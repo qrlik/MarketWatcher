@@ -1,13 +1,14 @@
 {
     "files": [
     "source/api/api.py",
-    "source/api/candle.py",
     "source/models/enums.py",
+    "source/models/candle.py",
     "source/systems/configController.py",
     "source/utilities/utils.py",
+    "source/widgets/configWidget.py",
+    "source/widgets/marketWatcher.py",
     "source/form.ui",
     "source/main.py",
-    "source/marketWatcher.py",
     "source/configController.py"
     ]
 }

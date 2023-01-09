@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication
-import marketWatcher
+from widgets import marketWatcher
 
 if __name__ == "__main__":
     app = QApplication([])
