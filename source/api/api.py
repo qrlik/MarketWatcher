@@ -3,7 +3,6 @@ from utilities import utils
 from binance.futures import Futures
 from datetime import datetime
 import os
-import time
 import socket
 import struct
 import win32api

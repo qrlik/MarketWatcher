@@ -1,5 +1,10 @@
 {
     "files": [
+    "source/api/api.py",
+    "source/api/candle.py",
+    "source/models/enums.py",
+    "source/systems/configController.py",
+    "source/utilities/utils.py",
     "source/form.ui",
     "source/main.py",
     "source/marketWatcher.py",
