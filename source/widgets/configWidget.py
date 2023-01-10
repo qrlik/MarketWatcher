@@ -36,6 +36,18 @@ def updateAddButtonState():
     configs = __configList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
     __addButton.setEnabled(len(configs) == 0)
 
+def addConfigToList():
+    index = 0
+    text = __timeframeBox.currentText()
+    value = enums.Timeframe[text]
+
+    for i in range(__configList.count()):
+        if enums.Timeframe[__configList.item(i).text()] < value:
+            index += 1
+
+    __configList.insertItem(index, QListWidgetItem(text))
+
 def onAddButtonClick():
-    QListWidgetItem(__timeframeBox.currentText(), __configList)
+    addConfigToList()
     updateAddButtonState()
+
