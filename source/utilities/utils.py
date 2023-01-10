@@ -39,6 +39,11 @@ def log(text: str, obj = None):
     logStr = source + text
     logging.info(logStr)
 
+def logError(text: str, obj = None):
+    source = '' if not obj else type(obj).__name__ + ': '
+    logStr = source + text
+    logging.error(logStr)
+
 def ceil(value: float, degree: int = 2) -> float:
     tens = math.pow(10, degree)
     return math.ceil(value * tens) / tens
