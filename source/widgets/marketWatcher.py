@@ -11,7 +11,7 @@ class MarketWatcher(QWidget):
     def __init__(self):
         super(MarketWatcher, self).__init__()
         self.loadUi()
-        configWidget.init(self.findChild(QWidget, 'configWidget'))
+        self.initConfigWidget()
 
     def loadUi(self):
         loader = QUiLoader()
@@ -20,3 +20,8 @@ class MarketWatcher(QWidget):
         uiFile.open(QFile.ReadOnly)
         loader.load(uiFile, self)
         uiFile.close()
+
+    def initConfigWidget(self):
+        widget = self.findChild(QWidget, 'configWidget')
+        configWidget.init(widget)
+        self.setFixedSize(520, 320)
