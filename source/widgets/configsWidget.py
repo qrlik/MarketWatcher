@@ -2,13 +2,16 @@ from PySide6.QtWidgets import QWidget,QComboBox,QPushButton,QListWidget,QListWid
 import PySide6.QtCore
 
 from models import enums
-from utilities import utils
+from widgets import configEditor
+from systems import configController
 
 __configWidget:QWidget = None
-__configEditor:QWidget = None
-__configList:QListWidget = None
+__configsList:QListWidget = None
 __timeframeBox:QComboBox = None
 __addButton:QPushButton = None
+
+def getConfigsList():
+    return __configsList
 
 def init(widget:QWidget):
     __initVariables(widget)
@@ -16,13 +19,11 @@ def init(widget:QWidget):
     __initCombobox()
     __initAddButton()
     __initConfigList()
-    __initConfigEditor()
 
 def __initVariables(widget:QWidget):
-    global __configWidget, __configList, __timeframeBox, __addButton
+    global __configWidget, __configsList, __timeframeBox, __addButton
     __configWidget = widget
-    __configEditor = widget.findChild(QWidget, 'configEditor')
-    __configList = widget.findChild(QListWidget, 'configList')
+    __configsList = widget.findChild(QListWidget, 'configsList')
     __timeframeBox = widget.findChild(QComboBox, 'timeframeBox')
     __addButton = widget.findChild(QPushButton, 'addButton')
 
@@ -35,11 +36,12 @@ def __addConfigToList():
     text = __timeframeBox.currentText()
     value = enums.Timeframe[text]
 
-    for i in range(__configList.count()):
-        if enums.Timeframe[__configList.item(i).text()] < value:
+    for i in range(__configsList.count()):
+        if enums.Timeframe[__configsList.item(i).text()] < value:
             index += 1
 
-    __configList.insertItem(index, QListWidgetItem(text))
+    __configsList.insertItem(index, QListWidgetItem(text))
+    configController.addConfig(text)
 
 def __onAddButtonClick():
     __addConfigToList()
@@ -47,7 +49,7 @@ def __onAddButtonClick():
 
 def __updateAddButtonState():
     timeframeStr = __timeframeBox.currentText()
-    configs = __configList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
+    configs = __configsList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
     __addButton.setEnabled(len(configs) == 0)
 
 def __initAddButton():
@@ -55,15 +57,8 @@ def __initAddButton():
     __addButton.clicked.connect(__onAddButtonClick)
     __updateAddButtonState()
 
-def __initConfigEditor():
-    pass
-
-def __updateConfigEditor():
-    #QListWidget.selectedItems()
-    pass
-
 def __initConfigList():
-    __configList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-    __configList.itemSelectionChanged.connect(__updateConfigEditor)
+    __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    __configsList.itemSelectionChanged.connect(configEditor.updateConfigEditor)
 
 

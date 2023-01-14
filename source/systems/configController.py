@@ -8,10 +8,10 @@ def save():
 def load():
 	pass
 
-def addConfig(timeframe:enums.Timeframe):
+def addConfig(timeframe:str):
 	__configs.setdefault(timeframe, {})
 
-def deleteConfig(timeframe:enums.Timeframe):
+def deleteConfig(timeframe:str):
 	__configs.pop(timeframe)
 
 def updateConfig(timeframe:enums.Timeframe, config, value):

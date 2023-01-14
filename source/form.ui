@@ -18,7 +18,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QFrame" name="configWidget">
+    <widget class="QFrame" name="configsWidget">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -61,7 +61,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QListWidget" name="configList">
+       <widget class="QListWidget" name="configsList">
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOn</enum>
         </property>
@@ -116,7 +116,7 @@
    <item>
     <widget class="QFrame" name="configEditor">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -126,33 +126,45 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="configGrid" native="true">
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="MA20">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>MA20</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="MA50">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>MA50</string>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QCheckBox" name="checkBox_3">
+          <widget class="QCheckBox" name="MA100">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>MA100</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QCheckBox" name="checkBox_4">
+          <widget class="QCheckBox" name="MA200">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>MA200</string>
            </property>
           </widget>
          </item>
@@ -164,37 +176,52 @@
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QCheckBox" name="checkBox_5">
+          <widget class="QCheckBox" name="EMA21">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>EMA21</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QCheckBox" name="checkBox_6">
+          <widget class="QCheckBox" name="EMA55">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>EMA55</string>
            </property>
           </widget>
          </item>
          <item row="4" column="0">
-          <widget class="QCheckBox" name="checkBox_7">
+          <widget class="QCheckBox" name="EMA100">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>EMA100</string>
            </property>
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QCheckBox" name="checkBox_8">
+          <widget class="QCheckBox" name="EMA144">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>EMA144</string>
            </property>
           </widget>
          </item>
          <item row="5" column="0">
-          <widget class="QCheckBox" name="checkBox_9">
+          <widget class="QCheckBox" name="EMA200">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
-            <string>CheckBox</string>
+            <string>EMA200</string>
            </property>
           </widget>
          </item>
