@@ -19,13 +19,13 @@ class Timeframe(IntEnum):
     ONE_MONTH = -1
 
 class MovingAverageType(Enum):
-	MA_20 = 1,
-	MA_50 = 2,
-	MA_100 = 3,
-	MA_200 = 4,
-	EMA_21 = 5,
-	EMA_55 = 6,
-	EMA_100 = 7,
-	EMA_144 = 8,
-	EMA_200 = 9
+	MA20 = 1,
+	MA50 = 2,
+	MA100 = 3,
+	MA200 = 4,
+	EMA21 = 5,
+	EMA55 = 6,
+	EMA100 = 7,
+	EMA144 = 8,
+	EMA200 = 9
 
