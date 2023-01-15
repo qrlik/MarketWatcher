@@ -10,15 +10,20 @@ __configsList:QListWidget = None
 __timeframeBox:QComboBox = None
 __addButton:QPushButton = None
 
-def getConfigsList():
-    return __configsList
-
 def init(widget:QWidget):
     __initVariables(widget)
     #initList + load last settings
     __initCombobox()
     __initAddButton()
     __initConfigList()
+
+def getConfigsList():
+    return __configsList
+
+def updateAddButtonState():
+    timeframeStr = __timeframeBox.currentText()
+    configs = __configsList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
+    __addButton.setEnabled(len(configs) == 0)
 
 def __initVariables(widget:QWidget):
     global __configWidget, __configsList, __timeframeBox, __addButton
@@ -45,17 +50,12 @@ def __addConfigToList():
 
 def __onAddButtonClick():
     __addConfigToList()
-    __updateAddButtonState()
-
-def __updateAddButtonState():
-    timeframeStr = __timeframeBox.currentText()
-    configs = __configsList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
-    __addButton.setEnabled(len(configs) == 0)
+    updateAddButtonState()
 
 def __initAddButton():
-    __timeframeBox.activated.connect(__updateAddButtonState)
+    __timeframeBox.activated.connect(updateAddButtonState)
     __addButton.clicked.connect(__onAddButtonClick)
-    __updateAddButtonState()
+    updateAddButtonState()
 
 def __initConfigList():
     __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
