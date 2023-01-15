@@ -34,6 +34,10 @@ def saveJsonFile(filename, data):
     with open(filename + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=4)
 
+def saveBsonFile(filename, data):
+    with open(filename + '.bson', 'w') as outfile:
+        json.dump(data, outfile)
+
 def log(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text

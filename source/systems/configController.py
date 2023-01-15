@@ -1,9 +1,12 @@
 from models import enums
+from utilities import utils
 
 __configs:dict = {}
 
-def save():
-	pass
+def save(filename:str):
+	if len(filename) == 0:
+		return
+	utils.saveBsonFile(filename, __configs)
 
 def load():
 	pass

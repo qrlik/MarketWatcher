@@ -27,6 +27,7 @@ def __onDelete():
     configController.deleteConfig(items[0].text())
     __editorList.takeItem(__editorList.row(items[0]))
     configsWidget.updateAddButtonState()
+    configsWidget.updateSaveButtonState()
     updateConfigEditor()
 
 def __initDeleteButton():

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget,QComboBox,QPushButton,QListWidget,QListWidgetItem,QAbstractItemView
+from PySide6.QtWidgets import QWidget,QComboBox,QPushButton,QListWidget,QListWidgetItem,QAbstractItemView,QFileDialog
 import PySide6.QtCore
 
 from models import enums
@@ -9,6 +9,7 @@ __configWidget:QWidget = None
 __configsList:QListWidget = None
 __timeframeBox:QComboBox = None
 __addButton:QPushButton = None
+__saveButton:QPushButton = None
 
 def init(widget:QWidget):
     __initVariables(widget)
@@ -16,6 +17,7 @@ def init(widget:QWidget):
     __initCombobox()
     __initAddButton()
     __initConfigList()
+    __initSaveButton()
 
 def getConfigsList():
     return __configsList
@@ -25,12 +27,16 @@ def updateAddButtonState():
     configs = __configsList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
     __addButton.setEnabled(len(configs) == 0)
 
+def updateSaveButtonState():
+    __saveButton.setEnabled(__configsList.count() > 0)
+
 def __initVariables(widget:QWidget):
-    global __configWidget, __configsList, __timeframeBox, __addButton
+    global __configWidget, __configsList, __timeframeBox, __addButton,__saveButton
     __configWidget = widget
     __configsList = widget.findChild(QListWidget, 'configsList')
     __timeframeBox = widget.findChild(QComboBox, 'timeframeBox')
     __addButton = widget.findChild(QPushButton, 'addButton')
+    __saveButton = widget.findChild(QPushButton, 'saveButton')
 
 def __initCombobox():
     for timeframe in enums.Timeframe:
@@ -51,6 +57,7 @@ def __addConfigToList():
 def __onAddButtonClick():
     __addConfigToList()
     updateAddButtonState()
+    updateSaveButtonState()
 
 def __initAddButton():
     __timeframeBox.activated.connect(updateAddButtonState)
@@ -61,4 +68,10 @@ def __initConfigList():
     __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     __configsList.itemSelectionChanged.connect(configEditor.updateConfigEditor)
 
+def __onSaveClick():
+    filename = QFileDialog.getSaveFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
+    configController.save(filename[0])
+
+def __initSaveButton():
+    __saveButton.clicked.connect(__onSaveClick)
 
