@@ -23,12 +23,16 @@ def init(widget:QWidget):
 def getConfigsList():
     return __configsList
 
-def updateAddButtonState():
+def update():
+    __updateAddButtonState()
+    __updateSaveButtonState()
+
+def __updateAddButtonState():
     timeframeStr = __timeframeBox.currentText()
     configs = __configsList.findItems(timeframeStr, PySide6.QtCore.Qt.MatchFlag.MatchExactly)
     __addButton.setEnabled(len(configs) == 0)
 
-def updateSaveButtonState():
+def __updateSaveButtonState():
     __saveButton.setEnabled(__configsList.count() > 0)
 
 def __initVariables(widget:QWidget):
@@ -55,20 +59,18 @@ def __addConfigToList(text:str = ''):
 
     __configsList.insertItem(index, QListWidgetItem(text))
     configController.addConfig(text)
-    updateAddButtonState()
-    updateSaveButtonState()
+    update()
 
 def __onAddButtonClick():
     __addConfigToList()
 
 def __initAddButton():
-    __timeframeBox.activated.connect(updateAddButtonState)
+    __timeframeBox.activated.connect(__updateAddButtonState)
     __addButton.clicked.connect(__onAddButtonClick)
-    updateAddButtonState()
 
 def __initConfigList():
     __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-    __configsList.itemSelectionChanged.connect(configEditor.updateConfigEditor)
+    __configsList.itemSelectionChanged.connect(configEditor.update)
 
 def __getFilenameFromPath(path:str):
     splitedName = path[0].split('/')

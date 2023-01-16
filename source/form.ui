@@ -127,6 +127,9 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QWidget" name="configGrid" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
           <widget class="QCheckBox" name="MA20">
