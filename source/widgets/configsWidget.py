@@ -70,7 +70,10 @@ def __initConfigList():
 
 def __onSaveClick():
     filename = QFileDialog.getSaveFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
-    configController.save(filename[0])
+    splitedName = filename[0].split('/')
+    filename = splitedName.pop()
+    filename = filename[:len(filename) - 5]
+    configController.save(filename)
 
 def __initSaveButton():
     __saveButton.clicked.connect(__onSaveClick)
