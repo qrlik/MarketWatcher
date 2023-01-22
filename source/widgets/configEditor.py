@@ -8,6 +8,7 @@ __editor:QWidget = None
 __editorList:QListWidget = None
 __configGrid:QWidget = None
 __button:QPushButton = None
+__checkedByUser = True
 
 def init(editor:QWidget, editorList:QListWidget):
     __initVariables(editor, editorList)
@@ -19,11 +20,14 @@ def update():
     __updateDeleteButton()
 
 def __updateGrid():
+    global __checkedByUser
     items = __editorList.selectedItems()
     itemText = items[0].text() if len(items) > 0 else ''
     for box in __configGrid.findChildren(QCheckBox):
         state = configController.getState(itemText, box.text())
+        __checkedByUser = False
         box.setCheckState(PySide6.QtCore.Qt.CheckState.Checked if state else PySide6.QtCore.Qt.CheckState.Unchecked)
+        __checkedByUser = True
         box.setEnabled(len(items) > 0)
 
 def __updateDeleteButton():
@@ -36,8 +40,18 @@ def __initVariables(editor:QWidget, editorList:QListWidget):
     __configGrid = __editor.findChild(QWidget, 'configGrid')
     __button = __editor.findChild(QPushButton, 'deleteButton')
 
+def __onCheckStateChanged():
+    items = __editorList.selectedItems()
+    if not __checkedByUser or len(items) == 0:
+        return
+    timeframe = items[0].text()
+    for box in __configGrid.findChildren(QCheckBox):
+        value = box.checkState() == PySide6.QtCore.Qt.CheckState.Checked
+        configController.updateConfig(timeframe, box.text(), value)
+
 def __initGrid():
-    pass # to do
+    for box in __configGrid.findChildren(QCheckBox):
+        box.stateChanged.connect(__onCheckStateChanged)
 
 def __onDelete():
     items = __editorList.selectedItems()

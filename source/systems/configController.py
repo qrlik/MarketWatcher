@@ -30,7 +30,7 @@ def addConfig(timeframe:str):
 def deleteConfig(timeframe:str):
 	__configs.pop(timeframe)
 
-# def updateConfig(timeframe:enums.Timeframe, config, value):
-# 	timeFrameConfigs = __configs.setdefault(timeframe, {})
-# 	configValue = timeFrameConfigs.setdefault(config, value)
-# 	configValue = value
+def updateConfig(timeframe:enums.Timeframe, config, value):
+	timeFrameConfigs = __configs.setdefault(timeframe, {})
+	timeFrameConfigs.setdefault(config)
+	timeFrameConfigs[config] = value
