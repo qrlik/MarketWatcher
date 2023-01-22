@@ -7,3 +7,6 @@ if __name__ == "__main__":
     widget = marketWatcher.MarketWatcher()
     widget.show()
     sys.exit(app.exec())
+
+# to do
+# добавить сохранение последних используемых настроек

@@ -11,6 +11,7 @@ __timeframeBox:QComboBox = None
 __addButton:QPushButton = None
 __loadButton:QPushButton = None
 __saveButton:QPushButton = None
+startButton:QPushButton = None
 
 def init(widget:QWidget):
     __initVariables(widget)
@@ -26,6 +27,7 @@ def getConfigsList():
 def update():
     __updateAddButtonState()
     __updateSaveButtonState()
+    __updateStartButton()
 
 def __updateAddButtonState():
     timeframeStr = __timeframeBox.currentText()
@@ -35,14 +37,18 @@ def __updateAddButtonState():
 def __updateSaveButtonState():
     __saveButton.setEnabled(__configsList.count() > 0)
 
+def __updateStartButton():
+    startButton.setEnabled(not configController.isEmpty())
+
 def __initVariables(widget:QWidget):
-    global __configWidget, __configsList, __timeframeBox, __addButton,__loadButton,__saveButton
+    global __configWidget, __configsList, __timeframeBox, __addButton,__loadButton,__saveButton,startButton
     __configWidget = widget
     __configsList = widget.findChild(QListWidget, 'configsList')
     __timeframeBox = widget.findChild(QComboBox, 'timeframeBox')
     __addButton = widget.findChild(QPushButton, 'addButton')
     __loadButton = widget.findChild(QPushButton, 'loadButton')
     __saveButton = widget.findChild(QPushButton, 'saveButton')
+    startButton = widget.findChild(QPushButton, 'startButton')
 
 def __initCombobox():
     for timeframe in enums.Timeframe:
@@ -81,9 +87,9 @@ def __onLoadClick():
     path = QFileDialog.getOpenFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
     configController.load(__getFilenameFromPath(path))
     __configsList.clear()
+    configEditor.update()
     for config in configController.getConfigs():
         __addConfigToList(config)
-    #to do reset editor
 
 def __initLoadButton():
     __loadButton.clicked.connect(__onLoadClick)
@@ -94,4 +100,3 @@ def __onSaveClick():
 
 def __initSaveButton():
     __saveButton.clicked.connect(__onSaveClick)
-

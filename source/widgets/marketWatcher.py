@@ -22,9 +22,13 @@ class MarketWatcher(QWidget):
         loader.load(uiFile, self)
         uiFile.close()
 
+    def __onStart(self):
+        x = 5
+
     def initConfigWidget(self):
         configsW = self.findChild(QWidget, 'configsWidget')
         configE = self.findChild(QWidget, 'configEditor')
         configsWidget.init(configsW)
+        configsWidget.startButton.clicked.connect(self.__onStart)
         configEditor.init(configE, configsWidget.getConfigsList())
         self.setFixedSize(520, 320)

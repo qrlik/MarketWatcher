@@ -1,3 +1,4 @@
+from PySide6.QtCore import Signal
 from models import enums
 from utilities import utils
 
@@ -29,6 +30,13 @@ def addConfig(timeframe:str):
 
 def deleteConfig(timeframe:str):
 	__configs.pop(timeframe)
+
+def isEmpty():
+	for timeframe, configs in __configs.items():
+		for configs, value in configs.items():
+			if value:
+				return False
+	return True
 
 def updateConfig(timeframe:enums.Timeframe, config, value):
 	timeFrameConfigs = __configs.setdefault(timeframe, {})

@@ -48,6 +48,7 @@ def __onCheckStateChanged():
     for box in __configGrid.findChildren(QCheckBox):
         value = box.checkState() == PySide6.QtCore.Qt.CheckState.Checked
         configController.updateConfig(timeframe, box.text(), value)
+    configsWidget.update()
 
 def __initGrid():
     for box in __configGrid.findChildren(QCheckBox):
