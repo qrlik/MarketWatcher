@@ -7,8 +7,9 @@
     "source/utilities/utils.py",
     "source/widgets/configEditor.py",
     "source/widgets/configsWidget.py",
-    "source/widgets/marketWatcher.py",
-    "source/form.ui",
+    "source/widgets/configsWindow.py",
+    "source/configsWindow.ui",
+    "source/watcherWindow.ui",
     "source/main.py",
     "source/configController.py"
     ]

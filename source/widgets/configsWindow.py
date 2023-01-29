@@ -4,31 +4,36 @@ from pathlib import Path
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtCore import Signal
 
 from widgets import configsWidget
 from widgets import configEditor
 
-class MarketWatcher(QWidget):
+class ConfigsWindow(QWidget):
     def __init__(self):
-        super(MarketWatcher, self).__init__()
+        super(ConfigsWindow, self).__init__()
         self.loadUi()
         self.initConfigWidget()
 
     def loadUi(self):
         loader = QUiLoader()
-        path = os.fspath(Path(__file__).resolve().parent / "../form.ui")
+        path = os.fspath(Path(__file__).resolve().parent / "../configsWindow.ui")
         uiFile = QFile(path)
         uiFile.open(QFile.ReadOnly)
         loader.load(uiFile, self)
         uiFile.close()
 
     def __onStart(self):
-        x = 5
+        self.onDestroy.emit()
 
     def initConfigWidget(self):
-        configsW = self.findChild(QWidget, 'configsWidget')
-        configE = self.findChild(QWidget, 'configEditor')
-        configsWidget.init(configsW)
+        self.__configsWidget = self.findChild(QWidget, 'configsWidget')
+        self.__configsEditor = self.findChild(QWidget, 'configEditor')
+        configsWidget.init(self.__configsWidget)
         configsWidget.startButton.clicked.connect(self.__onStart)
-        configEditor.init(configE, configsWidget.getConfigsList())
+        configEditor.init(self.__configsEditor, configsWidget.getConfigsList())
         self.setFixedSize(520, 320)
+
+    onDestroy = Signal()
+    __configsWidget:QWidget = None
+    __configsEditor:QWidget = None

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MarketWatcher</class>
- <widget class="QWidget" name="MarketWatcher">
+ <class>configsWindow</class>
+ <widget class="QWidget" name="configsWindow">
   <property name="enabled">
    <bool>true</bool>
   </property>
