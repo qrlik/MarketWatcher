@@ -16,7 +16,7 @@ class Timeframe(IntEnum):
     ONE_DAY = 86_400_000,
     THREE_DAY = 259_200_000,
     ONE_WEEK = 604_800_000,
-    ONE_MONTH = -1
+    ONE_MONTH = -1 # to do
 
 class MovingAverageType(Enum):
 	MA20 = 1,

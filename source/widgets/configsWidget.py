@@ -52,7 +52,8 @@ def __initVariables(widget:QWidget):
 
 def __initCombobox():
     for timeframe in enums.Timeframe:
-        __timeframeBox.addItem(timeframe.name)
+        if timeframe >= enums.Timeframe.ONE_HOUR:
+            __timeframeBox.addItem(timeframe.name)
 
 def __addConfigToList(text:str = ''):
     index = 0
