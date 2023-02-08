@@ -24,7 +24,7 @@ class ConfigsWindow(QWidget):
         uiFile.close()
 
     def __onStart(self):
-        self.onDestroy.emit()
+        self.onStart.emit()
 
     def initConfigWidget(self):
         self.__configsWidget = self.findChild(QWidget, 'configsWidget')
@@ -34,6 +34,6 @@ class ConfigsWindow(QWidget):
         configEditor.init(self.__configsEditor, configsWidget.getConfigsList())
         self.setFixedSize(520, 320)
 
-    onDestroy = Signal()
+    onStart = Signal()
     __configsWidget:QWidget = None
     __configsEditor:QWidget = None
