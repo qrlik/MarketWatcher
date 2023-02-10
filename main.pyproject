@@ -8,9 +8,8 @@
     "source/widgets/configEditor.py",
     "source/widgets/configsWidget.py",
     "source/widgets/configsWindow.py",
-    "source/configsWindow.ui",
-    "source/watcherWindow.ui",
-    "source/main.py",
-    "source/configController.py"
+    "source/ui/configsWindow.ui",
+    "source/ui/watcherWindow.ui",
+    "source/main.py"
     ]
 }

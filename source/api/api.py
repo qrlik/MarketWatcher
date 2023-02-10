@@ -27,7 +27,7 @@ def __updateTime():
 			utcTime = datetime.datetime.utcfromtimestamp(epoch_time)
 			win32api.SetSystemTime(utcTime.year, utcTime.month, utcTime.weekday(), utcTime.day, utcTime.hour, utcTime.minute, utcTime.second, 0)
 	except socket.timeout as e:
-		print(e)
+             utils.logError(e)
 
 def __makeApiCall(func):
     while True:

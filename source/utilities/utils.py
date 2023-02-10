@@ -3,8 +3,9 @@ import os.path
 import math
 import time
 import logging
+from logging.handlers import RotatingFileHandler
 
-__logsFile = 'logs/Logs.txt'
+__logsFile = 'tmp/Logs.txt'
 if not os.path.exists(__logsFile):
     if not os.path.exists('logs'):
         os.mkdir('logs')
@@ -16,10 +17,10 @@ logging.basicConfig(
     level=logging.DEBUG,
     datefmt='%Y-%m-%d %H:%M:%S',
     handlers=[
-        logging.FileHandler(__logsFile),
+        RotatingFileHandler(__logsFile, maxBytes=100*1024*1024, backupCount=2)
         #logging.StreamHandler()
     ])
-    
+
 def getCurrentTime() -> int:
     return round(time.time() * 1000)
 

@@ -17,7 +17,7 @@ class ConfigsWindow(QWidget):
 
     def loadUi(self):
         loader = QUiLoader()
-        path = os.fspath(Path(__file__).resolve().parent / "../configsWindow.ui")
+        path = os.fspath(Path(__file__).resolve().parent / "../ui/configsWindow.ui")
         uiFile = QFile(path)
         uiFile.open(QFile.ReadOnly)
         loader.load(uiFile, self)
