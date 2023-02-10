@@ -36,10 +36,6 @@ class WatcherWindow(QMainWindow):
         self.setCentralWidget(self.__watcherWidget)
         self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
 
-        self.log('inited')
-        self.log('inited')
-        self.log('inited')
-
         # self.__configsWindow.close()
         # self.__configsWindow = None
 

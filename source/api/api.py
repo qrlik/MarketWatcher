@@ -1,4 +1,5 @@
-from api import candles
+from models import candle
+from models import enums
 from utilities import utils
 from binance.futures import Futures
 from datetime import datetime
@@ -29,10 +30,10 @@ def __updateTime():
 	except socket.timeout as e:
              utils.logError(e)
 
-def __makeApiCall(func):
+def __makeApiCall(func, *args):
     while True:
         try:
-            return func()
+            return func(*args)
         except Exception as e:
             utils.log(str(e))
             if hasattr(e, 'error_code') and e.error_code == -1021:
@@ -40,25 +41,25 @@ def __makeApiCall(func):
             else:
                 return None
 
-def __getCandelsTimed(symbol: str, interval: candles.candleInterval, amount: int, startPoint: int):
+def __getCandelsTimed(symbol: str, interval: enums.Timeframe, amount: int, startPoint: int):
     return __client.klines(symbol, interval, startTime = startPoint, limit = amount)
 
-def __parseResponce(responceCandles, interval: candles.candleInterval):
-    candle = candles.Candle()
-    candle.interval = interval
-    candle.openTime = responceCandles[0]
-    candle.closeTime = responceCandles[6]
-    candle.time = datetime.fromtimestamp(responceCandles[0] / 1000).strftime('%H:%M %d-%m-%Y')
-    candle.open = float(responceCandles[1])
-    candle.high = float(responceCandles[2])
-    candle.low = float(responceCandles[3])
-    candle.close = float(responceCandles[4])
-    candle.volume = float(responceCandles[5])
-    return candle
+def __parseResponce(responceCandles, interval: enums.Timeframe):
+    c = candle.Candle()
+    c.interval = interval
+    c.openTime = responceCandles[0]
+    c.closeTime = responceCandles[6]
+    c.time = datetime.fromtimestamp(responceCandles[0] / 1000).strftime('%H:%M %d-%m-%Y')
+    c.open = float(responceCandles[1])
+    c.high = float(responceCandles[2])
+    c.low = float(responceCandles[3])
+    c.close = float(responceCandles[4])
+    c.volume = float(responceCandles[5])
+    return c
 
-def __getCandles(symbol: str, interval: candles.candleInterval, amount: int, startPoint: int):
+def __getCandles(symbol: str, interval: enums.Timeframe, amount: int, startPoint: int):
     result = []
-    intervalStr = candles.candleIntervalToStr[interval]
+    intervalStr = candle.candleIntervalToStr[interval]
     startAmount = amount
     while amount > 0:
         amountStep = min(amount, __maxCandelsAmount)
@@ -73,14 +74,14 @@ def __getCandles(symbol: str, interval: candles.candleInterval, amount: int, sta
 
     return [__parseResponce(responce, interval) for responce in result]
 
-def getCandelsByAmount(symbol: str, interval: candles.candleInterval, amount: int):
+def getCandelsByAmount(symbol: str, interval: enums.Timeframe, amount: int):
     startPoint = utils.getCurrentTime() - amount * interval
-    return __makeApiCall(__getCandles(symbol, interval, amount, startPoint))
+    return __makeApiCall(__getCandles, symbol, interval, amount, startPoint)
 
-def getFinishedCandelsByStart(symbol: str, interval: candles.candleInterval, startPoint: int, amount: int = -1):
+def getFinishedCandelsByStart(symbol: str, interval: enums.Timeframe, startPoint: int, amount: int = -1):
     if amount == -1:
         amount = int(utils.floor((utils.getCurrentTime() - startPoint) / interval, 0))
-    return __makeApiCall(__getCandles(symbol, interval, amount, startPoint))
+    return __makeApiCall(__getCandles, symbol, interval, amount, startPoint)
 
 def getExchangeInfo():
-    return __makeApiCall(__client.exchange_info())
+    return __makeApiCall(__client.exchange_info)
