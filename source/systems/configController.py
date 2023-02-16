@@ -1,5 +1,6 @@
 from PySide6.QtCore import Signal
 from models import timeframe
+from models import movingAverage
 from utilities import utils
 
 __configs:dict = {}
@@ -21,6 +22,16 @@ def clear():
 def getConfigs():
 	return __configs.keys()
 
+def getConfig(timeframe:str):
+	return __configs.get(timeframe, {})
+
+def getMovingAverages(timeframe:str):
+	averages = []
+	for average, state in getConfig(timeframe):
+		if state:
+			averages.append(movingAverage.MovingAverageType[average])
+	return averages
+
 def getState(timeframe:str, config:str):
 	configs = __configs.get(timeframe, {})
 	return configs.get(config, False)
@@ -32,7 +43,7 @@ def deleteConfig(timeframe:str):
 	__configs.pop(timeframe)
 
 def isEmpty():
-	for timeframe, configs in __configs.items():
+	for _, configs in __configs.items():
 		for configs, value in configs.items():
 			if value:
 				return False

@@ -1,11 +1,13 @@
-from systems import movingAverageController
+
+from api import api
 from models import timeframe
 from models import candle
-from api import api
+from systems import configController
+from systems import movingAverageController
 
 class TimeframeController:
-    def __init__(self, ticker:str, timeframe: timeframe.Timeframe, averages: list):
-        self.__averagesController = movingAverageController.MovingAverageController(averages)
+    def __init__(self, ticker:str, timeframe: timeframe.Timeframe):
+        self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(timeframe))
         self.__timeframe = timeframe
         self.__ticker = ticker
         self.__requestCandles
