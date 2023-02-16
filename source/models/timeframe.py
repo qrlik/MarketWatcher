@@ -1,4 +1,3 @@
-from enum import Enum
 from enum import IntEnum
 
 class Timeframe(IntEnum):
@@ -15,17 +14,4 @@ class Timeframe(IntEnum):
     TWELVE_HOUR = 43_200_000,
     ONE_DAY = 86_400_000,
     THREE_DAY = 259_200_000,
-    ONE_WEEK = 604_800_000,
-    ONE_MONTH = -1 # to do
-
-class MovingAverageType(Enum):
-	MA20 = 1,
-	MA50 = 2,
-	MA100 = 3,
-	MA200 = 4,
-	EMA21 = 5,
-	EMA55 = 6,
-	EMA100 = 7,
-	EMA144 = 8,
-	EMA200 = 9
-
+    ONE_WEEK = 604_800_000

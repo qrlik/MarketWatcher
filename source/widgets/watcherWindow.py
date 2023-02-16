@@ -13,8 +13,8 @@ class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
 
-        #self.__initConfigWindow()
-        self.__onStart()
+        self.__initConfigWindow()
+        #self.__onStart()
 
     def __loadUi(self):
         loader = QUiLoader()
@@ -36,8 +36,9 @@ class WatcherWindow(QMainWindow):
         self.setCentralWidget(self.__watcherWidget)
         self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
 
-        # self.__configsWindow.close()
-        # self.__configsWindow = None
+        ##
+        self.__configsWindow.close()
+        self.__configsWindow = None
 
     def __initValues(self):
         self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')
