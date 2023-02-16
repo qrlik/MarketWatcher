@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal
-from models import enums
+from models import timeframe
 from utilities import utils
 
 __configs:dict = {}
@@ -38,7 +38,7 @@ def isEmpty():
 				return False
 	return True
 
-def updateConfig(timeframe:enums.Timeframe, config, value):
+def updateConfig(timeframe:timeframe.Timeframe, config, value):
 	timeFrameConfigs = __configs.setdefault(timeframe, {})
 	timeFrameConfigs.setdefault(config)
 	timeFrameConfigs[config] = value

@@ -14,11 +14,10 @@ if not os.path.exists(__logsFile):
 
 logging.basicConfig(
     format='%(asctime)s.%(msecs)06d %(levelname)-8s %(message)s',
-    level=logging.DEBUG,
+    level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S',
     handlers=[
         RotatingFileHandler(__logsFile, maxBytes=100*1024*1024, backupCount=2)
-        #logging.StreamHandler()
     ])
 
 def getCurrentTime() -> int:

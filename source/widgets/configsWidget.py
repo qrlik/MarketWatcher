@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget,QComboBox,QPushButton,QListWidget,QListWidgetItem,QAbstractItemView,QFileDialog
 import PySide6.QtCore
 
-from models import enums
+from models import timeframe
 from widgets import configEditor
 from systems import configController
 
@@ -51,17 +51,17 @@ def __initVariables(widget:QWidget):
     startButton = widget.findChild(QPushButton, 'startButton')
 
 def __initCombobox():
-    for timeframe in enums.Timeframe:
-        if timeframe >= enums.Timeframe.ONE_HOUR:
+    for timeframe in timeframe.Timeframe:
+        if timeframe >= timeframe.Timeframe.ONE_HOUR:
             __timeframeBox.addItem(timeframe.name)
 
 def __addConfigToList(text:str = ''):
     index = 0
     text = __timeframeBox.currentText() if len(text) == 0 else text
-    value = enums.Timeframe[text]
+    value = timeframe.Timeframe[text]
 
     for i in range(__configsList.count()):
-        if enums.Timeframe[__configsList.item(i).text()] < value:
+        if timeframe.Timeframe[__configsList.item(i).text()] < value:
             index += 1
 
     __configsList.insertItem(index, QListWidgetItem(text))

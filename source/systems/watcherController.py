@@ -1,8 +1,9 @@
 from api import api
+from models import movingAverage
+from models import timeframe
+from systems import movingAverageController
 
 def getTickersList():
-    #tmp
-    return [ 'BTCUSDT' ]
     info = api.Spot.getExchangeInfo()
     tickers = []
     for symbol in info.get('symbols', []):
@@ -12,3 +13,14 @@ def getTickersList():
                 tickers.append(name)
     return tickers
     
+def tmp():
+    averages = [ movingAverage.MovingAverageType.EMA21 ]
+    controller = movingAverageController.MovingAverageController(averages)
+
+    candles = api.Spot.getCandelsByAmount('BTCUSDT', timeframe.Timeframe.ONE_HOUR, 147)
+    candles.pop()
+    for candle in candles:
+        controller.process(candle)
+
+    averages = controller.getAverages()
+ 

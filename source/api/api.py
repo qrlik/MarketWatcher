@@ -1,5 +1,5 @@
 from models import candle
-from models import enums
+from models import timeframe
 from utilities import utils
 from binance.spot import Spot as Spots
 from binance.futures import Futures
@@ -44,10 +44,10 @@ class __binanceClient:
                 else:
                     return None
 
-    def __getCandelsTimed(self, symbol: str, interval: enums.Timeframe, amount: int, startPoint: int):
+    def __getCandelsTimed(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         return self.__client.klines(symbol, interval, startTime = startPoint, limit = amount)
 
-    def __parseResponce(self, responceCandles, interval: enums.Timeframe):
+    def __parseResponce(self, responceCandles, interval: timeframe.Timeframe):
         c = candle.Candle()
         c.interval = interval
         c.openTime = responceCandles[0]
@@ -60,9 +60,9 @@ class __binanceClient:
         c.volume = float(responceCandles[5])
         return c
 
-    def __getCandles(self, symbol: str, interval: enums.Timeframe, amount: int, startPoint: int):
+    def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
-        intervalStr = candle.candleIntervalToStr[interval]
+        intervalStr = timeframe.timeframeToStr[interval]
         startAmount = amount
         while amount > 0:
             amountStep = min(amount, self.__maxCandelsAmount)
@@ -77,11 +77,11 @@ class __binanceClient:
 
         return [self.__parseResponce(responce, interval) for responce in result]
 
-    def getCandelsByAmount(self, symbol: str, interval: enums.Timeframe, amount: int):
+    def getCandelsByAmount(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
         return self.__makeApiCall(self.__getCandles, symbol, interval, amount, startPoint)
 
-    def getFinishedCandelsByStart(self, symbol: str, interval: enums.Timeframe, startPoint: int, amount: int = -1):
+    def getFinishedCandelsByStart(self, symbol: str, interval: timeframe.Timeframe, startPoint: int, amount: int = -1):
         if amount == -1:
             amount = int(utils.floor((utils.getCurrentTime() - startPoint) / interval, 0))
         return self.__makeApiCall(self.__getCandles, symbol, interval, amount, startPoint)
