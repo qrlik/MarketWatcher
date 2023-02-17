@@ -51,9 +51,9 @@ def __initVariables(widget:QWidget):
     startButton = widget.findChild(QPushButton, 'startButton')
 
 def __initCombobox():
-    for timeframe in timeframe.Timeframe:
-        if timeframe >= timeframe.Timeframe.ONE_HOUR:
-            __timeframeBox.addItem(timeframe.name)
+    for tf in timeframe.Timeframe:
+        if tf >= timeframe.Timeframe.ONE_HOUR:
+            __timeframeBox.addItem(tf.name)
 
 def __addConfigToList(text:str = ''):
     index = 0

@@ -6,11 +6,11 @@ from systems import configController
 from systems import movingAverageController
 
 class TimeframeController:
-    def __init__(self, ticker:str, timeframe: timeframe.Timeframe):
-        self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(timeframe))
-        self.__timeframe = timeframe
+    def __init__(self, ticker:str, tf: str):
+        self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(tf))
+        self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker
-        self.__requestCandles
+        self.__requestCandles()
     
     def __requestCandles(self):
         amountForAverages = self.__averagesController.getCandlesAmountForInit()

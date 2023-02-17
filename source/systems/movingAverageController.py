@@ -1,8 +1,6 @@
 from models import movingAverage
 from models import candle
 
-__emaFactor = 8
-
 class MovingAverageController:
     def __init__(self, averages: list):
         for average in averages:
@@ -44,9 +42,10 @@ class MovingAverageController:
             if data[1] == movingAverage.MovingAverageMode.SMA:
                 amount = max(amount, data[0])
             elif data[1] == movingAverage.MovingAverageMode.EMA:
-                amount = max(amount, data[0] * __emaFactor)
+                amount = max(amount, data[0] * self.__emaFactor)
         return amount
 
     __averages:dict = {}
-    __maxAverageSize = 0
     __closes = []
+    __maxAverageSize = 0
+    __emaFactor = 8

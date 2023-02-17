@@ -1,7 +1,5 @@
 from api import api
-from models import movingAverage
-from models import timeframe
-from systems import movingAverageController
+from systems import tickerController
 
 def getTickersList():
     info = api.Spot.getExchangeInfo()
@@ -14,13 +12,15 @@ def getTickersList():
     return tickers
     
 def tmp():
-    averages = [ movingAverage.MovingAverageType.EMA21 ]
-    controller = movingAverageController.MovingAverageController(averages)
+    x = tickerController.TickerController('BTCUSDT')
 
-    candles = api.Spot.getCandelsByAmount('BTCUSDT', timeframe.Timeframe.ONE_HOUR, 147)
-    candles.pop()
-    for candle in candles:
-        controller.process(candle)
+#     averages = [ movingAverage.MovingAverageType.EMA21 ]
+#     controller = movingAverageController.MovingAverageController(averages)
 
-    averages = controller.getAverages()
+#     candles = api.Spot.getCandelsByAmount('BTCUSDT', timeframe.Timeframe.ONE_HOUR, 147)
+#     candles.pop()
+#     for candle in candles:
+#         controller.process(candle)
+
+#     averages = controller.getAverages()
  

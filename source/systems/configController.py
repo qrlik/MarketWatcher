@@ -27,7 +27,7 @@ def getConfig(timeframe:str):
 
 def getMovingAverages(timeframe:str):
 	averages = []
-	for average, state in getConfig(timeframe):
+	for average, state in getConfig(timeframe).items():
 		if state:
 			averages.append(movingAverage.MovingAverageType[average])
 	return averages
