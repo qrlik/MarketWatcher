@@ -1,8 +1,8 @@
 from api import api
 from systems import tickerController
 
-def getTickersList():
-    info = api.Spot.getExchangeInfo()
+def getFuturesTickersList():
+    info = api.Future.getExchangeInfo()
     tickers = []
     for symbol in info.get('symbols', []):
         if symbol.get('status', '') == 'TRADING' and symbol.get('quoteAsset', '') == 'USDT':
@@ -10,17 +10,11 @@ def getTickersList():
             if name:
                 tickers.append(name)
     return tickers
+
+class WatcherController:
+    def __init__(self):
+        self.__tickers = getFuturesTickersList()
+        x = tickerController.TickerController('BTCUSDT')
     
-def tmp():
-    x = tickerController.TickerController('BTCUSDT')
-
-#     averages = [ movingAverage.MovingAverageType.EMA21 ]
-#     controller = movingAverageController.MovingAverageController(averages)
-
-#     candles = api.Spot.getCandelsByAmount('BTCUSDT', timeframe.Timeframe.ONE_HOUR, 147)
-#     candles.pop()
-#     for candle in candles:
-#         controller.process(candle)
-
-#     averages = controller.getAverages()
+    __tickers = []
  

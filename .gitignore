@@ -1,9 +1,9 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
-/source/tmp/*.bson
-/source/tmp/*.txt
-/source/logs/*
+/source/cache/*
+/source/*.json
+/source/*.bson
 
 *.pyproject.user
 *~

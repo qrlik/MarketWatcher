@@ -1,14 +1,17 @@
 import json
+import jsonpickle
 import os.path
 import math
 import time
 import logging
 from logging.handlers import RotatingFileHandler
 
-__logsFile = 'tmp/Logs.txt'
+cacheFolder = 'cache/'
+__logsFile = cacheFolder + 'Logs.txt'
+
 if not os.path.exists(__logsFile):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
+    if not os.path.exists('cache'):
+        os.mkdir('cache')
     with open(__logsFile, 'x') as f:
         f.write('')
 
@@ -30,9 +33,23 @@ def loadJsonFile(filename, isBson = False):
     except:
         return None
 
+def loadPickleJson(filename):
+    try:
+        with open(filename + '.json') as infile:
+            return jsonpickle.decode(infile.read())
+    except Exception as e:
+        return None
+
 def saveJsonFile(filename, data, isBson = False):
-    with open(filename + ('.bson' if isBson else '.json'), 'w') as outfile:
-        json.dump(data, outfile, indent=4)
+    try:
+        with open(filename + ('.bson' if isBson else '.json'), 'w') as outfile:
+            json.dump(data, outfile, indent=4)
+    except:
+        return None
+    
+def savePickleJson(filename, data):
+    with open(filename + '.json', 'w') as outfile:
+        outfile.write(jsonpickle.encode(data))
 
 def log(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
