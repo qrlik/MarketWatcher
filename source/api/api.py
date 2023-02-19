@@ -63,28 +63,26 @@ class __binanceClient:
     def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
         intervalStr = timeframe.timeframeToStr[interval]
-        startAmount = amount
         while amount > 0:
             amountStep = min(amount, self.__maxCandelsAmount)
             result.extend(self.__getCandelsTimed(symbol, intervalStr, amountStep, startPoint))
             if startPoint == 0:
                 startPoint = result[0][0]
                 amount = int(utils.floor((utils.getCurrentTime() - result[0][0]) / interval, 0))
-                startAmount = amount
             amount -= amountStep
             startPoint = result[-1][0] + interval
-            print(int((startAmount - amount) / startAmount * 100))
 
         return [self.__parseResponce(responce, interval) for responce in result]
 
-    def getCandelsByAmount(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+    def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
         return self.__makeApiCall(self.__getCandles, symbol, interval, amount, startPoint)
 
-    def getFinishedCandelsByStart(self, symbol: str, interval: timeframe.Timeframe, startPoint: int, amount: int = -1):
-        if amount == -1:
-            amount = int(utils.floor((utils.getCurrentTime() - startPoint) / interval, 0))
-        return self.__makeApiCall(self.__getCandles, symbol, interval, amount, startPoint)
+    def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+        result = self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))
+        if result is not None and len(result) > 0:
+            result.pop()
+        return result
 
     def getExchangeInfo(self):
         return self.__makeApiCall(self.__client.exchange_info)

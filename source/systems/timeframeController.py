@@ -15,21 +15,21 @@ class TimeframeController:
     
     def __initCandles(self):
         amountForAverages = self.__averagesController.getCandlesAmountForInit()
-        startPoint = utils.getCurrentTime() - amountForAverages * self.__timeframe
         cacheName = utils.cacheFolder + 'tickers/' + self.__ticker + '/' + self.__timeframe.name
         candles = utils.loadPickleJson(cacheName)
         candles = [] if candles is None else candles
         if candles and len(candles) > 0:
             lastCache = candles[-1].openTime + self.__timeframe
-            if startPoint < lastCache:
-                startPoint = lastCache
-            else:
+            timeFromCache = utils.getCurrentTime() - lastCache
+            finishedFromCache = int(timeFromCache / self.__timeframe)
+            if finishedFromCache >= amountForAverages:
                 candles = []
-
-        # to do check first candle vs startPoint without cache
-
-        candles.extend(api.Spot.getFinishedCandelsByStart(self.__ticker, self.__timeframe, startPoint))
+            else:
+                amountForAverages = finishedFromCache
+            
+        candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForAverages))
         candles = candles[-amountForAverages:]
+        self.__checkFinishedCandles(candles)
         utils.savePickleJson(cacheName, candles)
 
         if len(candles) == 0:
@@ -41,6 +41,25 @@ class TimeframeController:
         self.__lastClosedCandle = candles[-1]
         for candle in candles:
             self.__averagesController.process(candle)
+
+    def __checkFinishedCandles(self, candles):
+        if not utils.isDebug() or len(candles) < 2:
+            return
+        lastOpen = candles[0].openTime
+        errorStr = 'TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name
+        for candle in candles[1:]:
+            if lastOpen + self.__timeframe != candle.openTime:
+                utils.logError(errorStr + ' wrong sequence')
+            lastOpen = candle.openTime
+
+        isWeek = self.__timeframe == timeframe.Timeframe.ONE_WEEK
+        time = utils.getCurrentTime() if not isWeek else utils.getCurrentTime() - 4 * timeframe.Timeframe.ONE_DAY
+        currentCandleOpen = int(time / self.__timeframe) * self.__timeframe
+        currentCandleOpen = currentCandleOpen if not isWeek else currentCandleOpen + 4 * timeframe.Timeframe.ONE_DAY
+
+        if currentCandleOpen != candles[-1].openTime + self.__timeframe:
+            utils.logError(errorStr + ' wrong last finished candle')
+
 
     __averagesController: movingAverageController.MovingAverageController = None
     __timeframe: timeframe.Timeframe = None

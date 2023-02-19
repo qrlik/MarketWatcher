@@ -4,6 +4,7 @@ import os.path
 import math
 import time
 import logging
+import sys
 from logging.handlers import RotatingFileHandler
 
 cacheFolder = 'cache/'
@@ -52,14 +53,20 @@ def savePickleJson(filename, data):
         outfile.write(jsonpickle.encode(data))
 
 def log(text: str, obj = None):
+    # to do signal for browser
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.info(logStr)
 
 def logError(text: str, obj = None):
+    # to do signal for browser
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.error(logStr)
+
+def isDebug():
+    """Return if the debugger is currently active"""
+    return hasattr(sys, 'gettrace') and sys.gettrace() is not None
 
 def ceil(value: float, degree: int = 2) -> float:
     tens = math.pow(10, degree)
