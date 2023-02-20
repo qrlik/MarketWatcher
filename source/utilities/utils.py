@@ -53,13 +53,11 @@ def savePickleJson(filename, data):
         outfile.write(jsonpickle.encode(data))
 
 def log(text: str, obj = None):
-    # to do signal for browser
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.info(logStr)
 
 def logError(text: str, obj = None):
-    # to do signal for browser
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.error(logStr)

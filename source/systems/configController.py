@@ -1,4 +1,3 @@
-from PySide6.QtCore import Signal
 from models import timeframe
 from models import movingAverage
 from utilities import utils

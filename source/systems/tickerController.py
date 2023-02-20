@@ -5,8 +5,6 @@ from utilities import utils
 
 class TickerController:
     def __init__(self, ticker:str):
-        configController.load('default') #tmp
-
         self.__ticker = ticker
         self.__initCacheFolder()
         self.__initTimeframes()

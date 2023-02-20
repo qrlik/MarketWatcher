@@ -14,6 +14,7 @@ def init(editor:QWidget, editorList:QListWidget):
     __initVariables(editor, editorList)
     __initGrid()
     __initDeleteButton()
+    update()
 
 def update():
     __updateGrid()

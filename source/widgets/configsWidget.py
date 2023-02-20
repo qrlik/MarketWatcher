@@ -3,6 +3,7 @@ import PySide6.QtCore
 
 from models import timeframe
 from widgets import configEditor
+from systems import cacheController
 from systems import configController
 
 __configWidget:QWidget = None
@@ -78,6 +79,9 @@ def __initAddButton():
 def __initConfigList():
     __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     __configsList.itemSelectionChanged.connect(configEditor.update)
+    __configsList.clear()
+    for config in configController.getConfigs():
+        __addConfigToList(config)
 
 def __getFilenameFromPath(path:str):
     splitedName = path[0].split('/')
@@ -86,18 +90,20 @@ def __getFilenameFromPath(path:str):
 
 def __onLoadClick():
     path = QFileDialog.getOpenFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
-    configController.load(__getFilenameFromPath(path))
-    __configsList.clear()
+    path = __getFilenameFromPath(path)
+    cacheController.setLastConfigFilename(path)
+    configController.load(path)
+    __initConfigList()
     configEditor.update()
-    for config in configController.getConfigs():
-        __addConfigToList(config)
 
 def __initLoadButton():
     __loadButton.clicked.connect(__onLoadClick)
 
 def __onSaveClick():
     path = QFileDialog.getSaveFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
-    configController.save(__getFilenameFromPath(path))
+    path = __getFilenameFromPath(path)
+    cacheController.setLastConfigFilename(path)
+    configController.save(path)
 
 def __initSaveButton():
     __saveButton.clicked.connect(__onSaveClick)

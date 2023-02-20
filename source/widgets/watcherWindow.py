@@ -7,12 +7,15 @@ from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
 
 from widgets import configsWindow
+from systems import cacheController
+from systems import configController
 from utilities import utils
 
 class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
 
+        configController.load(cacheController.getLastConfigFilename())
         self.__initConfigWindow()
         #self.__onStart()
 
