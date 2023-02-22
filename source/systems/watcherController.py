@@ -1,7 +1,9 @@
 from api import api
 from systems import tickerController
 
-def getFuturesTickersList():
+__tickers:dict = {}
+
+def __getFuturesTickersList():
     info = api.Future.getExchangeInfo()
     tickers = []
     for symbol in info.get('symbols', []):
@@ -11,10 +13,7 @@ def getFuturesTickersList():
                 tickers.append(name)
     return tickers
 
-class WatcherController:
-    def __init__(self):
-        self.__tickers = getFuturesTickersList()
-        x = tickerController.TickerController('BTCUSDT')
-    
-    __tickers = []
- 
+def start():
+    __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT'))
+    # for ticker in getFuturesTickersList():
+    #     self.__tickers.setdefault(ticker, tickerController.TickerController('BTCUSDT'))

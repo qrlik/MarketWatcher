@@ -12,10 +12,10 @@ from widgets import configEditor
 class ConfigsWindow(QWidget):
     def __init__(self):
         super(ConfigsWindow, self).__init__()
-        self.loadUi()
-        self.initConfigWidget()
+        self.__loadUi()
+        self.__initConfigWidget()
 
-    def loadUi(self):
+    def __loadUi(self):
         loader = QUiLoader()
         path = os.fspath(Path(__file__).resolve().parent / "../ui/configsWindow.ui")
         uiFile = QFile(path)
@@ -26,7 +26,7 @@ class ConfigsWindow(QWidget):
     def __onStart(self):
         self.onStart.emit()
 
-    def initConfigWidget(self):
+    def __initConfigWidget(self):
         self.__configsWidget = self.findChild(QWidget, 'configsWidget')
         self.__configsEditor = self.findChild(QWidget, 'configEditor')
         configsWidget.init(self.__configsWidget)

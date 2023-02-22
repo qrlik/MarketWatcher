@@ -2,13 +2,15 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QTabWidget
 from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtGui import QResizeEvent
 
 from widgets import configsWindow
 from systems import cacheController
 from systems import configController
+from systems import watcherController
 from utilities import utils
 
 class WatcherWindow(QMainWindow):
@@ -16,8 +18,16 @@ class WatcherWindow(QMainWindow):
         super(WatcherWindow, self).__init__()
 
         configController.load(cacheController.getLastConfigFilename())
-        self.__initConfigWindow()
-        #self.__onStart()
+        #self.__initConfigWindow()
+        self.__onStart()
+
+    def __init(self):
+        self.__loadUi()
+        self.__initValues()
+        self.__initSizes()
+
+        self.setCentralWidget(self.__watcherWidget)
+        self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
 
     def __loadUi(self):
         loader = QUiLoader()
@@ -33,20 +43,22 @@ class WatcherWindow(QMainWindow):
         self.__configsWindow.onStart.connect(self.__onStart)
 
     def __onStart(self):
-        self.__loadUi()
+        self.__init()
 
-        self.__initValues()
-        self.setCentralWidget(self.__watcherWidget)
-        self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
-
+        #watcherController.start()
         ##
-        self.__configsWindow.close()
-        self.__configsWindow = None
+        # self.__configsWindow.close()
+        # self.__configsWindow = None
 
     def __initValues(self):
         self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')
-        if self.__watcherWidget:
-            self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        self.__watcherList = self.__watcherWidget.findChild(QListWidget, 'watcherList')
+        self.__infoWidget = self.__watcherWidget.findChild(QTabWidget, 'infoWidget')
+        self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+
+    def __initSizes(self):
+        self.__infoWidget.setFixedWidth(300)
+        self.__logBrowser.setFixedHeight(150)
 
     def log(self, text:str):
         if not self.__logBrowser:
@@ -55,5 +67,8 @@ class WatcherWindow(QMainWindow):
         utils.log(text)
 
     __configsWindow:QWidget = None
+
     __watcherWidget:QWidget = None
+    __watcherList:QListWidget = None
+    __infoWidget:QTabWidget = None
     __logBrowser:QTextEdit = None
