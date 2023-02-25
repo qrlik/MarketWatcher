@@ -57,6 +57,8 @@ class WatcherWindow(QMainWindow):
         self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
 
     def __initSizes(self):
+        self.setMinimumWidth(1000)
+        self.setMinimumHeight(600)
         self.__infoWidget.setFixedWidth(300)
         self.__logBrowser.setFixedHeight(150)
 

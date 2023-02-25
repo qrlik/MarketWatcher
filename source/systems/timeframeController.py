@@ -12,9 +12,14 @@ class TimeframeController:
         self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker
         self.__initCandles()
+        self.__initControllers()
     
-    def __initCandles(self):
+    def __getCandlesAmount(self):
         amountForAverages = self.__averagesController.getCandlesAmountForInit()
+        return amountForAverages
+
+    def __initCandles(self):
+        amountForInit = self.__getCandlesAmount()
         cacheName = utils.cacheFolder + 'tickers/' + self.__ticker + '/' + self.__timeframe.name
         candles = utils.loadPickleJson(cacheName)
         candles = [] if candles is None else candles
@@ -22,24 +27,19 @@ class TimeframeController:
             lastCache = candles[-1].openTime + self.__timeframe
             timeFromCache = utils.getCurrentTime() - lastCache
             finishedFromCache = int(timeFromCache / self.__timeframe)
-            if finishedFromCache >= amountForAverages:
+            if finishedFromCache >= amountForInit:
                 candles = []
             else:
-                amountForAverages = finishedFromCache
+                amountForInit = finishedFromCache
             
-        candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForAverages))
-        candles = candles[-amountForAverages:]
+        candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForInit))
+        candles = candles[-amountForInit:]
         self.__checkFinishedCandles(candles)
         utils.savePickleJson(cacheName, candles)
+        self.__finishedCandles = candles
 
-        if len(candles) == 0:
-            return
-        self.__currentCandle = candles[-1]
-        candles.pop()
-        if len(candles) == 0:
-            return
-        self.__lastClosedCandle = candles[-1]
-        for candle in candles:
+    def __initControllers(self):
+        for candle in self.__finishedCandles:
             self.__averagesController.process(candle)
 
     def __checkFinishedCandles(self, candles):
@@ -62,7 +62,8 @@ class TimeframeController:
 
 
     __averagesController: movingAverageController.MovingAverageController = None
+
+    __finishedCandles = []
+    __currentCandle: candle.Candle = None
     __timeframe: timeframe.Timeframe = None
     __ticker:str = ''
-    __lastClosedCandle:candle.Candle = None
-    __currentCandle:candle.Candle = None

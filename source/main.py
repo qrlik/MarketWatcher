@@ -14,3 +14,4 @@ if __name__ == "__main__":
 
 # to do
 # to do signal for log browser
+# to do save closed candles on new finished candle
