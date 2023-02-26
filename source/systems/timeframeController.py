@@ -2,6 +2,7 @@
 from api import api
 from models import timeframe
 from models import candle
+from systems import deltaController
 from systems import configController
 from systems import movingAverageController
 from utilities import utils
@@ -41,6 +42,7 @@ class TimeframeController:
     def __initControllers(self):
         for candle in self.__finishedCandles:
             self.__averagesController.process(candle)
+            self.__deltaController.process(candle)
 
     def __checkFinishedCandles(self, candles):
         if not utils.isDebug() or len(candles) < 2:
@@ -60,8 +62,8 @@ class TimeframeController:
         if currentCandleOpen != candles[-1].openTime + self.__timeframe:
             utils.logError(errorStr + ' wrong last finished candle')
 
-
     __averagesController: movingAverageController.MovingAverageController = None
+    __deltaController: deltaController.DeltaController = deltaController.DeltaController()
 
     __finishedCandles = []
     __currentCandle: candle.Candle = None
