@@ -11,6 +11,7 @@ from utilities import utils
 class TimeframeController:
     def __init__(self, ticker:str, tf: str):
         self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(tf))
+        self.__signalController: signalController.SignalController = signalController.SignalController(self)
         self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker
         self.__initCandles()
@@ -44,8 +45,6 @@ class TimeframeController:
         for candle in self.__finishedCandles:
             self.__averagesController.process(candle)
             self.__deltaController.process(candle)
-        self.__signalController.setAverageController(self.__averagesController)
-        self.__signalController.setDeltaController(self.__deltaController)
         self.__signalController.update(self.__finishedCandles[-1]) # to do move to websocket
 
     def __checkFinishedCandles(self, candles):
@@ -66,9 +65,18 @@ class TimeframeController:
         if currentCandleOpen != candles[-1].openTime + self.__timeframe:
             utils.logError(errorStr + ' wrong last finished candle')
 
+    def getAveragesController(self):
+        return self.__averagesController
+    
+    def getDeltaController(self):
+        return self.__deltaController
+    
+    def getSignalController(self):
+        return self.__signalController
+
     __averagesController: movingAverageController.MovingAverageController = None
     __deltaController: deltaController.DeltaController = deltaController.DeltaController()
-    __signalController: signalController.SignalController = signalController.SignalController()
+    __signalController: signalController.SignalController = None
 
     __finishedCandles = []
     __currentCandle: candle.Candle = None

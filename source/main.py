@@ -10,7 +10,5 @@ if __name__ == "__main__":
     widget.show()
     sys.exit(app.exec())
 
-    #watcherController.WatcherController()
-
 # to do
 # to do save closed candles on new finished candle

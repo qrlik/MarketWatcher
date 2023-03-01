@@ -4,11 +4,9 @@ from systems import deltaController
 from systems import movingAverageController
 
 class SignalController:
-    def setDeltaController(self, controller):
-        self.__deltaController = controller
-
-    def setAverageController(self, controller):
-        self.__averageController = controller
+    def __init__(self, timeframeController):
+        self.__averageController = timeframeController.getAveragesController()
+        self.__deltaController = timeframeController.getDeltaController()
 
     def update(self, candle: candle.Candle):
         self.__signals.clear()

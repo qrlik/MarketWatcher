@@ -49,7 +49,7 @@ class WatcherWindow(QMainWindow):
     def __onStart(self):
         self.__init()
 
-        #watcherController.start()
+        watcherController.start()
         ##
         # self.__configsWindow.close()
         # self.__configsWindow = None
