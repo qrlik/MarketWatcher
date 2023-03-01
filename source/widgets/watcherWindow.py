@@ -3,9 +3,8 @@ import datetime
 from pathlib import Path
 
 from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QTabWidget
-from PySide6.QtCore import QFile
+from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtGui import QResizeEvent
 
 from widgets import configsWindow
 from systems import cacheController
@@ -29,9 +28,11 @@ class WatcherWindow(QMainWindow):
         self.__loadUi()
         self.__initValues()
         self.__initSizes()
+        self.__initTimer()
 
         self.setCentralWidget(self.__watcherWidget)
         self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
+        self.__loop()
 
     def __loadUi(self):
         loader = QUiLoader()
@@ -65,6 +66,17 @@ class WatcherWindow(QMainWindow):
         self.setMinimumHeight(600)
         self.__infoWidget.setFixedWidth(300)
         self.__logBrowser.setFixedHeight(150)
+
+    def __initTimer(self):
+        timer = QTimer(self)
+        timer.timeout.connect(self.__loop)
+        timer.start(5000)
+
+    def __loop(self):
+        self.__updateList()
+
+    def __updateList(self):
+        pass
 
     def log(self, text:str):
         if not self.__logBrowser:
