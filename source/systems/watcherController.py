@@ -13,6 +13,9 @@ def __getFuturesTickersList():
                 tickers.append(name)
     return tickers
 
+def getTickers():
+    return __tickers
+
 def start():
     __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT'))
     # for ticker in getFuturesTickersList():

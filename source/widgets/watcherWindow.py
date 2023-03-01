@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWi
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
+from models import listTicketItem
 from widgets import configsWindow
 from systems import cacheController
 from systems import configController
@@ -25,10 +26,12 @@ class WatcherWindow(QMainWindow):
         utils.deleteLogListener(self)
 
     def __init(self):
+        watcherController.start()
         self.__loadUi()
         self.__initValues()
         self.__initSizes()
         self.__initTimer()
+        self.__initList()
 
         self.setCentralWidget(self.__watcherWidget)
         self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
@@ -50,7 +53,6 @@ class WatcherWindow(QMainWindow):
     def __onStart(self):
         self.__init()
 
-        watcherController.start()
         ##
         # self.__configsWindow.close()
         # self.__configsWindow = None
@@ -60,6 +62,10 @@ class WatcherWindow(QMainWindow):
         self.__watcherList = self.__watcherWidget.findChild(QListWidget, 'watcherList')
         self.__infoWidget = self.__watcherWidget.findChild(QTabWidget, 'infoWidget')
         self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+
+    def __initList(self):
+        for ticker, _ in watcherController.getTickers().items():
+            self.__watcherList.insertItem(0, listTicketItem.ListTicketItem(ticker))
 
     def __initSizes(self):
         self.setMinimumWidth(1000)
@@ -76,7 +82,7 @@ class WatcherWindow(QMainWindow):
         self.__updateList()
 
     def __updateList(self):
-        pass
+        self.__watcherList.sortItems()
 
     def log(self, text:str):
         if not self.__logBrowser:
