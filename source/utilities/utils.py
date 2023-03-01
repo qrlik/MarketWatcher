@@ -9,6 +9,7 @@ from logging.handlers import RotatingFileHandler
 
 cacheFolder = 'cache/'
 __logsFile = cacheFolder + 'Logs.txt'
+__listeners = set()
 
 if not os.path.exists(__logsFile):
     if not os.path.exists('cache'):
@@ -52,15 +53,29 @@ def savePickleJson(filename, data):
     with open(filename + '.json', 'w') as outfile:
         outfile.write(jsonpickle.encode(data))
 
+def addLogListener(obj):
+    __listeners.add(obj)
+
+def deleteLogListener(obj):
+    __listeners.remove(obj)
+
+def __logListeners(logStr):
+    for listener in __listeners:
+        method = getattr(listener, 'log', None)
+        if callable(method):
+            method(logStr)
+
 def log(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.info(logStr)
+    __logListeners(logStr)
 
 def logError(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
     logging.error(logStr)
+    __logListeners(logStr)
 
 def isDebug():
     """Return if the debugger is currently active"""

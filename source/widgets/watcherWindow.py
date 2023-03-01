@@ -20,6 +20,10 @@ class WatcherWindow(QMainWindow):
         configController.load(cacheController.getLastConfigFilename())
         #self.__initConfigWindow()
         self.__onStart()
+        utils.addLogListener(self)
+
+    def __del__(self):
+        utils.deleteLogListener(self)
 
     def __init(self):
         self.__loadUi()
@@ -66,7 +70,6 @@ class WatcherWindow(QMainWindow):
         if not self.__logBrowser:
             return
         self.__logBrowser.append(datetime.datetime.now().strftime("%H:%M:%S") + ': ' + text)
-        utils.log(text)
 
     __configsWindow:QWidget = None
 
