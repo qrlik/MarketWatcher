@@ -82,6 +82,8 @@ class WatcherWindow(QMainWindow):
         self.__updateList()
 
     def __updateList(self):
+        for i in range(self.__watcherList.count()):
+            self.__watcherList.item(i).update()
         self.__watcherList.sortItems()
 
     def log(self, text:str):

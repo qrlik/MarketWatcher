@@ -19,7 +19,10 @@ class TickerController:
 
     def __initTimeframes(self):
         for timeframe in configController.getConfigs():
-            self.__timeframes.append(timeframeController.TimeframeController(self.__ticker, timeframe))
+            self.__timeframes.setdefault(timeframe, timeframeController.TimeframeController(self.__ticker, timeframe))
+
+    def getTimeframes(self):
+        return self.__timeframes
 
     __ticker:str = ''
-    __timeframes = []
+    __timeframes = {}

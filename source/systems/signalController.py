@@ -11,7 +11,7 @@ class SignalController:
     def update(self, candle: candle.Candle):
         self.__signals.clear()
         delta = self.__deltaController.getDelta()
-        for averages, value in self.__averageController.getAverages().items():
+        for average, value in self.__averageController.getAverages().items():
             if value is not None:
                 topLevel = value + delta
                 bottomLevel = value - delta
@@ -19,7 +19,10 @@ class SignalController:
                     or (candle.low >= bottomLevel and candle.low <= topLevel)       \
                     or (topLevel >= candle.low and topLevel <= candle.high)         \
                     or (bottomLevel >= candle.low and bottomLevel <= candle.high):
-                    self.__signals.append(averages)
+                    self.__signals.append(average)
+
+    def getSignals(self):
+        return self.__signals
 
     __deltaController:deltaController.DeltaController = None
     __averageController:movingAverageController.MovingAverageController = None
