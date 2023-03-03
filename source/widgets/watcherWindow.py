@@ -2,15 +2,16 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QTabWidget
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QFrame, QAbstractItemView
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
 from models import listTicketItem
-from widgets import configsWindow
 from systems import cacheController
 from systems import configController
 from systems import watcherController
+from widgets import configsWindow
+from widgets import infoWidget
 from utilities import utils
 
 class WatcherWindow(QMainWindow):
@@ -60,10 +61,13 @@ class WatcherWindow(QMainWindow):
     def __initValues(self):
         self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')
         self.__watcherList = self.__watcherWidget.findChild(QListWidget, 'watcherList')
-        self.__infoWidget = self.__watcherWidget.findChild(QTabWidget, 'infoWidget')
+        self.__infoWidget = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        infoWidget.setWidget(self.__infoWidget)
 
     def __initList(self):
+        self.__watcherList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.__watcherList.itemSelectionChanged.connect(self.__updateInfoWidget)
         for ticker, _ in watcherController.getTickers().items():
             self.__watcherList.insertItem(0, listTicketItem.ListTicketItem(ticker))
 
@@ -80,7 +84,14 @@ class WatcherWindow(QMainWindow):
 
     def __loop(self):
         self.__updateList()
+        self.__updateInfoWidget()
 
+    def __updateInfoWidget(self):
+        selectedItems = self.__watcherList.selectedItems()
+        if len(selectedItems) == 0:
+            return
+        infoWidget.update(selectedItems[0].getTicker())
+            
     def __updateList(self):
         for i in range(self.__watcherList.count()):
             self.__watcherList.item(i).update()
@@ -95,5 +106,5 @@ class WatcherWindow(QMainWindow):
 
     __watcherWidget:QWidget = None
     __watcherList:QListWidget = None
-    __infoWidget:QTabWidget = None
+    __infoWidget:QFrame = None
     __logBrowser:QTextEdit = None

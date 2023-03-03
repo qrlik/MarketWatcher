@@ -74,6 +74,12 @@ class TimeframeController:
     def getSignalController(self):
         return self.__signalController
 
+    def getCurrentCandle(self):
+        # to do tmp
+        if len(self.__finishedCandles) > 0:
+            return self.__finishedCandles[-1]
+        return candle.Candle()
+
     __averagesController: movingAverageController.MovingAverageController = None
     __deltaController: deltaController.DeltaController = deltaController.DeltaController()
     __signalController: signalController.SignalController = None

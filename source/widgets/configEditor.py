@@ -57,6 +57,8 @@ def __initGrid():
 
 def __onDelete():
     items = __editorList.selectedItems()
+    if len(items) == 0:
+        return
     configController.deleteConfig(items[0].text())
     __editorList.takeItem(__editorList.row(items[0]))
     configsWidget.update()

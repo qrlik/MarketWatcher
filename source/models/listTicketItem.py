@@ -10,6 +10,9 @@ class ListTicketItem(QListWidgetItem):
     def __lt__(self, other):
         return super().text() < other.text()
     
+    def getTicker(self):
+        return self.__ticker
+
     def update(self):
         newText = self.__ticker + '\t'
         for timeframe, controller in reversed(watcherController.getTicker(self.__ticker).getTimeframes().items()):
