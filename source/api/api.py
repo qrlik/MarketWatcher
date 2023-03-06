@@ -90,7 +90,6 @@ class __binanceClient:
     __KEY = os.getenv('BINANCE_KEY')
     __SECRET = os.getenv('BINANCE_SECRET')
     __maxCandelsAmount = 1000
-    __client = None
 
 Spot = __binanceClient(True)
 Future = __binanceClient(False)

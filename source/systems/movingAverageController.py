@@ -3,6 +3,9 @@ from models import candle
 
 class MovingAverageController:
     def __init__(self, averages: list):
+        self.__lastValues:dict = {}
+        self.__closes = []
+        self.__averages:dict = {}
         for average in averages:
             self.__averages.setdefault(average)
         self.__maxAverageSize = movingAverage.getMaxAverageSize(self.__averages)
@@ -51,8 +54,4 @@ class MovingAverageController:
                 amount = max(amount, data[0] * self.__emaFactor)
         return amount
 
-    __averages:dict = {}
-    __lastValues:dict = {}
-    __closes = []
-    __maxAverageSize = 0
     __emaFactor = 8

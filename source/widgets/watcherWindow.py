@@ -101,10 +101,3 @@ class WatcherWindow(QMainWindow):
         if not self.__logBrowser:
             return
         self.__logBrowser.append(datetime.datetime.now().strftime("%H:%M:%S") + ': ' + text)
-
-    __configsWindow:QWidget = None
-
-    __watcherWidget:QWidget = None
-    __watcherList:QListWidget = None
-    __infoWidget:QFrame = None
-    __logBrowser:QTextEdit = None

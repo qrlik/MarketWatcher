@@ -6,6 +6,7 @@ from utilities import utils
 class TickerController:
     def __init__(self, ticker:str):
         self.__ticker = ticker
+        self.__timeframes = {}
         self.__initCacheFolder()
         self.__initTimeframes()
 
@@ -23,6 +24,3 @@ class TickerController:
 
     def getTimeframes(self):
         return self.__timeframes
-
-    __ticker:str = ''
-    __timeframes = {}

@@ -11,7 +11,9 @@ from utilities import utils
 class TimeframeController:
     def __init__(self, ticker:str, tf: str):
         self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(tf))
+        self.__deltaController: deltaController.DeltaController = deltaController.DeltaController()
         self.__signalController: signalController.SignalController = signalController.SignalController(self)
+        self.__finishedCandles = []
         self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker
         self.__initCandles()
@@ -79,12 +81,3 @@ class TimeframeController:
         if len(self.__finishedCandles) > 0:
             return self.__finishedCandles[-1]
         return candle.Candle()
-
-    __averagesController: movingAverageController.MovingAverageController = None
-    __deltaController: deltaController.DeltaController = deltaController.DeltaController()
-    __signalController: signalController.SignalController = None
-
-    __finishedCandles = []
-    __currentCandle: candle.Candle = None
-    __timeframe: timeframe.Timeframe = None
-    __ticker:str = ''

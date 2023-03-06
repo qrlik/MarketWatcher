@@ -1,6 +1,10 @@
 from models import candle
 
 class DeltaController:
+    def __init__(self):
+        self.__deltas = []
+        self.__averageDelta = 0.0
+
     def getDelta(self):
         return self.__averageDelta
 
@@ -12,6 +16,4 @@ class DeltaController:
         self.__deltas.append(newDelta)
         self.__averageDelta = sum(self.__deltas) / len(self.__deltas)
         
-    __deltas = []
-    __averageDelta = 0.0
     __size = 25

@@ -19,9 +19,7 @@ class ListTicketItem(QListWidgetItem):
             signals = controller.getSignalController().getSignals()
             if len(signals) > 0:
                 newText += timeframe + '('
-            for signal in signals:
-                newText += signal.name + ','
-            newText = newText[:-1] + ') '
+                for signal in signals:
+                    newText += signal.name + ','
+                newText = newText[:-1] + ') '
         super().setText(newText)
-
-    __ticker:str = ''

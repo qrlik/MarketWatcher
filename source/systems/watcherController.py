@@ -22,5 +22,6 @@ def getTicker(ticker:str):
 def start():
     __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT'))
     __tickers.setdefault('ETHUSDT', tickerController.TickerController('ETHUSDT'))
+    x = 5
     # for ticker in getFuturesTickersList():
     #     self.__tickers.setdefault(ticker, tickerController.TickerController('BTCUSDT'))

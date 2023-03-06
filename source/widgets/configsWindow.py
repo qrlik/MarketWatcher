@@ -12,6 +12,7 @@ from widgets import configEditor
 class ConfigsWindow(QWidget):
     def __init__(self):
         super(ConfigsWindow, self).__init__()
+        self.onStart = Signal()
         self.__loadUi()
         self.__initConfigWidget()
 
@@ -33,7 +34,3 @@ class ConfigsWindow(QWidget):
         configsWidget.startButton.clicked.connect(self.__onStart)
         configEditor.init(self.__configsEditor, configsWidget.getConfigsList())
         self.setFixedSize(520, 320)
-
-    onStart = Signal()
-    __configsWidget:QWidget = None
-    __configsEditor:QWidget = None

@@ -7,6 +7,7 @@ class SignalController:
     def __init__(self, timeframeController):
         self.__averageController = timeframeController.getAveragesController()
         self.__deltaController = timeframeController.getDeltaController()
+        self.__signals = []
 
     def update(self, candle: candle.Candle):
         self.__signals.clear()
@@ -23,7 +24,3 @@ class SignalController:
 
     def getSignals(self):
         return self.__signals
-
-    __deltaController:deltaController.DeltaController = None
-    __averageController:movingAverageController.MovingAverageController = None
-    __signals = []

@@ -1,10 +1,11 @@
 class Candle:
-    interval = None
-    openTime = 0
-    closeTime = 0
-    time = ''
+    def __init__(self):
+        self.interval = None
+        self.openTime = 0
+        self.closeTime = 0
+        self.time = ''
 
-    open = 0.0
-    high = 0.0
-    low = 0.0
-    close = 0.0
+        self.open = 0.0
+        self.high = 0.0
+        self.low = 0.0
+        self.close = 0.0
