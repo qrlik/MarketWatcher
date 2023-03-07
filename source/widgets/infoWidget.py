@@ -48,7 +48,7 @@ def __initAverages():
         newLayout.addStretch()
 
         averageValue = QLabel('0.0')
-        averageValue.setObjectName(average.name + '_deltaValue')
+        averageValue.setObjectName(average.name + '_averageValue')
         newLayout.addWidget(averageValue)
 
 def update(ticker:str):
@@ -63,4 +63,10 @@ def update(ticker:str):
             __priceValue.setText(str(price))
 
         deltaValue = __widget.findChild(QLabel, timeframe + '_deltaValue')
-        deltaValue.setText(str(controller.getDeltaController().getDelta()))
+        deltaValue.setText(str(controller.getDeltaController().getPrettyDelta()))
+
+    for average in movingAverage.MovingAverageType:
+        averageValue = __widget.findChild(QLabel, average.name + '_averageValue')
+        average = controller.getAveragesController().getAverage(average)
+        averageText = str(average) if average else '0.0'
+        averageValue.setText(averageText)

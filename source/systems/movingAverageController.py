@@ -44,6 +44,9 @@ class MovingAverageController:
     def getAverages(self):
         return self.__averages
     
+    def getAverage(self, type:movingAverage.MovingAverageType):
+        return self.__averages.get(type, None)
+
     def getCandlesAmountForInit(self):
         amount = 0
         for average in self.__averages.keys():

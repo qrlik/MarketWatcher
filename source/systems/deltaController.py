@@ -7,6 +7,9 @@ class DeltaController:
 
     def getDelta(self):
         return self.__averageDelta
+    
+    def getPrettyDelta(self):
+        return round(self.__averageDelta * 100, 2)
 
     def process(self, candle: candle.Candle):
         if len(self.__deltas) >= self.__size:

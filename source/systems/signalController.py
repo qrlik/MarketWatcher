@@ -14,8 +14,8 @@ class SignalController:
         delta = self.__deltaController.getDelta()
         for average, value in self.__averageController.getAverages().items():
             if value is not None:
-                topLevel = value + delta
-                bottomLevel = value - delta
+                topLevel = value * (1 + delta)
+                bottomLevel = value * (1 - delta)
                 if (candle.high >= bottomLevel and candle.high <= topLevel)         \
                     or (candle.low >= bottomLevel and candle.low <= topLevel)       \
                     or (topLevel >= candle.low and topLevel <= candle.high)         \
