@@ -40,7 +40,7 @@ class TimeframeController:
         candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForInit))
         candles = candles[-amountForInit:]
         self.__checkFinishedCandles(candles)
-        utils.savePickleJson(cacheName, candles)
+        #utils.savePickleJson(cacheName, candles) to do tmp
         self.__finishedCandles = candles
 
     def __initControllers(self):
