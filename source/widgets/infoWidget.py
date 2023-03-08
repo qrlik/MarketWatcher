@@ -23,30 +23,27 @@ def __init():
 def __initTabs():
     for timeframe in configController.getConfigs():
         tabWidget = QWidget()
-        __tabs.addTab(tabWidget, timeframe)
         tabWidget.setObjectName(timeframe + '_tab')
+        __tabs.addTab(tabWidget, timeframe)
         tabWidget.setLayout(QVBoxLayout())
         __initDeltas(tabWidget)
         __initLine(tabWidget)
         __initAverages(tabWidget)
+        tabWidget.layout().addStretch()
 
 def __initDeltas(tab:QWidget):
-    layout = QVBoxLayout()
-    layout.setObjectName('deltasLayout')
+    layout = QHBoxLayout()
+    layout.setObjectName('deltaLayout')
     tab.layout().addLayout(layout)
-    for timeframe in configController.getConfigs():
-        newLayout = QHBoxLayout()
-        newLayout.setObjectName(timeframe + '_deltaLayout')
-        layout.addLayout(newLayout)
 
-        deltaLabel = QLabel(timeframe)
-        deltaLabel.setObjectName(timeframe + '_deltaLabel')
-        newLayout.addWidget(deltaLabel)
-        newLayout.addStretch()
+    deltaLabel = QLabel('Delta, %')
+    deltaLabel.setObjectName('deltaLabel')
+    layout.addWidget(deltaLabel)
+    layout.addStretch()
 
-        deltaValue = QLabel('0.0')
-        deltaValue.setObjectName(timeframe + '_deltaValue')
-        newLayout.addWidget(deltaValue)
+    deltaValue = QLabel('0.0')
+    deltaValue.setObjectName('deltaValue')
+    layout.addWidget(deltaValue)
 
 def __initLine(tab:QWidget):
     line = QFrame()
@@ -78,17 +75,20 @@ def update(ticker:str):
     timeframes = tickerController.getTimeframes()
     first = True
 
+    index = 0
     for timeframe, controller in timeframes.items():
         if first:
             first = False
             price = controller.getCurrentCandle().close
             __priceValue.setText(str(price))
 
-        deltaValue = __widget.findChild(QLabel, timeframe + '_deltaValue')
+        tabWidget = __tabs.widget(index)
+        index += 1
+        deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
         deltaValue.setText(str(controller.getDeltaController().getPrettyDelta()))
 
-    for average in movingAverage.MovingAverageType:
-        averageValue = __widget.findChild(QLabel, average.name + '_averageValue')
-        average = controller.getAveragesController().getAverage(average)
-        averageText = str(average) if average else '0.0'
-        averageValue.setText(averageText)
+        for average in movingAverage.MovingAverageType:
+            averageValue = tabWidget.findChild(QLabel, average.name + '_averageValue')
+            average = controller.getAveragesController().getAverage(average)
+            averageText = str(average) if average else '0.0'
+            averageValue.setText(averageText)
