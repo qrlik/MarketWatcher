@@ -25,6 +25,7 @@ class TimeframeController:
 
     def __initCandles(self):
         amountForInit = self.__getCandlesAmount()
+        amountForRequest = amountForInit
         cacheName = utils.cacheFolder + 'tickers/' + self.__ticker + '/' + self.__timeframe.name
         candles = utils.loadPickleJson(cacheName)
         candles = [] if candles is None else candles
@@ -35,12 +36,12 @@ class TimeframeController:
             if finishedFromCache >= amountForInit:
                 candles = []
             else:
-                amountForInit = finishedFromCache
+                amountForRequest = finishedFromCache
             
-        candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForInit))
+        candles.extend(api.Spot.getFinishedCandles(self.__ticker, self.__timeframe, amountForRequest))
         candles = candles[-amountForInit:]
         self.__checkFinishedCandles(candles)
-        #utils.savePickleJson(cacheName, candles) to do tmp
+        utils.savePickleJson(cacheName, candles)
         self.__finishedCandles = candles
 
     def __initControllers(self):
