@@ -28,7 +28,7 @@ def __initTabs():
         tabWidget.setLayout(QVBoxLayout())
         __initDeltas(tabWidget)
         __initLine(tabWidget)
-        __initAverages(tabWidget)
+        __initAverages(tabWidget, timeframe)
         tabWidget.layout().addStretch()
 
 def __initDeltas(tab:QWidget):
@@ -52,11 +52,11 @@ def __initLine(tab:QWidget):
     line.setFrameShadow(QFrame.Shadow.Sunken)
     line.setFrameShape(QFrame.Shape.HLine)
 
-def __initAverages(tab:QWidget):
+def __initAverages(tab:QWidget, timeframe:str):
     layout = QVBoxLayout()
     layout.setObjectName('averagesLayout')
     tab.layout().addLayout(layout)
-    for average in movingAverage.MovingAverageType:
+    for average in configController.getMovingAverages(timeframe):
         newLayout = QHBoxLayout()
         newLayout.setObjectName(average.name + '_averageLayout')
         layout.addLayout(newLayout)
