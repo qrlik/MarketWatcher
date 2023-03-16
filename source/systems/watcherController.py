@@ -9,8 +9,9 @@ def __getFuturesTickersList():
     for symbol in info.get('symbols', []):
         if symbol.get('status', '') == 'TRADING' and symbol.get('quoteAsset', '') == 'USDT':
             name = symbol.get('symbol')
+            pricePrecision = symbol.get('pricePrecision')
             if name:
-                tickers.append(name)
+                tickers.append((name, pricePrecision))
     return tickers
 
 def getTickers():
@@ -20,8 +21,8 @@ def getTicker(ticker:str):
     return __tickers.get(ticker, None)
 
 def start():
-    __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT'))
-    __tickers.setdefault('ETHUSDT', tickerController.TickerController('ETHUSDT'))
+    __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT', 2))
+    __tickers.setdefault('ETHUSDT', tickerController.TickerController('ETHUSDT', 2))
     x = 5
     # for ticker in getFuturesTickersList():
     #     self.__tickers.setdefault(ticker, tickerController.TickerController('BTCUSDT'))

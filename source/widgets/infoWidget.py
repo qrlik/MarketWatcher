@@ -89,5 +89,5 @@ def update(ticker:str):
 
         for average, value in controller.getAveragesController().getAverages().items():
             averageValue = tabWidget.findChild(QLabel, average.name + '_averageValue')
-            averageText = str(value) if value else '0.0'
+            averageText = str(round(value, tickerController.getPricePrecision())) if value else '0.0'
             averageValue.setText(averageText)

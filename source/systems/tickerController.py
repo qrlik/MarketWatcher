@@ -4,8 +4,9 @@ from systems import timeframeController
 from utilities import utils
 
 class TickerController:
-    def __init__(self, ticker:str):
+    def __init__(self, ticker:str, pricePrecision: int):
         self.__ticker = ticker
+        self.__pricePrecision = pricePrecision
         self.__timeframes = {}
         self.__initCacheFolder()
         self.__initTimeframes()
@@ -24,3 +25,6 @@ class TickerController:
 
     def getTimeframes(self):
         return self.__timeframes
+    
+    def getPricePrecision(self):
+        return self.__pricePrecision
