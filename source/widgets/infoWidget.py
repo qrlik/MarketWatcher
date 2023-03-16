@@ -76,7 +76,7 @@ def update(ticker:str):
     first = True
 
     index = 0
-    for timeframe, controller in timeframes.items():
+    for _, controller in timeframes.items():
         if first:
             first = False
             price = controller.getCurrentCandle().close
@@ -87,8 +87,7 @@ def update(ticker:str):
         deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
         deltaValue.setText(str(controller.getDeltaController().getPrettyDelta()))
 
-        for average in movingAverage.MovingAverageType:
+        for average, value in controller.getAveragesController().getAverages().items():
             averageValue = tabWidget.findChild(QLabel, average.name + '_averageValue')
-            average = controller.getAveragesController().getAverage(average)
-            averageText = str(average) if average else '0.0'
+            averageText = str(value) if value else '0.0'
             averageValue.setText(averageText)
