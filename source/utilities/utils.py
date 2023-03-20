@@ -8,22 +8,26 @@ import sys
 from logging.handlers import RotatingFileHandler
 
 cacheFolder = 'cache/'
-__logsFile = cacheFolder + 'Logs.txt'
 __listeners = set()
 
-if not os.path.exists(__logsFile):
-    if not os.path.exists('cache'):
-        os.mkdir('cache')
-    with open(__logsFile, 'x') as f:
-        f.write('')
+def setupLogger(name, file, level):
+    if not os.path.exists(file):
+        if not os.path.exists('cache'):
+            os.mkdir('cache')
+        with open(file, 'x') as f:
+            f.write('')
 
-logging.basicConfig(
-    format='%(asctime)s.%(msecs)06d %(levelname)-8s %(message)s',
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S',
-    handlers=[
-        RotatingFileHandler(__logsFile, maxBytes=100*1024*1024, backupCount=2)
-    ])
+    handler = RotatingFileHandler(file, maxBytes=100*1024*1024, backupCount=2)        
+    handler.setFormatter(logging.Formatter(fmt='%(asctime)s.%(msecs)06d %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
+__infoLogger = setupLogger('infoLogger', cacheFolder + 'Logs.txt', logging.INFO)
+__errorLogger = setupLogger('errorLogger', cacheFolder + 'errorLogs.txt', logging.ERROR)
 
 def getCurrentTime() -> int:
     return round(time.time() * 1000)
@@ -68,13 +72,13 @@ def __logListeners(logStr):
 def log(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
-    logging.info(logStr)
+    __infoLogger.info(logStr)
     __logListeners(logStr)
 
 def logError(text: str, obj = None):
     source = '' if not obj else type(obj).__name__ + ': '
     logStr = source + text
-    logging.error(logStr)
+    __errorLogger.error(logStr)
     __logListeners(logStr)
 
 def isDebug():
