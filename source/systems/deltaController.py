@@ -1,4 +1,5 @@
 from models import candle
+from systems import settingsController
 
 class DeltaController:
     def __init__(self):
@@ -19,4 +20,4 @@ class DeltaController:
         self.__deltas.append(newDelta)
         self.__averageDelta = sum(self.__deltas) / len(self.__deltas)
         
-    __size = 25
+    __size = settingsController.getConfig('deltaAverageLength')

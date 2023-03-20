@@ -1,5 +1,6 @@
 from models import movingAverage
 from models import candle
+from systems import settingsController
 
 class MovingAverageController:
     def __init__(self, averages: list):
@@ -57,4 +58,4 @@ class MovingAverageController:
                 amount = max(amount, data[0] * self.__emaFactor)
         return amount
 
-    __emaFactor = 8
+    __emaFactor = settingsController.getConfig('emaFactor')

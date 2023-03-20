@@ -7,8 +7,6 @@ from systems import watcherController
 __widget:QFrame = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
-__deltas = {}
-__averages = {}
 
 def setWidget(widget:QFrame):
     global __widget, __priceValue, __tabs
