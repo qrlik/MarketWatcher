@@ -9,3 +9,9 @@ class Candle:
         self.high = 0.0
         self.low = 0.0
         self.close = 0.0
+
+def createFromDict(candleDict:dict):
+    result = Candle()
+    for key, value in candleDict.items():
+        setattr(result, key, value)
+    return result
