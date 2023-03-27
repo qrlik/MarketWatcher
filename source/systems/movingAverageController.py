@@ -9,6 +9,7 @@ class MovingAverageController:
         self.__averages:dict = {}
         for average in averages:
             self.__averages.setdefault(average)
+            self.__lastValues.setdefault(average)
         self.__maxAverageSize = movingAverage.getMaxAverageSize(self.__averages)
 
     def __calculateSMA(self, amount:int):
@@ -23,7 +24,7 @@ class MovingAverageController:
         else:
             alpha = 2 / (amount + 1)
             lastValue = alpha * self.__closes[-1] + (1 - alpha) * lastValue
-        self.__lastValues.setdefault(type, lastValue)
+        self.__lastValues[type] = lastValue
         if len(self.__closes) < amount:
             return None
         return lastValue
