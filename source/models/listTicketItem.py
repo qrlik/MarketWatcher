@@ -1,5 +1,7 @@
 
 from PySide6.QtWidgets import QListWidgetItem
+
+from models import timeframe
 from systems import watcherController
 
 class ListTicketItem(QListWidgetItem):
@@ -15,10 +17,10 @@ class ListTicketItem(QListWidgetItem):
 
     def update(self):
         newText = self.__ticker + '\t'
-        for timeframe, controller in reversed(watcherController.getTicker(self.__ticker).getTimeframes().items()):
+        for tf, controller in reversed(watcherController.getTicker(self.__ticker).getTimeframes().items()):
             signals = controller.getSignalController().getSignals()
             if len(signals) > 0:
-                newText += timeframe + '('
+                newText += timeframe.getPrettyFormat(tf) + '('
                 for signal in signals:
                     newText += signal.name + ','
                 newText = newText[:-1] + ') '

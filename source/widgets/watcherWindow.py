@@ -35,7 +35,7 @@ class WatcherWindow(QMainWindow):
         self.__initList()
 
         self.setCentralWidget(self.__watcherWidget)
-        self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
+        #self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
         self.__loop()
 
     def __loadUi(self):

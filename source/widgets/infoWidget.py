@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget
 
-from models import movingAverage
+from models import timeframe
 from systems import configController
 from systems import watcherController
 
@@ -19,14 +19,14 @@ def __init():
     __initTabs()
 
 def __initTabs():
-    for timeframe in configController.getConfigs():
+    for tf in configController.getConfigs():
         tabWidget = QWidget()
-        tabWidget.setObjectName(timeframe + '_tab')
-        __tabs.addTab(tabWidget, timeframe)
+        tabWidget.setObjectName(tf + '_tab')
+        __tabs.addTab(tabWidget, timeframe.getPrettyFormat(tf))
         tabWidget.setLayout(QVBoxLayout())
         __initDeltas(tabWidget)
         __initLine(tabWidget)
-        __initAverages(tabWidget, timeframe)
+        __initAverages(tabWidget, tf)
         tabWidget.layout().addStretch()
 
 def __initDeltas(tab:QWidget):
