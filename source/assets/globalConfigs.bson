@@ -1,4 +1,4 @@
 {
 	"emaFactor": 8,
-	"deltaAverageLength": 50
+	"deltaAverageLength": 200
 }

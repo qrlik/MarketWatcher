@@ -62,7 +62,7 @@ class __binanceClient:
 
     def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
-        intervalStr = timeframe.timeframeToStr[interval]
+        intervalStr = timeframe.timeframeToApiStr[interval]
         while amount > 0:
             amountStep = min(amount, self.__maxCandelsAmount)
             result.extend(self.__getCandelsTimed(symbol, intervalStr, amountStep, startPoint))

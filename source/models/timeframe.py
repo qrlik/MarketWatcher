@@ -16,7 +16,7 @@ class Timeframe(IntEnum):
     THREE_DAY = 259_200_000,
     ONE_WEEK = 604_800_000
 
-timeframeToStr = {
+timeframeToApiStr = {
     Timeframe.ONE_MIN : '1m',
     Timeframe.THREE_MIN : '3m',
     Timeframe.FIVE_MIN : '5m',
@@ -31,3 +31,22 @@ timeframeToStr = {
     Timeframe.ONE_DAY : '1d',
     Timeframe.THREE_DAY : '3d',
     Timeframe.ONE_WEEK : '1w' }
+
+timeframeToPrettyStr = {
+    Timeframe.ONE_MIN : '1m',
+    Timeframe.THREE_MIN : '3m',
+    Timeframe.FIVE_MIN : '5m',
+    Timeframe.FIFTEEN_MIN : '15m',
+    Timeframe.THIRTY_MIN : '30m',
+    Timeframe.ONE_HOUR : '1h',
+    Timeframe.TWO_HOUR : '2h',
+    Timeframe.FOUR_HOUR : '4h',
+    Timeframe.SIX_HOUR : '6h',
+    Timeframe.EIGHT_HOUR : '8h',
+    Timeframe.TWELVE_HOUR : '12h',
+    Timeframe.ONE_DAY : 'D',
+    Timeframe.THREE_DAY : '3D',
+    Timeframe.ONE_WEEK : 'W' }
+
+def getPrettyFormat(timeframe:str):
+    return timeframeToPrettyStr.get(Timeframe[timeframe])
