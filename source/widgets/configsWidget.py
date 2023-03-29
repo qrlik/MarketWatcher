@@ -67,6 +67,7 @@ def __addConfigToList(text:str = ''):
 
     __configsList.insertItem(index, QListWidgetItem(text))
     configController.addConfig(text)
+    configEditor.updateValueBox()
     update()
 
 def __onAddButtonClick():

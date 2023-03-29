@@ -1,0 +1,7 @@
+{
+	"emaFactor": 8,
+	"deltaAverageLength": 200,
+	"globalConfigs": {
+		"maDeltaTimeframe": ""
+	}
+}
