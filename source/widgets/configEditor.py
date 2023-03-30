@@ -28,7 +28,7 @@ def __updateGrid():
     items = __editorList.selectedItems()
     itemText = items[0].text() if len(items) > 0 else ''
     for box in __configGrid.findChildren(QCheckBox):
-        state = configController.getState(itemText, box.text())
+        state = configController.getAverageState(itemText, box.text())
         __checkedByUser = False
         box.setCheckState(PySide6.QtCore.Qt.CheckState.Checked if state else PySide6.QtCore.Qt.CheckState.Unchecked)
         __checkedByUser = True
@@ -53,12 +53,12 @@ def __onCheckStateChanged():
     timeframe = items[0].text()
     for box in __configGrid.findChildren(QCheckBox):
         value = box.checkState() == PySide6.QtCore.Qt.CheckState.Checked
-        configController.updateConfig(timeframe, box.text(), value)
+        configController.setAverageState(timeframe, box.text(), value)
     configsWidget.update()
 
 def __initGrid():
     __nameBox.currentIndexChanged.connect(updateValueBox)
-    for name, _ in settingsController.getConfig('globalConfigs').items():
+    for name, _ in settingsController.getSetting('userDefined').items():
         __nameBox.addItem(name)
     for box in __configGrid.findChildren(QCheckBox):
         box.stateChanged.connect(__onCheckStateChanged)
@@ -76,7 +76,7 @@ def __onDelete():
     items = __editorList.selectedItems()
     if len(items) == 0:
         return
-    configController.deleteConfig(items[0].text())
+    configController.deleteTimeframe(items[0].text())
     __editorList.takeItem(__editorList.row(items[0]))
     configsWidget.update()
     update()

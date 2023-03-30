@@ -20,4 +20,4 @@ class DeltaController:
         self.__deltas.append(newDelta)
         self.__averageDelta = sum(self.__deltas) / len(self.__deltas)
         
-    __size = settingsController.getConfig('deltaAverageLength')
+    __size = settingsController.getSetting('deltaAverageLength')

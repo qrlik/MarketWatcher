@@ -1,13 +1,14 @@
 from models import movingAverage
 from models import candle
+from systems import configController
 from systems import settingsController
 
 class MovingAverageController:
-    def __init__(self, averages: list):
+    def __init__(self, timeframe: str):
         self.__lastValues:dict = {}
         self.__closes = []
         self.__averages:dict = {}
-        for average in averages:
+        for average in configController.getTimeframeAverages(timeframe):
             self.__averages.setdefault(average)
             self.__lastValues.setdefault(average)
         self.__maxAverageSize = movingAverage.getMaxAverageSize(self.__averages)
@@ -59,4 +60,4 @@ class MovingAverageController:
                 amount = max(amount, data[0] * self.__emaFactor)
         return amount
 
-    __emaFactor = settingsController.getConfig('emaFactor')
+    __emaFactor = settingsController.getSetting('emaFactor')

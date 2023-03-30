@@ -32,11 +32,11 @@ __errorLogger = setupLogger('errorLogger', cacheFolder + 'errorLogs.txt', loggin
 def getCurrentTime() -> int:
     return round(time.time() * 1000)
 
-def loadJsonFile(filename, isBson = False):
+def loadJsonFile(filename):
     try:
-        with open(filename + ('.bson' if isBson else '.json')) as infile:
+        with open(filename + '.json') as infile:
             return json.load(infile)
-    except:
+    except Exception as e:
         return None
 
 def loadPickleJson(filename):
@@ -46,9 +46,9 @@ def loadPickleJson(filename):
     except Exception as e:
         return None
 
-def saveJsonFile(filename, data, isBson = False):
+def saveJsonFile(filename, data):
     try:
-        with open(filename + ('.bson' if isBson else '.json'), 'w') as outfile:
+        with open(filename + '.json', 'w') as outfile:
             json.dump(data, outfile, indent=4)
     except:
         return None

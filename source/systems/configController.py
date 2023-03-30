@@ -7,48 +7,58 @@ __configs:dict = {}
 def save(filename:str):
 	if len(filename) == 0:
 		return
-	utils.saveJsonFile(filename, __configs, True)
+	utils.saveJsonFile(filename, __configs)
 
 def load(filename:str):
-	if len(filename) == 0:
+	if not filename or len(filename) == 0:
 		return
 	global __configs
-	__configs = utils.loadJsonFile(filename, True)
+	loaded = utils.loadJsonFile(filename)
+	if loaded is not None and len(loaded) > 0:
+		__configs = loaded
 
 def clear():
 	__configs.clear()
 
-def getConfigs():
-	return __configs.keys()
+def getGlobalConfigs():
+	return __configs.get('globalConfigs').items()
 
-def getConfig(timeframe:str):
-	return __configs.get(timeframe, {})
+def addTimeframe(timeframe:str):
+	__configs.setdefault('timeframes', {}).setdefault(timeframe, {})
 
-def getMovingAverages(timeframe:str):
+def deleteTimeframe(timeframe:str):
+	__configs.setdefault('timeframes', {}).pop(timeframe, None)
+
+def getTimeframes():
+	return __configs.get('timeframes', {}).keys()
+
+def getTimeframesConfigs():
+	return __configs.get('timeframes', {}).items()
+
+def getTimeframeAverages(timeframe:str):
 	averages = []
-	for average, state in getConfig(timeframe).items():
+	for average, state in __configs.get('timeframes').get(timeframe).get('averages', {}).items():
 		if state:
 			averages.append(movingAverage.MovingAverageType[average])
 	return averages
 
-def getState(timeframe:str, config:str):
-	configs = __configs.get(timeframe, {})
-	return configs.get(config, False)
-
-def addConfig(timeframe:str):
-	__configs.setdefault(timeframe, {})
-
-def deleteConfig(timeframe:str):
-	__configs.pop(timeframe)
-
 def isEmpty():
-	for _, configs in __configs.items():
-		for configs, value in configs.items():
-			if value:
-				return False
+	for tf in getTimeframes():
+		if len(getTimeframeAverages(tf)) > 0:
+			return False
 	return True
 
-def updateConfig(timeframe:timeframe.Timeframe, config, value):
-	timeFrameConfigs = __configs.setdefault(timeframe, {})
-	timeFrameConfigs.setdefault(config)
-	timeFrameConfigs[config] = value
+def __getConfigState(timeframe:str, config:str, name:str):
+	configs = __configs.get('timeframes', {}).get(timeframe, {})
+	return configs.get(config, {}).get(name, False)
+
+def getAverageState(timeframe:str, average:str):
+	return __getConfigState(timeframe, 'averages', average)
+
+def __setConfigState(timeframe:str, config:str, name:str, value):
+	config = __configs.setdefault('timeframes', {}).setdefault(timeframe, {}).setdefault(config, {})
+	config.setdefault(name, False)
+	config[name] = value
+
+def setAverageState(timeframe:timeframe.Timeframe, average, value):
+	__setConfigState(timeframe, 'averages', average, value)

@@ -10,7 +10,7 @@ from utilities import utils
 
 class TimeframeController:
     def __init__(self, ticker:str, tf: str):
-        self.__averagesController = movingAverageController.MovingAverageController(configController.getMovingAverages(tf))
+        self.__averagesController = movingAverageController.MovingAverageController(tf)
         self.__deltaController: deltaController.DeltaController = deltaController.DeltaController()
         self.__signalController: signalController.SignalController = signalController.SignalController(self)
         self.__finishedCandles = []

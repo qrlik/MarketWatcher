@@ -1,6 +1,6 @@
 from utilities import utils
 
-__settings:dict = utils.loadJsonFile('assets/globalSettings', True)
+__settings:dict = utils.loadJsonFile('assets/globalSettings')
 
-def getConfig(key:str):
+def getSetting(key:str):
 	return __settings.get(key)

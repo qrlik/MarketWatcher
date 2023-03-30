@@ -66,7 +66,7 @@ def __addConfigToList(text:str = ''):
             index += 1
 
     __configsList.insertItem(index, QListWidgetItem(text))
-    configController.addConfig(text)
+    configController.addTimeframe(text)
     configEditor.updateValueBox()
     update()
 
@@ -81,7 +81,7 @@ def __initConfigList():
     __configsList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     __configsList.itemSelectionChanged.connect(configEditor.update)
     __configsList.clear()
-    for config in configController.getConfigs():
+    for config in configController.getTimeframes():
         __addConfigToList(config)
 
 def __getFilenameFromPath(path:str):
@@ -90,7 +90,7 @@ def __getFilenameFromPath(path:str):
     return filename[:len(filename) - 5]
 
 def __onLoadClick():
-    path = QFileDialog.getOpenFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
+    path = QFileDialog.getOpenFileName(__configWidget, "Save Config Settings", "", "Json Files (*.json)")
     path = __getFilenameFromPath(path)
     cacheController.setLastConfigFilename(path)
     configController.load(path)
@@ -101,7 +101,7 @@ def __initLoadButton():
     __loadButton.clicked.connect(__onLoadClick)
 
 def __onSaveClick():
-    path = QFileDialog.getSaveFileName(__configWidget, "Save Config Settings", "", "Bson Files (*.bson)")
+    path = QFileDialog.getSaveFileName(__configWidget, "Save Config Settings", "", "Json Files (*.json)")
     path = __getFilenameFromPath(path)
     cacheController.setLastConfigFilename(path)
     configController.save(path)

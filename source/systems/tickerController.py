@@ -20,7 +20,7 @@ class TickerController:
             os.mkdir(tickerFolder)
 
     def __initTimeframes(self):
-        for timeframe in configController.getConfigs():
+        for timeframe in configController.getTimeframes():
             self.__timeframes.setdefault(timeframe, timeframeController.TimeframeController(self.__ticker, timeframe))
 
     def getTimeframes(self):
