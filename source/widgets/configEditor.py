@@ -12,6 +12,7 @@ __nameBox:QComboBox = None
 __valueBox:QComboBox = None
 __button:QPushButton = None
 __checkedByUser = True
+__valueBoxConnection = None
 
 def init(editor:QWidget, editorList:QListWidget):
     __initVariables(editor, editorList)
@@ -64,13 +65,23 @@ def __initGrid():
         box.stateChanged.connect(__onCheckStateChanged)
 
 def updateValueBox():
+    global __valueBoxConnection
     if __nameBox is None:
         return
-    
+    if __valueBoxConnection:
+        __valueBox.currentIndexChanged.disconnect(__valueBoxConnection)
     if __nameBox.currentText() == 'maDeltaTimeframe':
         __valueBox.clear()
+        selectedText = configController.getGlobalConfig('maDeltaTimeframe')
+        __valueBoxConnection = __valueBox.currentIndexChanged.connect(updateMaDeltaTimeframe)
         for i in range(__editorList.count()):
-            __valueBox.addItem(__editorList.item(i).text())
+            text = __editorList.item(i).text()
+            __valueBox.addItem(text)
+            if text == selectedText:
+                __valueBox.setCurrentIndex(i)
+
+def updateMaDeltaTimeframe():
+    configController.setGlobalConfig('maDeltaTimeframe', __valueBox.currentText())
 
 def __onDelete():
     items = __editorList.selectedItems()

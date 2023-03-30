@@ -20,8 +20,17 @@ def load(filename:str):
 def clear():
 	__configs.clear()
 
+
 def getGlobalConfigs():
-	return __configs.get('globalConfigs').items()
+	return __configs.get('globalConfigs', {}).items()
+
+def getGlobalConfig(name:str):
+	return __configs.get('globalConfigs', {}).get(name)
+
+def setGlobalConfig(name:str, value):
+	globals = __configs.setdefault('globalConfigs', {})
+	globals.setdefault(name, None)
+	globals[name] = value
 
 def addTimeframe(timeframe:str):
 	__configs.setdefault('timeframes', {}).setdefault(timeframe, {})
@@ -37,7 +46,7 @@ def getTimeframesConfigs():
 
 def getTimeframeAverages(timeframe:str):
 	averages = []
-	for average, state in __configs.get('timeframes').get(timeframe).get('averages', {}).items():
+	for average, state in __configs.get('timeframes', {}).get(timeframe, {}).get('averages', {}).items():
 		if state:
 			averages.append(movingAverage.MovingAverageType[average])
 	return averages
@@ -62,3 +71,4 @@ def __setConfigState(timeframe:str, config:str, name:str, value):
 
 def setAverageState(timeframe:timeframe.Timeframe, average, value):
 	__setConfigState(timeframe, 'averages', average, value)
+
