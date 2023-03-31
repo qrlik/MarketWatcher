@@ -5,14 +5,14 @@ directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
 from models import candle
-from systems import deltaController
+from systems import atrController
 from utilities import utils
 
-class deltaTester:
+class atrTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
-        self.deltaController = deltaController.DeltaController()
+        self.atrController = atrController.AtrController()
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -35,9 +35,9 @@ class deltaTester:
             if self.checksAmount == checkIndex:
                 break
 
-            self.deltaController.process(candle)
+            self.atrController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
-                result &= self.deltaController.getPrettyDelta() == self.checks[checkIndex].get('delta', 0.0)
+                result &= round(self.atrController.getAtr(), 2) == self.checks[checkIndex].get('atr', 0.0)
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
 
@@ -48,4 +48,4 @@ class deltaTester:
             utils.logError(self.name + ' FAILED')
 
 def test():
-    deltaTester('testDelta1').test()
+    atrTester('testAtr1').test()

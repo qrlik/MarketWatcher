@@ -2,8 +2,7 @@
 from api import api
 from models import timeframe
 from models import candle
-from systems import deltaController
-from systems import configController
+from systems import atrController
 from systems import movingAverageController
 from systems import signalController
 from utilities import utils
@@ -11,7 +10,7 @@ from utilities import utils
 class TimeframeController:
     def __init__(self, ticker:str, tf: str):
         self.__averagesController = movingAverageController.MovingAverageController(tf)
-        self.__deltaController: deltaController.DeltaController = deltaController.DeltaController()
+        self.__atrController: atrController.AtrController = atrController.AtrController()
         self.__signalController: signalController.SignalController = signalController.SignalController(self)
         self.__finishedCandles = []
         self.__timeframe = timeframe.Timeframe[tf]
@@ -20,8 +19,9 @@ class TimeframeController:
         self.__initControllers()
     
     def __getCandlesAmount(self):
-        amountForAverages = self.__averagesController.getCandlesAmountForInit()
-        return amountForAverages
+        amount = self.__averagesController.getCandlesAmountForInit()
+        amount = max(amount, self.__atrController.getCandlesAmountForInit())
+        return amount
 
     def __initCandles(self):
         amountForInit = self.__getCandlesAmount()
@@ -47,7 +47,7 @@ class TimeframeController:
     def __initControllers(self):
         for candle in self.__finishedCandles:
             self.__averagesController.process(candle)
-            self.__deltaController.process(candle)
+            self.__atrController.process(candle)
         self.__signalController.update(self.__finishedCandles[-1]) # to do move to websocket
 
     def __checkFinishedCandles(self, candles):
@@ -71,8 +71,8 @@ class TimeframeController:
     def getAveragesController(self):
         return self.__averagesController
     
-    def getDeltaController(self):
-        return self.__deltaController
+    def getAtrController(self):
+        return self.__atrController
     
     def getSignalController(self):
         return self.__signalController

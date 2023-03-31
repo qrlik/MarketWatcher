@@ -83,7 +83,7 @@ def update(ticker:str):
         tabWidget = __tabs.widget(index)
         index += 1
         deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
-        deltaValue.setText(str(controller.getDeltaController().getPrettyDelta()))
+        deltaValue.setText(str(controller.getAtrController().getPrettyDelta()))
 
         for average, value in controller.getAveragesController().getAverages().items():
             averageValue = tabWidget.findChild(QLabel, average.name + '_averageValue')

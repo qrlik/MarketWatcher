@@ -1,8 +1,8 @@
-import testDelta
+import testAtr
 import testAverage
 
 def testAll():
-    testDelta.test()
+    testAtr.test()
     testAverage.test()
 
 if __name__ == '__main__':

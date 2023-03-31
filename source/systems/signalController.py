@@ -1,17 +1,15 @@
 
 from models import candle
-from systems import deltaController
-from systems import movingAverageController
 
 class SignalController:
     def __init__(self, timeframeController):
         self.__averageController = timeframeController.getAveragesController()
-        self.__deltaController = timeframeController.getDeltaController()
+        self.__atrController = timeframeController.getAtrController()
         self.__signals = []
 
     def update(self, candle: candle.Candle):
         self.__signals.clear()
-        delta = self.__deltaController.getDelta()
+        delta = self.__atrController.getDelta()
         for average, value in self.__averageController.getAverages().items():
             if value is not None:
                 topLevel = value * (1 + delta)
