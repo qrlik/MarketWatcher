@@ -18,7 +18,7 @@ def getTickers():
     return __tickers
 
 def getTicker(ticker:str):
-    return __tickers.get(ticker, None)
+    return __tickers.get(ticker)
 
 def start():
     __tickers.setdefault('BTCUSDT', tickerController.TickerController('BTCUSDT', 2))

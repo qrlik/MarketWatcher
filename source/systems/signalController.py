@@ -1,11 +1,18 @@
 
 from models import candle
+from systems import configController
+from systems import watcherController
+
 
 class SignalController:
-    def __init__(self, timeframeController):
-        self.__averageController = timeframeController.getAveragesController()
-        self.__atrController = timeframeController.getAtrController()
+    def __init__(self, ticker, averageController):
         self.__signals = []
+        self.__averageController = averageController
+
+        tf = configController.getGlobalConfig('maDeltaTimeframe')
+        tfController = watcherController.getTicker(ticker).getTimeframe(tf)
+        self.__atrController = tfController.getAtrController()
+        x = 5
 
     def update(self, candle: candle.Candle):
         self.__signals.clear()

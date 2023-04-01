@@ -4,14 +4,23 @@ from systems import configController
 from systems import settingsController
 
 class MovingAverageController:
-    def __init__(self, timeframe: str):
+    def __init__(self, arg):
+        if isinstance(arg, list):
+            self.__initFromList(arg)
+        else:
+            self.__initFromTimeframe(arg)
+
+    def __initFromList(self, averages: list):
         self.__lastValues:dict = {}
         self.__closes = []
         self.__averages:dict = {}
-        for average in configController.getTimeframeAverages(timeframe):
+        for average in averages:
             self.__averages.setdefault(average)
             self.__lastValues.setdefault(average)
         self.__maxAverageSize = movingAverage.getMaxAverageSize(self.__averages)
+
+    def __initFromTimeframe(self, timeframe: str):
+        self.__init__(configController.getTimeframeAverages(timeframe))
 
     def __calculateSMA(self, amount:int):
         if len(self.__closes) < amount:

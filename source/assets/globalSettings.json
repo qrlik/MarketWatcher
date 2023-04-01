@@ -2,6 +2,6 @@
 	"emaFactor": 8,
 	"atrAverageLength": 14,
 	"userDefined": {
-		"maAtrTimeframe": ""
+		"maDeltaTimeframe": ""
 	}
 }

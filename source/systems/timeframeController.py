@@ -11,7 +11,7 @@ class TimeframeController:
     def __init__(self, ticker:str, tf: str):
         self.__averagesController = movingAverageController.MovingAverageController(tf)
         self.__atrController: atrController.AtrController = atrController.AtrController()
-        self.__signalController: signalController.SignalController = signalController.SignalController(self)
+        self.__signalController: signalController.SignalController = signalController.SignalController(ticker, self.__averagesController)
         self.__finishedCandles = []
         self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker

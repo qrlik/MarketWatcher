@@ -70,18 +70,18 @@ def updateValueBox():
         return
     if __valueBoxConnection:
         __valueBox.currentIndexChanged.disconnect(__valueBoxConnection)
-    if __nameBox.currentText() == 'maAtrTimeframe':
+    if __nameBox.currentText() == 'maDeltaTimeframe':
         __valueBox.clear()
-        selectedText = configController.getGlobalConfig('maAtrTimeframe')
-        __valueBoxConnection = __valueBox.currentIndexChanged.connect(updateAtrDeltaTimeframe)
+        selectedText = configController.getGlobalConfig('maDeltaTimeframe')
+        __valueBoxConnection = __valueBox.currentIndexChanged.connect(updateMaDeltaTimeframe)
         for i in range(__editorList.count()):
             text = __editorList.item(i).text()
             __valueBox.addItem(text)
             if text == selectedText:
                 __valueBox.setCurrentIndex(i)
 
-def updateAtrDeltaTimeframe():
-    configController.setGlobalConfig('maAtrTimeframe', __valueBox.currentText())
+def updateMaDeltaTimeframe():
+    configController.setGlobalConfig('maDeltaTimeframe', __valueBox.currentText())
 
 def __onDelete():
     items = __editorList.selectedItems()

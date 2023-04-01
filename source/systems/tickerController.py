@@ -26,5 +26,8 @@ class TickerController:
     def getTimeframes(self):
         return self.__timeframes
     
+    def getTimeframe(self, tf:str):
+        return self.__timeframes.get(tf)
+
     def getPricePrecision(self):
         return self.__pricePrecision

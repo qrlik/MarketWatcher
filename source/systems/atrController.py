@@ -5,6 +5,7 @@ class AtrController:
     def __init__(self):
         self.__atrs = []
         self.__lastCandle = None
+        self.__prevCandle = None
         self.__averageTrueRange = 0.0
 
     def getAtr(self):
@@ -19,9 +20,14 @@ class AtrController:
     def getCandlesAmountForInit(self):
         return self.__size * settingsController.getSetting('emaFactor')
 
-    def __calculateTrueRange(self, candle: candle.Candle):
-        prevCandle = candle if self.__lastCandle is None else self.__lastCandle
-        return max(candle.high, prevCandle.close) - min(candle.low, prevCandle.close)
+    def __updateCandles(self,  candle: candle.Candle):
+        if self.__lastCandle is not None and self.__lastCandle.time != candle.time:
+            self.__prevCandle = self.__lastCandle
+        self.__lastCandle = candle
+
+    def __calculateTrueRange(self):
+        prevCandle = self.__lastCandle if self.__prevCandle is None else self.__prevCandle
+        return max(self.__lastCandle.high, prevCandle.close) - min(self.__lastCandle.low, prevCandle.close)
 
     def __calculateAverage(self):
         lastValue = self.__averageTrueRange
@@ -35,10 +41,10 @@ class AtrController:
         return lastValue
 
     def process(self, candle: candle.Candle):
-        self.__atrs.append(self.__calculateTrueRange(candle))
+        self.__updateCandles(candle)
+        self.__atrs.append(self.__calculateTrueRange())
         if len(self.__atrs) > self.__size:
             self.__atrs.pop(0)
-        self.__lastCandle = candle
         self.__averageTrueRange = self.__calculateAverage()
 
     __size = settingsController.getSetting('atrAverageLength')
