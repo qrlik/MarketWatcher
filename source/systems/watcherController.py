@@ -26,3 +26,7 @@ def start():
     x = 5
     # for ticker in getFuturesTickersList():
     #     self.__tickers.setdefault(ticker, tickerController.TickerController('BTCUSDT'))
+
+def update():
+    for _, controller in __tickers.items():
+        controller.update()

@@ -31,3 +31,7 @@ class TickerController:
 
     def getPricePrecision(self):
         return self.__pricePrecision
+    
+    def update(self):
+        for _, controller in self.__timeframes.items():
+            controller.update()

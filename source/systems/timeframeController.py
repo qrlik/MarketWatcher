@@ -10,7 +10,7 @@ from utilities import utils
 class TimeframeController:
     def __init__(self, ticker:str, tf: str):
         self.__averagesController = movingAverageController.MovingAverageController(tf)
-        self.__atrController: atrController.AtrController = atrController.AtrController()
+        self.__atrController: atrController.AtrController = atrController.AtrController(ticker)
         self.__signalController: signalController.SignalController = signalController.SignalController(ticker, self.__averagesController)
         self.__finishedCandles = []
         self.__timeframe = timeframe.Timeframe[tf]
@@ -48,7 +48,6 @@ class TimeframeController:
         for candle in self.__finishedCandles:
             self.__averagesController.process(candle)
             self.__atrController.process(candle)
-        self.__signalController.update(self.__finishedCandles[-1]) # to do move to websocket
 
     def __checkFinishedCandles(self, candles):
         if not utils.isDebug() or len(candles) < 2:
@@ -82,3 +81,6 @@ class TimeframeController:
         if len(self.__finishedCandles) > 0:
             return self.__finishedCandles[-1]
         return candle.Candle()
+    
+    def update(self):
+        self.__signalController.update(self.__finishedCandles[-1]) # to do move to websocket?

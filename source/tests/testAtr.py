@@ -12,7 +12,7 @@ class atrTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
-        self.atrController = atrController.AtrController()
+        self.atrController = atrController.AtrController('')
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -37,7 +37,7 @@ class atrTester:
 
             self.atrController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
-                result &= round(self.atrController.getAtr(), 2) == self.checks[checkIndex].get('atr', 0.0)
+                result &= self.atrController.getAtr(2) == self.checks[checkIndex].get('atr', 0.0)
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
 

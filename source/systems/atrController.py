@@ -1,22 +1,21 @@
 from models import candle
 from systems import settingsController
+from systems import watcherController
 
 class AtrController:
-    def __init__(self):
+    def __init__(self, ticker:str):
         self.__atrs = []
         self.__lastCandle = None
         self.__prevCandle = None
         self.__averageTrueRange = 0.0
+        self.__ticker = ticker
 
-    def getAtr(self):
-        return self.__averageTrueRange
+    def getAtr(self, precision=0):
+        ticker = watcherController.getTicker(self.__ticker)
+        if ticker:
+            precision = ticker.getPricePrecision()
+        return round(self.__averageTrueRange, precision)
     
-    def getDelta(self):
-        return self.__averageTrueRange / self.__lastCandle.close
-
-    def getPrettyDelta(self):
-        return round(self.__averageTrueRange / self.__lastCandle.close * 100, 2)
-
     def getCandlesAmountForInit(self):
         return self.__size * settingsController.getSetting('emaFactor')
 

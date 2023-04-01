@@ -83,6 +83,7 @@ class WatcherWindow(QMainWindow):
         timer.start(5000)
 
     def __loop(self):
+        watcherController.update()
         self.__updateList()
         self.__updateInfoWidget()
 
