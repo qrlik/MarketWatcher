@@ -1,6 +1,6 @@
 {
 	"emaFactor": 8,
-	"atrAverageLength": 14,
+	"atrAverageLength": 50,
 	"userDefined": {
 		"maDeltaTimeframe": ""
 	}

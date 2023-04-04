@@ -22,6 +22,6 @@ class ListTicketItem(QListWidgetItem):
             if len(signals) > 0:
                 newText += timeframe.getPrettyFormat(tf) + '('
                 for signal in signals:
-                    newText += signal.name + ','
+                    newText += signal[0].name + ','
                 newText = newText[:-1] + ') '
         super().setText(newText)
