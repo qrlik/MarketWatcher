@@ -1,5 +1,6 @@
 {
 	"candlesFileName": "400_1d_BTC",
+	"precision": 2,
 	"data": [
 		{
 			"time": "04:00 01-08-2022",

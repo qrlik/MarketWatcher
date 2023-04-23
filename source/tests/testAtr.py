@@ -7,8 +7,8 @@ class atrTester:
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
         self.atrController = atrController.AtrController()
+        self.atrController.init(2)
         self.atrController.setSize(self.testData['size'])
-        self.atrController.setPrecision(2)
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)

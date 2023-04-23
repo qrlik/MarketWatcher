@@ -29,13 +29,14 @@ class signalTester:
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
 
         self.atrController = atrController.AtrController()
+        self.atrController.init(self.testData['precision'])
         self.atrController.setSize(self.testData['size'])
-        self.atrController.setPrecision(self.testData['precision'])
 
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
         self.candlesController.init('', self.testData['candlesFileName'])
         
         self.averageController = movingAverageController.MovingAverageController(getAverages(self.testData['averages']))
+        self.averageController.init(self.testData['precision'])
 
         self.signalController = signalController.SignalController()
         self.signalController.initTest(self.averageController, self.candlesController, self.atrController)

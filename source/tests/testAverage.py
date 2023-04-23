@@ -8,6 +8,7 @@ class averageTester:
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
         self.averageController = movingAverageController.MovingAverageController([ movingAverage.MovingAverageType.EMA21 ])
+        self.averageController.init(self.testData['precision'])
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -34,7 +35,7 @@ class averageTester:
             self.averageController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
                 for type, value in self.averageController.getAverages().items():
-                    result &= round(value, 2) == self.checks[checkIndex].get(type.name, 0.0)
+                    result &= value == self.checks[checkIndex].get(type.name, 0.0)
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
 

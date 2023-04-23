@@ -12,11 +12,11 @@ class AtrController:
         self.__averageTrueRange = None
         self.__precision = None
 
+    def init(self, precision:int):
+        self.__precision = precision
+
     def setSize(self, size):
         self.__size = size
-
-    def setPrecision(self, precision:int):
-        self.__precision = precision
 
     def getAtr(self):
         if self.__averageTrueRange:
