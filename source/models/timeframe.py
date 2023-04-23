@@ -48,5 +48,5 @@ timeframeToPrettyStr = {
     Timeframe.THREE_DAY : '3D',
     Timeframe.ONE_WEEK : 'W' }
 
-def getPrettyFormat(timeframe:str):
-    return timeframeToPrettyStr.get(Timeframe[timeframe])
+def getPrettyFormat(timeframe:Timeframe):
+    return timeframeToPrettyStr.get(timeframe)

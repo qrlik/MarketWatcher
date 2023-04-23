@@ -6,8 +6,8 @@ from tests import testAverage
 from tests import testSignals
 
 def testAll():
-    #testAtr.test()
-    #testAverage.test()
+    testAtr.test()
+    testAverage.test()
     testSignals.test()
 
 if __name__ == '__main__':

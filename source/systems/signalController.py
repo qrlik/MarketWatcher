@@ -1,6 +1,7 @@
 
 from enum import Enum
 from models import candle
+from models import timeframe
 from systems import configController
 from systems import watcherController
 
@@ -10,22 +11,17 @@ class SignalDirection(Enum):
     DOWN = 2
 
 class SignalController:
-    def __init__(self, ticker, averageController, candlesController):
-        self.__signals = []
-        self.__ticker = ticker
-        self.__averageController = averageController
-        self.__candlesController = candlesController
-        self.__maDeltaController = None
+    def __init__(self):
+        self.__signals:list = []
 
-    def setDeltaController(self, arg=None):
-        if self.__maDeltaController is not None:
-            return
-        if not arg:
-            tf = configController.getGlobalConfig('maDeltaTimeframe')
-            tfController = watcherController.getTicker(self.__ticker).getTimeframe(tf)
-            self.__maDeltaController = tfController.getAtrController()
+    def init(self, tckController, tfController):
+        self.__averageController = tfController.getAveragesController()
+        self.__candlesController = tfController.getCandlesController()
+        deltaTimeframe = timeframe.Timeframe[configController.getGlobalConfig('maDeltaTimeframe')]
+        if deltaTimeframe < tfController.getTimeframe():
+            self.__deltaController = tckController.getTimeframe(deltaTimeframe).getAtrController()
         else:
-            self.__maDeltaController = arg
+            self.__deltaController = tfController.getAtrController()
 
     def __getAverageDirection(self, curCandle, top, botton):
         curFound = False
@@ -43,9 +39,7 @@ class SignalController:
         return SignalDirection.NEUTRAL
 
     def __updateAverages(self, candle: candle.Candle):
-        self.setDeltaController()
-
-        delta = self.__maDeltaController.getAtr()
+        delta = self.__deltaController.getAtr()
         for average, value in self.__averageController.getAverages().items():
             if value is None or delta is None:
                 continue

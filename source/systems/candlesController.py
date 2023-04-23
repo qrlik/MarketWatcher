@@ -4,17 +4,16 @@ from models import candle
 from utilities import utils
 
 class CandlesController:
-    def __init__(self, *args):
-        if len(args) == 3:
-            self.__initCommon(args[0], args[1], args[2])
-        elif len(args) == 1:
-            self.__initTest(args[0])
-    
-    def __initCommon(self, ticker:str, tf: str, amountForInit):
-        self.__finishedCandles = []
-        self.__timeframe = timeframe.Timeframe[tf]
-        self.__ticker = ticker
-        self.__initCandles(amountForInit)
+    def __init__(self, tf: timeframe.Timeframe):
+        self.__finishedCandles:list = []
+        self.__timeframe:timeframe.Timeframe = tf
+
+    def init(self, tckController, arg):
+        self.__ticker = tckController.getTicker()
+        if isinstance(arg, str):
+            self.__initTest(arg)
+        else:
+            self.__initCandles(arg)
     
     def __initTest(self, filename:str):
         candles = utils.loadJsonFile('assets/candles/' + filename)

@@ -82,7 +82,7 @@ def __initConfigList():
     __configsList.itemSelectionChanged.connect(configEditor.update)
     __configsList.clear()
     for config in configController.getTimeframes():
-        __addConfigToList(config)
+        __addConfigToList(config.name)
 
 def __getFilenameFromPath(path:str):
     splitedName = path[0].split('/')

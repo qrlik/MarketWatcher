@@ -39,14 +39,15 @@ def deleteTimeframe(timeframe:str):
 	__configs.setdefault('timeframes', {}).pop(timeframe, None)
 
 def getTimeframes():
-	return __configs.get('timeframes', {}).keys()
+	result = [timeframe.Timeframe[tf] for tf in __configs.get('timeframes', {}).keys()]
+	return sorted(result)
 
 def getTimeframesConfigs():
 	return __configs.get('timeframes', {}).items()
 
-def getTimeframeAverages(timeframe:str):
+def getTimeframeAverages(timeframe:timeframe.Timeframe):
 	averages = []
-	for average, state in __configs.get('timeframes', {}).get(timeframe, {}).get('averages', {}).items():
+	for average, state in __configs.get('timeframes', {}).get(timeframe.name, {}).get('averages', {}).items():
 		if state:
 			averages.append(movingAverage.MovingAverageType[average])
 	return averages

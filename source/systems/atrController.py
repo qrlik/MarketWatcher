@@ -3,28 +3,26 @@ from systems import settingsController
 from systems import watcherController
 
 class AtrController:
-    def __init__(self, ticker:str):
+    def __init__(self):
         self.__size = settingsController.getSetting('atrAverageLength')
         self.__atrs = []
         self.__lastCandle = None
         self.__prevCandle = None
         self.__lastValue = None
         self.__averageTrueRange = None
-        self.__customPrecision = 0
-        self.__ticker = ticker
+        self.__precision = None
 
     def setSize(self, size):
         self.__size = size
 
     def setPrecision(self, precision:int):
-        self.__customPrecision = precision
+        self.__precision = precision
 
     def getAtr(self):
         if self.__averageTrueRange:
-            ticker = watcherController.getTicker(self.__ticker)
-            if ticker:
-                return round(self.__averageTrueRange, ticker.getPricePrecision())
-            return round(self.__averageTrueRange, self.__customPrecision)
+            if self.__precision:
+                return round(self.__averageTrueRange, self.__precision)
+            return self.__averageTrueRange
         return None
     
     def getCandlesAmountForInit(self):

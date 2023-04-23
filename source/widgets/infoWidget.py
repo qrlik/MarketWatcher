@@ -21,7 +21,7 @@ def __init():
 def __initTabs():
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
-        tabWidget.setObjectName(tf + '_tab')
+        tabWidget.setObjectName(tf.name + '_tab')
         __tabs.addTab(tabWidget, timeframe.getPrettyFormat(tf))
         tabWidget.setLayout(QVBoxLayout())
         __initDeltas(tabWidget)
@@ -50,7 +50,7 @@ def __initLine(tab:QWidget):
     line.setFrameShadow(QFrame.Shadow.Sunken)
     line.setFrameShape(QFrame.Shape.HLine)
 
-def __initAverages(tab:QWidget, timeframe:str):
+def __initAverages(tab:QWidget, timeframe:timeframe.Timeframe):
     layout = QVBoxLayout()
     layout.setObjectName('averagesLayout')
     tab.layout().addLayout(layout)
