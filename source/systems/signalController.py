@@ -23,6 +23,12 @@ class SignalController:
         else:
             self.__deltaController = tfController.getAtrController()
 
+    def initTest(self, averageController, candlesController, atrController):
+        self.__averageController = averageController
+        self.__candlesController = candlesController
+        self.__deltaController = atrController
+
+
     def __getAverageDirection(self, curCandle, top, botton):
         curFound = False
         for candle in self.__candlesController.getFinishedCandles()[::-1]:

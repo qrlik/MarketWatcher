@@ -6,7 +6,7 @@ class atrTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
-        self.atrController = atrController.AtrController('')
+        self.atrController = atrController.AtrController()
         self.atrController.setSize(self.testData['size'])
         self.atrController.setPrecision(2)
 

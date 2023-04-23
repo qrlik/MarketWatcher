@@ -8,8 +8,8 @@ class CandlesController:
         self.__finishedCandles:list = []
         self.__timeframe:timeframe.Timeframe = tf
 
-    def init(self, tckController, arg):
-        self.__ticker = tckController.getTicker()
+    def init(self, ticker, arg):
+        self.__ticker = ticker
         if isinstance(arg, str):
             self.__initTest(arg)
         else:

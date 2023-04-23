@@ -1,4 +1,5 @@
 from models import movingAverage
+from models import timeframe
 from systems import atrController
 from systems import movingAverageController
 from systems import candlesController
@@ -26,13 +27,18 @@ class signalTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
-        self.atrController = atrController.AtrController('')
+
+        self.atrController = atrController.AtrController()
         self.atrController.setSize(self.testData['size'])
         self.atrController.setPrecision(self.testData['precision'])
-        self.candlesController = candlesController.CandlesController(self.testData['candlesFileName'])
+
+        self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
+        self.candlesController.init('', self.testData['candlesFileName'])
+        
         self.averageController = movingAverageController.MovingAverageController(getAverages(self.testData['averages']))
-        self.signalController = signalController.SignalController('', self.averageController, self.candlesController)
-        self.signalController.setDeltaController(self.atrController)
+
+        self.signalController = signalController.SignalController()
+        self.signalController.initTest(self.averageController, self.candlesController, self.atrController)
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)

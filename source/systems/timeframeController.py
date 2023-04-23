@@ -21,7 +21,7 @@ class TimeframeController:
     def init(self):
         self.__data.atrController.setPrecision(self.__ticker.getPricePrecision())
         self.__data.candlesController.init(self.__ticker, self.__getCandlesAmountForInit())
-        self.__data.signalController.init(self.__ticker, self)
+        self.__data.signalController.init(self.__ticker.getTicker(), self)
         for candle in self.__data.candlesController.getFinishedCandles():
             self.__data.averagesController.process(candle)
             self.__data.atrController.process(candle)
