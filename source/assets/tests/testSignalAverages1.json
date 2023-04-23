@@ -1,0 +1,61 @@
+{
+	"candlesFileName": "400_1d_BTC",
+	"size": 14,
+	"precision": 2,
+	"averages": [
+		"MA50"
+	],
+	"data": [
+		{
+			"time": "04:00 18-07-2022",
+			"signals": []
+		},
+		{
+			"time": "04:00 19-07-2022",
+			"signals": [ 
+				{
+					"signal": "MA50",
+					"direction": "DOWN"
+				}
+			]
+		},
+		{
+			"time": "04:00 25-07-2022",
+			"signals": []
+		},
+		{
+			"time": "04:00 26-07-2022",
+			"signals": []
+		},
+		{
+			"time": "04:00 27-07-2022",
+			"signals": []
+		},
+		{
+			"time": "04:00 09-09-2022",
+			"signals": []
+		},
+		{
+			"time": "04:00 10-09-2022",
+			"signals": [ 
+				{
+					"signal": "MA50",
+					"direction": "DOWN"
+				}
+			]
+		},
+		{
+			"time": "04:00 11-09-2022",
+			"signals": [ 
+				{
+					"signal": "MA50",
+					"direction": "DOWN"
+				}
+			]
+		},
+		{
+			"time": "04:00 12-09-2022",
+			"signals": []
+		}
+	]
+}

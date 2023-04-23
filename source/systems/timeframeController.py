@@ -10,7 +10,7 @@ class TimeframeController:
         self.__averagesController = movingAverageController.MovingAverageController(tf)
         self.__atrController: atrController.AtrController = atrController.AtrController(ticker)
         self.__candlesController: candlesController.CandlesController = candlesController.CandlesController(ticker, tf, self.__getCandlesAmountForInit())
-        self.__signalController: signalController.SignalController = signalController.SignalController(ticker, self)
+        self.__signalController: signalController.SignalController = signalController.SignalController(ticker, self.getAveragesController(), self.getCandlesController())
         self.__initControllers()
     
     def __getCandlesAmountForInit(self):

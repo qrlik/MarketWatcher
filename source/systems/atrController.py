@@ -4,17 +4,28 @@ from systems import watcherController
 
 class AtrController:
     def __init__(self, ticker:str):
+        self.__size = settingsController.getSetting('atrAverageLength')
         self.__atrs = []
         self.__lastCandle = None
         self.__prevCandle = None
-        self.__averageTrueRange = 0.0
+        self.__lastValue = None
+        self.__averageTrueRange = None
+        self.__customPrecision = 0
         self.__ticker = ticker
 
-    def getAtr(self, precision=0):
-        ticker = watcherController.getTicker(self.__ticker)
-        if ticker:
-            precision = ticker.getPricePrecision()
-        return round(self.__averageTrueRange, precision)
+    def setSize(self, size):
+        self.__size = size
+
+    def setPrecision(self, precision:int):
+        self.__customPrecision = precision
+
+    def getAtr(self):
+        if self.__averageTrueRange:
+            ticker = watcherController.getTicker(self.__ticker)
+            if ticker:
+                return round(self.__averageTrueRange, ticker.getPricePrecision())
+            return round(self.__averageTrueRange, self.__customPrecision)
+        return None
     
     def getCandlesAmountForInit(self):
         return self.__size * settingsController.getSetting('emaFactor')
@@ -29,15 +40,14 @@ class AtrController:
         return max(self.__lastCandle.high, prevCandle.close) - min(self.__lastCandle.low, prevCandle.close)
 
     def __calculateAverage(self):
-        lastValue = self.__averageTrueRange
-        if lastValue is None:
-            lastValue = self.__atrs[-1]
+        if self.__lastValue is None:
+            self.__lastValue = self.__atrs[-1]
         else:
             alpha = 2 / (self.__size + 1)
-            lastValue = alpha * self.__atrs[-1] + (1 - alpha) * lastValue
+            self.__lastValue = alpha * self.__atrs[-1] + (1 - alpha) * self.__lastValue
         if len(self.__atrs) < self.__size:
             return None
-        return lastValue
+        return self.__lastValue
 
     def process(self, candle: candle.Candle):
         self.__updateCandles(candle)
@@ -45,5 +55,3 @@ class AtrController:
         if len(self.__atrs) > self.__size:
             self.__atrs.pop(0)
         self.__averageTrueRange = self.__calculateAverage()
-
-    __size = settingsController.getSetting('atrAverageLength')

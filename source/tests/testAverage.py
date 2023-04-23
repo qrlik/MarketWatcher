@@ -1,9 +1,3 @@
-import path
-import sys
-
-directory = path.Path(__file__).abspath()
-sys.path.append(directory.parent.parent)
-
 from models import candle
 from models import movingAverage
 from systems import movingAverageController
@@ -24,6 +18,7 @@ class averageTester:
     def __checkError(self, result, index):
         if not result:
             utils.logError(self.name + ' ERROR - ' + str(index))
+            assert(False)
 
     def test(self):
         result = True

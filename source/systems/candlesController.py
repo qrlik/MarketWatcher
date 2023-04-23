@@ -4,11 +4,21 @@ from models import candle
 from utilities import utils
 
 class CandlesController:
-    def __init__(self, ticker:str, tf: str, amountForInit):
+    def __init__(self, *args):
+        if len(args) == 3:
+            self.__initCommon(args[0], args[1], args[2])
+        elif len(args) == 1:
+            self.__initTest(args[0])
+    
+    def __initCommon(self, ticker:str, tf: str, amountForInit):
         self.__finishedCandles = []
         self.__timeframe = timeframe.Timeframe[tf]
         self.__ticker = ticker
         self.__initCandles(amountForInit)
+    
+    def __initTest(self, filename:str):
+        candles = utils.loadJsonFile('assets/candles/' + filename)
+        self.__finishedCandles =  [candle.createFromDict(c) for c in candles]
     
     def __initCandles(self, amountForInit):
         amountForRequest = amountForInit

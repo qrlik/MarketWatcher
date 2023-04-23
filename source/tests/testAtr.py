@@ -1,9 +1,3 @@
-import path
-import sys
-
-directory = path.Path(__file__).abspath()
-sys.path.append(directory.parent.parent)
-
 from models import candle
 from systems import atrController
 from utilities import utils
@@ -13,6 +7,8 @@ class atrTester:
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
         self.atrController = atrController.AtrController('')
+        self.atrController.setSize(self.testData['size'])
+        self.atrController.setPrecision(2)
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -23,6 +19,7 @@ class atrTester:
     def __checkError(self, result, index):
         if not result:
             utils.logError(self.name + ' ERROR - ' + str(index))
+            assert(False)
 
     def test(self):
         result = True
@@ -37,7 +34,9 @@ class atrTester:
 
             self.atrController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
-                result &= self.atrController.getAtr(2) == self.checks[checkIndex].get('atr', 0.0)
+                atr1 = self.atrController.getAtr()
+                atr2 = self.checks[checkIndex].get('atr', None)
+                result &= atr1 == atr2
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
 

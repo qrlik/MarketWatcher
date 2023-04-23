@@ -1,3 +1,6 @@
+import os
+os.chdir('source/')
+
 import sys
 import traceback
 from PySide6.QtWidgets import QApplication
@@ -24,4 +27,5 @@ if __name__ == "__main__":
     # utils.saveJsonFile('test', d)
 
 # to do
+# to do price precision into averages
 # to do save closed candles on new finished candle

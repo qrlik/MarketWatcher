@@ -10,15 +10,32 @@ class SignalDirection(Enum):
     DOWN = 2
 
 class SignalController:
-    def __init__(self, ticker, timeframeController):
+    def __init__(self, ticker, averageController, candlesController):
         self.__signals = []
         self.__ticker = ticker
-        self.__averageController = timeframeController.getAveragesController()
-        self.__candlesController = timeframeController.getCandlesController()
+        self.__averageController = averageController
+        self.__candlesController = candlesController
         self.__maDeltaController = None
 
-    def __getAverageDirection(self, top, botton):
-        for candle in self.__candlesController.getFinishedCandles()[-1:]:
+    def setDeltaController(self, arg=None):
+        if self.__maDeltaController is not None:
+            return
+        if not arg:
+            tf = configController.getGlobalConfig('maDeltaTimeframe')
+            tfController = watcherController.getTicker(self.__ticker).getTimeframe(tf)
+            self.__maDeltaController = tfController.getAtrController()
+        else:
+            self.__maDeltaController = arg
+
+    def __getAverageDirection(self, curCandle, top, botton):
+        curFound = False
+        for candle in self.__candlesController.getFinishedCandles()[::-1]:
+            if not curFound:
+                if candle.time != curCandle.time:
+                    continue
+                else:
+                    curFound = True
+
             if candle.close > top:
                 return SignalDirection.UP
             elif candle.close < botton:
@@ -26,19 +43,16 @@ class SignalController:
         return SignalDirection.NEUTRAL
 
     def __updateAverages(self, candle: candle.Candle):
-        if self.__maDeltaController is None:
-            tf = configController.getGlobalConfig('maDeltaTimeframe')
-            tfController = watcherController.getTicker(self.__ticker).getTimeframe(tf)
-            self.__maDeltaController = tfController.getAtrController()
+        self.setDeltaController()
 
         delta = self.__maDeltaController.getAtr()
         for average, value in self.__averageController.getAverages().items():
-            if value is None:
+            if value is None or delta is None:
                 continue
             topLevel = value + delta / 2
             bottomLevel = value - delta / 2
             if candle.close <= topLevel and candle.close >= bottomLevel:
-                direction = self.__getAverageDirection(topLevel, bottomLevel)
+                direction = self.__getAverageDirection(candle, topLevel, bottomLevel)
                 if direction != SignalDirection.NEUTRAL:
                     self.__signals.append((average, direction))
 
