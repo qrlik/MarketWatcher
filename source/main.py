@@ -1,6 +1,3 @@
-import os
-os.chdir('source/')
-
 import sys
 import traceback
 from PySide6.QtWidgets import QApplication
@@ -8,14 +5,16 @@ from PySide6.QtWidgets import QApplication
 from utilities import utils
 from widgets import watcherWindow
 
-from models import timeframe
-from api import api
-
 def excepthook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
     utils.logError(tb)
 
+from systems import websocketController
+from models import timeframe
+
 if __name__ == "__main__":
+    websocketController.start(['BTCUSDT', 'ETHUSDT'], timeframe.Timeframe.ONE_MIN)
+
     sys.excepthook = excepthook
     app = QApplication([])
     widget = watcherWindow.WatcherWindow()
@@ -27,5 +26,5 @@ if __name__ == "__main__":
     # utils.saveJsonFile('test', d)
 
 # to do
-# to do price precision into averages
+# to do check cache with server before loading
 # to do save closed candles on new finished candle

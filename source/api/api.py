@@ -2,7 +2,9 @@ from models import candle
 from models import timeframe
 from utilities import utils
 from binance.spot import Spot as Spots
-from binance.futures import Futures
+from binance.um_futures import UMFutures as Futures
+from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
+from binance.websocket.spot.websocket_client import SpotWebsocketClient
 from datetime import datetime
 import os
 import socket
@@ -11,10 +13,17 @@ import win32api
 
 class __binanceClient:
     def __init__(self, isSpot:bool):
+        self.__socketId = 1
         if isSpot:
-            self.__client = Spots(key=self.__KEY, secret=self.__SECRET)
+            self.__client = Spots(api_key=self.__KEY, api_secret=self.__SECRET)
+            self.__websocket = SpotWebsocketClient()
         else:
             self.__client = Futures(key=self.__KEY, secret=self.__SECRET)
+            self.__websocket = UMFuturesWebsocketClient()
+        self.__websocket.start()
+
+    def exit(self):
+        self.__websocket.close()
 
     def __updateTime(self):
         TIME1970 = 2208988800
@@ -57,7 +66,7 @@ class __binanceClient:
         c.high = float(responceCandles[2])
         c.low = float(responceCandles[3])
         c.close = float(responceCandles[4])
-        c.volume = float(responceCandles[5])
+        #c.volume = float(responceCandles[5])
         return c
 
     def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
@@ -87,9 +96,17 @@ class __binanceClient:
     def getExchangeInfo(self):
         return self.__makeApiCall(self.__client.exchange_info)
 
+    def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
+        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
+        self.__socketId += 1
+
     __KEY = os.getenv('BINANCE_KEY')
     __SECRET = os.getenv('BINANCE_SECRET')
     __maxCandelsAmount = 1000
 
 Spot = __binanceClient(True)
 Future = __binanceClient(False)
+
+def atExit():
+    Spot.exit()
+    Future.exit()

@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWi
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
+from api import api
 from models import listTicketItem
 from systems import cacheController
 from systems import configController
@@ -97,6 +98,10 @@ class WatcherWindow(QMainWindow):
         for i in range(self.__watcherList.count()):
             self.__watcherList.item(i).update()
         self.__watcherList.sortItems()
+
+    def closeEvent(self, event):
+        api.atExit()
+        return super().closeEvent(event)
 
     def log(self, text:str):
         if not self.__logBrowser:

@@ -40,7 +40,7 @@ class CandlesController:
         self.__finishedCandles = candles
 
     def __checkFinishedCandles(self, candles):
-        if not utils.isDebug() or len(candles) < 2:
+        if len(candles) < 2:
             return
         lastOpen = candles[0].openTime
         errorStr = 'TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name
