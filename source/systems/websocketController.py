@@ -11,7 +11,7 @@ from utilities import utils
 
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
-__ticketsData = {}
+__tickersData = {}
 __timeframe = None
 __started = False
 
@@ -55,15 +55,19 @@ class tickerData:
             result = (self.currentCandle, self.finishedCandle)
         return result
 
-def start(tickets:list, tf:timeframe.Timeframe):
-    global __timeframe, __started
+def getTickerData(ticker:str):
+    global __tickersData
+    return __tickersData.get(ticker).get()
+
+def start(tickers:list, tf:timeframe.Timeframe):
+    global __timeframe, __started, __tickersData
     if __started:
         return
     __started = True
     __timeframe = tf
-    for ticket in tickets:
-        __ticketsData.setdefault(ticket, tickerData())
-    api.Spot.subscribeKlines(tickets, tf, onMessage)
+    for ticker in tickers:
+        __tickersData.setdefault(ticker, tickerData())
+    api.Spot.subscribeKlines(tickers, tf, onMessage)
 
 def parseCandle(data):
     c = candle.Candle()
@@ -90,5 +94,7 @@ def onMessage(message):
     if not time or not candleData or not ticker:
         return
     
+    global __tickersData
     c, isClosed = parseCandle(data['k'])
-    __ticketsData[ticker].update(time, c, isClosed)
+    __tickersData[ticker].update(time, c, isClosed)
+    print(ticker)

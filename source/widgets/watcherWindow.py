@@ -10,6 +10,7 @@ from api import api
 from models import listTicketItem
 from systems import cacheController
 from systems import configController
+from systems import settingsController
 from systems import watcherController
 from widgets import configsWindow
 from widgets import infoWidget
@@ -81,7 +82,7 @@ class WatcherWindow(QMainWindow):
     def __initTimer(self):
         timer = QTimer(self)
         timer.timeout.connect(self.__loop)
-        timer.start(5000)
+        timer.start(settingsController.getSetting('loopInterval'))
 
     def __loop(self):
         watcherController.update()
