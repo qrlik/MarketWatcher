@@ -1,4 +1,6 @@
 import os
+from collections import OrderedDict
+
 from models import timeframe
 from systems import configController
 from systems import timeframeController
@@ -8,7 +10,7 @@ class TickerData:
     def __init__(self, ticker:str, pricePrecision: int):
         self.ticker:str = ticker
         self.pricePrecision:int = pricePrecision
-        self.timeframes:dict = {}
+        self.timeframes:OrderedDict = OrderedDict()
 
 class TickerController:
     def __init__(self, ticker:str, pricePrecision: int):
@@ -27,11 +29,11 @@ class TickerController:
             os.mkdir(tickerFolder)
 
     def __initTimeframes(self):
-        for timeframe in configController.getTimeframes():
-            tfController = timeframeController.TimeframeController(timeframe, self)
-            self.__data.timeframes.setdefault(timeframe, tfController)
-        for timeframe, tfController in self.__data.timeframes.items():
-            tfController.init()
+        for tf in [timeframe.Timeframe.ONE_MIN]: #configController.getTimeframes():
+            tfController = timeframeController.TimeframeController(tf, self)
+            self.__data.timeframes.setdefault(tf, tfController)
+        for _, tfController in self.__data.timeframes.items():
+            tfController.preInit()
     
     def getTicker(self):
         return self.__data.ticker
@@ -46,5 +48,11 @@ class TickerController:
         return self.__data.pricePrecision
     
     def update(self):
+        isAllInited = True
         for _, tfController in self.__data.timeframes.items():
-            tfController.update()
+            isAllInited &= tfController.finishInit()
+        
+        if isAllInited:
+            for _, tfController in self.__data.timeframes.items():
+                tfController.update()
+        return isAllInited

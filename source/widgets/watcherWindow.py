@@ -29,16 +29,16 @@ class WatcherWindow(QMainWindow):
         utils.deleteLogListener(self)
 
     def __init(self):
-        watcherController.start()
         self.__loadUi()
         self.__initValues()
         self.__initSizes()
-        self.__initTimer()
         self.__initList()
 
         self.setCentralWidget(self.__watcherWidget)
         #self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
-        self.__loop()
+
+        watcherController.start()
+        self.__initTimer()
 
     def __loadUi(self):
         loader = QUiLoader()

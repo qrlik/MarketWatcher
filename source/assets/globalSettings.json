@@ -1,7 +1,7 @@
 {
 	"emaFactor": 8,
 	"atrAverageLength": 50,
-	"loopInterval": 5000,
+	"loopInterval": 1000,
 	"userDefined": {
 		"maDeltaTimeframe": ""
 	}

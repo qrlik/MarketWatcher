@@ -24,6 +24,11 @@ def setupLogger(name, file, level):
     logger.setLevel(level)
     logger.addHandler(handler)
 
+    if level == logging.ERROR:
+        stream = logging.StreamHandler()        
+        stream.setFormatter(logging.Formatter(fmt='%(asctime)s.%(msecs)06d %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+        logger.addHandler(stream)
+
     return logger
 
 __infoLogger = setupLogger('infoLogger', cacheFolder + 'Logs.txt', logging.INFO)

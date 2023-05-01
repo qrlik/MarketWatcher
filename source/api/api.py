@@ -47,15 +47,33 @@ class __binanceClient:
             try:
                 return func(*args)
             except Exception as e:
-                utils.log(str(e))
+                utils.logError(str(e))
                 if hasattr(e, 'error_code') and e.error_code == -1021:
                     self.__updateTime()
                 else:
                     return None
 
-    def __getCandelsTimed(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
-        return self.__client.klines(symbol, interval, startTime = startPoint, limit = amount)
+    async def __makeApiCallAsync(self, func, *args):
+        while True:
+            try:
+                return await func(*args)
+            except Exception as e:
+                utils.logError(str(e))
+                if hasattr(e, 'error_code') and e.error_code == -1021:
+                    self.__updateTime()
+                else:
+                    return None
 
+    ### sync block
+    def getExchangeInfo(self):
+        return self.__makeApiCall(self.__client.exchange_info)
+
+    def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
+        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
+        self.__socketId += 1
+    ###
+
+    ### async block
     def __parseResponce(self, responceCandles, interval: timeframe.Timeframe):
         c = candle.Candle()
         c.interval = interval
@@ -69,12 +87,15 @@ class __binanceClient:
         #c.volume = float(responceCandles[5])
         return c
 
-    def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
+    async def __getCandelsTimed(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
+        return await self.__client.klinesAsync(symbol, interval, startTime = startPoint, limit = amount)
+
+    async def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
         intervalStr = timeframe.timeframeToApiStr[interval]
         while amount > 0:
             amountStep = min(amount, self.__maxCandelsAmount)
-            result.extend(self.__getCandelsTimed(symbol, intervalStr, amountStep, startPoint))
+            result.extend(await self.__getCandelsTimed(symbol, intervalStr, amountStep, startPoint))
             if startPoint == 0:
                 startPoint = result[0][0]
                 amount = int(utils.floor((utils.getCurrentTime() - result[0][0]) / interval, 0))
@@ -83,22 +104,16 @@ class __binanceClient:
 
         return [self.__parseResponce(responce, interval) for responce in result]
 
-    def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+    async def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
-        return self.__makeApiCall(self.__getCandles, symbol, interval, amount, startPoint)
+        return await self.__makeApiCallAsync(self.__getCandles, symbol, interval, amount, startPoint)
 
-    def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
-        result = self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))
+    async def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+        result = await self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))
         if result is not None and len(result) > 0:
             result.pop()
         return result
-
-    def getExchangeInfo(self):
-        return self.__makeApiCall(self.__client.exchange_info)
-
-    def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
-        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
-        self.__socketId += 1
+    ###
 
     __KEY = os.getenv('BINANCE_KEY')
     __SECRET = os.getenv('BINANCE_SECRET')

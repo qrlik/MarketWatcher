@@ -97,4 +97,3 @@ def onMessage(message):
     global __tickersData
     c, isClosed = parseCandle(data['k'])
     __tickersData[ticker].update(time, c, isClosed)
-    print(ticker)

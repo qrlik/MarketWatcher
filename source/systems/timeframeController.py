@@ -17,15 +17,24 @@ class TimeframeController:
     def __init__(self, tf: timeframe.Timeframe, tckController):
         self.__ticker = tckController
         self.__data = TimeframeData(tf)
+        self.__isInited = False
 
-    def init(self):
+    def preInit(self):
+        self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
+
+    def finishInit(self):
+        if self.__isInited:
+            return True
+        if not self.__data.candlesController.finishInit():
+            return False
+        self.__isInited = True
         self.__data.atrController.init(self.__ticker.getPricePrecision())
         self.__data.averagesController.init(self.__ticker.getPricePrecision())
-        self.__data.candlesController.init(self.__ticker, self.__getCandlesAmountForInit())
         self.__data.signalController.init(self.__ticker.getTicker(), self)
         for candle in self.__data.candlesController.getFinishedCandles():
             self.__data.averagesController.process(candle)
             self.__data.atrController.process(candle)
+        return True
 
     def __getCandlesAmountForInit(self):
         amount = self.__data.averagesController.getCandlesAmountForInit()
