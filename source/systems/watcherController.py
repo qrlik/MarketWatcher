@@ -1,6 +1,7 @@
 from api import api
 from systems import configController
 from systems import tickerController
+from systems import settingsController
 from systems import websocketController
 from utilities import utils
 
@@ -8,17 +9,27 @@ __tickers:dict = {}
 
 def __getTickersList():
     infoFutures = api.Future.getExchangeInfo()
-    tickersFutures = []
+    basesFutures = set()
+    exceptions = settingsController.getSetting('baseAssetsExceptions')
+    ignores = settingsController.getSetting('baseAssetsIgnores')
     for symbol in infoFutures.get('symbols', []):
-        name = symbol.get('symbol', None)
         status = symbol.get('status', '')
+        baseAsset = symbol.get('baseAsset', '')
+        quoteAsset = symbol.get('quoteAsset', '')
         underlyingType = symbol.get('underlyingType', '')
+        contractType = symbol.get('contractType', '')
 
-        if status == 'TRADING' and underlyingType == 'COIN':
-            tickersFutures.append(name)
+        if status == 'TRADING' and underlyingType == 'COIN' and quoteAsset == 'USDT' and contractType == 'PERPETUAL':
+            if baseAsset in ignores:
+                continue
+            baseAsset = baseAsset.replace('1000', '')
+            if exceptions.get(baseAsset, None):
+                baseAsset = exceptions.get(baseAsset)
+            basesFutures.add(baseAsset)
 
     info = api.Spot.getExchangeInfo()
-    tickers = []
+    tickers = set()
+    basesSpot = set()
     for symbol in info.get('symbols', []):
         name = symbol.get('symbol', None)
         baseAsset = symbol.get('baseAsset', '')
@@ -39,10 +50,15 @@ def __getTickersList():
             pricePrecision += 1
             pricePrecisionFloat *= 10
 
-        for ticker in tickersFutures:
-            if baseAsset in ticker and quoteAsset in ticker:
-                tickers.append((name, pricePrecision))
+        for base in basesFutures:
+            if baseAsset == base:
+                tickers.add((name, pricePrecision))
+                basesSpot.add(baseAsset)
                 break
+
+    diffs = basesFutures.symmetric_difference(basesSpot)
+    if len(diffs) > 0:
+        utils.log('watcherController::getTickersList not spot symbols - ' + str(diffs))
 
     return tickers
 
@@ -54,8 +70,8 @@ def getTicker(ticker:str):
 
 def start():
     global __tickers
-    timeframes = configController.getTimeframes() #[timeframe.Timeframe.ONE_MIN]
-    tickers = __getTickersList() #[('BTCUSDT', 2), ('ETHUSDT', 1)]#
+    timeframes = configController.getTimeframes()
+    tickers = __getTickersList()
     socketList = [ticker[0] for ticker in tickers]
     websocketController.start(socketList, timeframes[0])
 

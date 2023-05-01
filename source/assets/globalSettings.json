@@ -4,5 +4,11 @@
 	"loopInterval": 1000,
 	"userDefined": {
 		"maDeltaTimeframe": ""
-	}
+	},
+	"baseAssetsExceptions": {
+		"LUNA2": "LUNA"
+	},
+	"baseAssetsIgnores": [
+		"USDC"
+	]
 }

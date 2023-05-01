@@ -77,7 +77,7 @@ def update(ticker:str):
     for _, controller in timeframes.items():
         if first:
             first = False
-            price = controller.getCandlesController().getLastFinishedCandle().close
+            price = controller.getCandlesController().getLastCandle().close
             __priceValue.setText(str(price))
 
         tabWidget = __tabs.widget(index)

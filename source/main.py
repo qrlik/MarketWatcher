@@ -11,6 +11,8 @@ def excepthook(exc_type, exc_value, exc_tb):
 
 if __name__ == "__main__":
     utils.log('====================== PROGRAMM STARTED ======================')
+    utils.logError('====================== PROGRAMM STARTED ======================')
+    
     sys.excepthook = excepthook
     app = QApplication([])
     widget = watcherWindow.WatcherWindow()
