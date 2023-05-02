@@ -35,35 +35,55 @@ class CandlesController(QObject):
 
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
-        amountForRequest = amountForInit + 1
         candles = utils.loadPickleJson(self.__getFilename())
-        candles = [] if candles is None else candles
-        if candles and len(candles) > 0:
-            lastCache = candles[-1].openTime + self.__timeframe
-            timeFromCache = utils.getCurrentTime() - lastCache
-            finishedFromCache = int(timeFromCache / self.__timeframe)
-            if finishedFromCache >= amountForInit:
-                candles = []
+        self.__finishedCandles = [] if candles is None else candles
+        self.__requestSync()
+
+    def __requestSync(self):
+        amountForRequest = self.__amountForCache + 1
+        if len(self.__finishedCandles) > 0:
+            timeFromLastOpen = utils.getCurrentTime() - self.__finishedCandles[-1].openTime
+            amountFromLastOpen = int(timeFromLastOpen / self.__timeframe)
+            if amountFromLastOpen >= self.__amountForCache:
+                self.__finishedCandles = []
             else:
-                amountForRequest = finishedFromCache + 1
-        
-        self.__finishedCandles = candles
+                amountForRequest = amountFromLastOpen + 1
         asyncHelper.Helper.addTask(self.__requestCandles, amountForRequest)
 
     async def __requestCandles(self, amountForRequest):
         self.__requestedCandles = await api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
         self.taskDoneSignal.emit()
 
-    def finishInit(self):
+    def __sync(self):
         if not self.__requestedCandles:
             return False
-        self.__finishedCandles.extend(self.__requestedCandles)
+        
+        lastOpenFound = False
+        if len(self.__finishedCandles) == 0:
+            lastOpenFound = True
+            self.__finishedCandles.extend(self.__requestedCandles)
+        else:
+            lastOpen = self.__finishedCandles[-1].openTime
+            for candle in self.__requestedCandles:
+                if lastOpenFound:
+                    self.__finishedCandles.append(candle)
+                elif lastOpen == candle.openTime:
+                    lastOpenFound = True
+
+        if lastOpenFound and len(self.__finishedCandles) > 0:
+            self.__currentCandle = self.__finishedCandles.pop()
         self.__requestedCandles = None
-        self.__currentCandle = self.__finishedCandles.pop()
-        self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
+        self.__shrinkAndSave()
+        return True
+
+    def __shrinkAndSave(self):
+        if len(self.__finishedCandles) > self.__amountForCache:
+            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
         self.__checkCandlesSequence()
         utils.savePickleJson(self.__getFilename(), self.__finishedCandles)
-        return True
+
+    def finishInit(self): # to do change to update
+        return self.__sync() #to do
 
     def __checkCandlesSequence(self):
         if len(self.__finishedCandles) == 0:
