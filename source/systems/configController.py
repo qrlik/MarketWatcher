@@ -53,7 +53,17 @@ def getTimeframeAverages(timeframe:timeframe.Timeframe):
 	return averages
 
 def isEmpty():
-	for tf in getTimeframes():
+	timeframes = getTimeframes()
+	if len(timeframes) == 0:
+		return True
+	minTimeframe = timeframes[0]
+	if (minTimeframe == timeframe.Timeframe.THREE_MIN and timeframe.Timeframe.FIVE_MIN in timeframe) 			\
+		or (minTimeframe == timeframe.Timeframe.EIGHT_HOUR and timeframe.Timeframe.TWELVE_HOUR in timeframe)	\
+		or (minTimeframe == timeframe.Timeframe.THREE_DAY and timeframe.Timeframe.ONE_WEEK in timeframe):
+		utils.logError('configController::isEmpty - wrong timeframes set')
+		return True
+	
+	for tf in timeframes:
 		if len(getTimeframeAverages(tf)) > 0:
 			return False
 	return True

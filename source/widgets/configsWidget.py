@@ -53,7 +53,7 @@ def __initVariables(widget:QWidget):
 
 def __initCombobox():
     for tf in timeframe.Timeframe:
-        if tf >= timeframe.Timeframe.ONE_HOUR:
+        if tf >= timeframe.Timeframe.FIFTEEN_MIN:
             __timeframeBox.addItem(tf.name)
 
 def __addConfigToList(text:str = ''):
