@@ -1,7 +1,8 @@
-from PySide6.QtCore import QEvent, QObject, Signal, Slot
+from PySide6.QtCore import QEvent, QObject, Slot
 from PySide6.QtWidgets import QApplication
 
 import asyncio
+from threading import Lock
 
 #https://doc.qt.io/qtforpython-6/examples/example_async_minimal.html
 
@@ -26,6 +27,7 @@ class AsyncHelper(QObject):
     __loop = asyncio.new_event_loop()
     asyncio.set_event_loop(__loop)
     __tasksCounter = 0
+    __lock = Lock()
 
     def __init__(self):
         super().__init__()
@@ -37,7 +39,8 @@ class AsyncHelper(QObject):
     def addTask(self, task, *args):
         """ To use asyncio and Qt together, one must run the asyncio
             event loop as a "guest" inside the Qt "host" event loop. """
-        self.__tasksCounter += 1
+        with self.__lock:
+            self.__tasksCounter += 1
         self.__loop.create_task(task(*args))
         self.__loop.call_soon(self.__nextRunSchedule)
         self.__loop.run_forever()
@@ -48,7 +51,8 @@ class AsyncHelper(QObject):
             the "guest run" lest we enter a quasi idle loop of switching
             back and forth between the asyncio and Qt loops. We can
             launch a new guest run by calling launch_guest_run() again. """
-        self.__tasksCounter -= 1
+        with self.__lock:
+            self.__tasksCounter -= 1
 
     def __continueLoop(self):
         """ This function is called by an event posted to the Qt event

@@ -85,7 +85,7 @@ class WatcherWindow(QMainWindow):
         timer.start(settingsController.getSetting('loopInterval'))
 
     def __loop(self):
-        watcherController.update()
+        watcherController.loop()
         self.__updateList()
         self.__updateInfoWidget()
 

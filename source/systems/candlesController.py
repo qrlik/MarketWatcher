@@ -16,6 +16,7 @@ class CandlesController(QObject):
         self.__currentCandle:candle.Candle = None
 
         self.__amountForCache = 0
+        self.__syncRequested = False
         self.__timeframe:timeframe.Timeframe = tf
         asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
@@ -40,6 +41,8 @@ class CandlesController(QObject):
         self.__requestSync()
 
     def __requestSync(self):
+        if self.__syncRequested:
+            return
         amountForRequest = self.__amountForCache + 1
         if len(self.__finishedCandles) > 0:
             timeFromLastOpen = utils.getCurrentTime() - self.__finishedCandles[-1].openTime
@@ -48,16 +51,25 @@ class CandlesController(QObject):
                 self.__finishedCandles = []
             else:
                 amountForRequest = amountFromLastOpen + 1
-        asyncHelper.Helper.addTask(self.__requestCandles, amountForRequest)
+        if amountForRequest > 0:
+            self.__syncRequested = True
+            asyncHelper.Helper.addTask(self.__requestCandles, amountForRequest)
 
     async def __requestCandles(self, amountForRequest):
         self.__requestedCandles = await api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
-        self.taskDoneSignal.emit()
+        self.taskDoneSignal.emit() # to do try to move in update
 
-    def __sync(self):
-        if not self.__requestedCandles:
+    def __shrinkAndSave(self):
+        if len(self.__finishedCandles) > self.__amountForCache:
+            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
+        self.__checkCandlesSequence()
+        utils.savePickleJson(self.__getFilename(), self.__finishedCandles)
+
+    def sync(self):
+        if not self.__syncRequested or not self.__requestedCandles:
             return False
-        
+        self.__syncRequested = False
+
         lastOpenFound = False
         if len(self.__finishedCandles) == 0:
             lastOpenFound = True
@@ -76,14 +88,12 @@ class CandlesController(QObject):
         self.__shrinkAndSave()
         return True
 
-    def __shrinkAndSave(self):
-        if len(self.__finishedCandles) > self.__amountForCache:
-            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
-        self.__checkCandlesSequence()
-        utils.savePickleJson(self.__getFilename(), self.__finishedCandles)
-
-    def finishInit(self): # to do change to update
-        return self.__sync() #to do
+    def update(self):
+        if self.__syncRequested:
+            if not self.sync():
+                return False
+        return False # tmp
+        # to do update from websocket
 
     def __checkCandlesSequence(self):
         if len(self.__finishedCandles) == 0:

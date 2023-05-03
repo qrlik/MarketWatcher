@@ -80,9 +80,6 @@ def start():
         __tickers.setdefault(ticker[0], controller)
         controller.init()
 
-def update():
-    result = 0
+def loop():
     for _, controller in __tickers.items():
-        result += controller.update()
-
-    print(str(result) + '/' + str(len(__tickers)))
+        controller.loop()

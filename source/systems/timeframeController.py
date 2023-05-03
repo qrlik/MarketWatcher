@@ -22,10 +22,15 @@ class TimeframeController:
     def preInit(self):
         self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
 
-    def finishInit(self):
+    def __getCandlesAmountForInit(self):
+        amount = self.__data.averagesController.getCandlesAmountForInit()
+        amount = max(amount, self.__data.atrController.getCandlesAmountForInit())
+        return amount
+
+    def checkInit(self):
         if self.__isInited:
             return True
-        if not self.__data.candlesController.finishInit():
+        if not self.__data.candlesController.sync():
             return False
         self.__isInited = True
         self.__data.atrController.init(self.__ticker.getPricePrecision())
@@ -36,13 +41,15 @@ class TimeframeController:
             self.__data.atrController.process(candle)
         return True
 
-    def __getCandlesAmountForInit(self):
-        amount = self.__data.averagesController.getCandlesAmountForInit()
-        amount = max(amount, self.__data.atrController.getCandlesAmountForInit())
-        return amount
+    def __preLoop(self):
+        return self.__data.candlesController.update()
 
-    def update(self):
+    def __loop(self):
         self.__data.signalController.update(self.__data.candlesController.getLastCandle())
+
+    def loop(self):
+        if self.__preLoop():
+            self.__loop()
 
     def getTimeframe(self):
         return self.__data.timeframe
