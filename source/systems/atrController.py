@@ -49,7 +49,7 @@ class AtrController:
 
     def process(self, candle: candle.Candle):
         self.__updateCandles(candle)
-        self.__atrs.append(self.__calculateTrueRange())
+        self.__atrs.append(self.__calculateTrueRange()) # to do possible mistake when candle repeating
         if len(self.__atrs) > self.__size:
             self.__atrs.pop(0)
         self.__averageTrueRange = self.__calculateAverage()

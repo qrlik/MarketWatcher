@@ -36,20 +36,19 @@ class TimeframeController:
         self.__data.atrController.init(self.__ticker.getPricePrecision())
         self.__data.averagesController.init(self.__ticker.getPricePrecision())
         self.__data.signalController.init(self.__ticker, self)
-        for candle in self.__data.candlesController.getFinishedCandles():
-            self.__data.averagesController.process(candle)
-            self.__data.atrController.process(candle)
         return True
 
-    def __preLoop(self):
-        return self.__data.candlesController.update()
-
-    def __loop(self):
-        self.__data.signalController.update(self.__data.candlesController.getLastCandle())
-
     def loop(self):
-        if self.__preLoop():
-            self.__loop()
+        if not self.__data.candlesController.update():
+            return
+
+        for candle in self.__data.candlesController.getNotProcessedCandles():
+            self.__data.averagesController.process(candle)
+            self.__data.atrController.process(candle)
+        self.__data.candlesController.markProcessed()
+        
+        #self.__data.atrController.process(self.__data.candlesController.getLastCandle()) # to do
+        self.__data.signalController.update(self.__data.candlesController.getLastCandle())
 
     def getTimeframe(self):
         return self.__data.timeframe

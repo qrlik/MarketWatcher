@@ -13,6 +13,7 @@ class CandlesController(QObject):
         super().__init__(None)
         self.__requestedCandles:list = None
         self.__finishedCandles:list = []
+        self.__lastProcessedOpenTime = 0
         self.__currentCandle:candle.Candle = None
 
         self.__amountForCache = 0
@@ -29,7 +30,7 @@ class CandlesController(QObject):
     
     def __initTest(self, filename:str):
         candles = utils.loadJsonFile('assets/candles/' + filename)
-        self.__finishedCandles =  [candle.createFromDict(c) for c in candles]
+        self.__finishedCandles = [candle.createFromDict(c) for c in candles]
     
     def __getFilename(self):
         return utils.cacheFolder + 'tickers/' + self.__ticker + '/' + self.__timeframe.name
@@ -120,6 +121,17 @@ class CandlesController(QObject):
     def getFinishedCandles(self):
         return self.__finishedCandles
     
+    def getNotProcessedCandles(self):
+        result = []
+        for candle in self.__finishedCandles:
+            if candle.openTime > self.__lastProcessedOpenTime:
+                result.append(candle)
+        return result
+
+    def markProcessed(self):
+        if len(self.__finishedCandles) > 0:
+            self.__lastProcessedOpenTime = self.__finishedCandles[-1].openTime
+
     def getLastCandle(self):
         if self.__currentCandle:
             return self.__currentCandle
