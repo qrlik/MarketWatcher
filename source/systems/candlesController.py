@@ -38,13 +38,17 @@ class CandlesController(QObject):
         self.__amountForCache = amountForInit
         candles = utils.loadPickleJson(self.__getFilename())
         self.__finishedCandles = [] if candles is None else candles
+        if len(self.__finishedCandles) > 0:
+            self.__currentCandle = self.__finishedCandles.pop()
         self.__requestSync()
 
     def __requestSync(self):
         if self.__syncRequested:
             return
         amountForRequest = self.__amountForCache + 1
-        if len(self.__finishedCandles) > 0:
+        if self.__currentCandle and utils.getCurrentTime() < self.__currentCandle.closeTime:
+            amountForRequest = 0
+        elif len(self.__finishedCandles) > 0:
             timeFromLastOpen = utils.getCurrentTime() - self.__finishedCandles[-1].openTime
             amountFromLastOpen = int(timeFromLastOpen / self.__timeframe)
             if amountFromLastOpen >= self.__amountForCache:
@@ -59,11 +63,14 @@ class CandlesController(QObject):
         self.__requestedCandles = await api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
         self.taskDoneSignal.emit() # to do try to move in update
 
-    def __shrinkAndSave(self):
+    def __shrinkAndSave(self): # to do think when call this
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
         self.__checkCandlesSequence()
-        utils.savePickleJson(self.__getFilename(), self.__finishedCandles)
+        forSave = self.__finishedCandles
+        if self.__currentCandle:
+            forSave.append(self.__currentCandle)
+        utils.savePickleJson(self.__getFilename(), forSave)
 
     def sync(self):
         if not self.__syncRequested or not self.__requestedCandles:
@@ -92,8 +99,9 @@ class CandlesController(QObject):
         if self.__syncRequested:
             if not self.sync():
                 return False
-        return False # tmp
+        return True # tmp
         # to do update from websocket
+        # не забыть кейс когда большая свеча обновляется после простоя кучей маленьких
 
     def __checkCandlesSequence(self):
         if len(self.__finishedCandles) == 0:

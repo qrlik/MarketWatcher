@@ -32,12 +32,12 @@ class WatcherWindow(QMainWindow):
         self.__loadUi()
         self.__initValues()
         self.__initSizes()
-        self.__initList()
 
         self.setCentralWidget(self.__watcherWidget)
         #self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
 
         watcherController.start()
+        self.__initList()
         self.__initTimer()
 
     def __loadUi(self):
