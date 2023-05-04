@@ -73,7 +73,21 @@ class CandlesController(QObject):
             forSave.append(self.__currentCandle)
         utils.savePickleJson(self.__getFilename(), forSave)
 
-    def sync(self):
+    def __checkCandlesSequence(self):
+        if len(self.__finishedCandles) == 0:
+            return
+        lastOpen = self.__finishedCandles[0].openTime
+        errorStr = 'TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name
+        if len(self.__finishedCandles) > 1:
+            for candle in self.__finishedCandles[1:]:
+                if lastOpen + self.__timeframe != candle.openTime:
+                    utils.logError(errorStr + ' wrong finish sequence ' + candle.time)
+                lastOpen = candle.openTime
+        if self.__currentCandle:
+            if lastOpen + self.__timeframe != self.__currentCandle.openTime:
+                utils.logError(errorStr + ' wrong current sequence ' + self.__currentCandle.time)
+
+    def __checkSyncResponse(self):
         if not self.__syncRequested or not self.__requestedCandles:
             return False
         self.__syncRequested = False
@@ -92,31 +106,23 @@ class CandlesController(QObject):
 
         if lastOpenFound and len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
+        if not lastOpenFound:
+            utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
+            ' sync lastOpen not found - ')
         self.__requestedCandles = None
         self.__shrinkAndSave()
         return True
 
-    def update(self):
+    def sync(self):
         if self.__syncRequested:
-            if not self.sync():
+            if not self.__checkSyncResponse():
                 return False
+        #if min tf -> websocket sync
+        # else -> merge sync
+
         return True # tmp
         # to do update from websocket
         # не забыть кейс когда большая свеча обновляется после простоя кучей маленьких
-
-    def __checkCandlesSequence(self):
-        if len(self.__finishedCandles) == 0:
-            return
-        lastOpen = self.__finishedCandles[0].openTime
-        errorStr = 'TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name
-        if len(self.__finishedCandles) > 1:
-            for candle in self.__finishedCandles[1:]:
-                if lastOpen + self.__timeframe != candle.openTime:
-                    utils.logError(errorStr + ' wrong finish sequence ' + candle.time)
-                lastOpen = candle.openTime
-        if self.__currentCandle:
-            if lastOpen + self.__timeframe != self.__currentCandle.openTime:
-                utils.logError(errorStr + ' wrong current sequence ' + self.__currentCandle.time)
 
     def getFinishedCandles(self):
         return self.__finishedCandles

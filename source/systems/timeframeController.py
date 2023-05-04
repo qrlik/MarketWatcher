@@ -21,32 +21,24 @@ class TimeframeController:
 
     def preInit(self):
         self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
+        self.__data.atrController.init(self.__ticker.getPricePrecision())
+        self.__data.averagesController.init(self.__ticker.getPricePrecision())
+        self.__data.signalController.init(self.__ticker, self)
 
     def __getCandlesAmountForInit(self):
         amount = self.__data.averagesController.getCandlesAmountForInit()
         amount = max(amount, self.__data.atrController.getCandlesAmountForInit())
         return amount
 
-    def checkInit(self):
-        if self.__isInited:
-            return True
-        if not self.__data.candlesController.sync():
-            return False
-        self.__isInited = True
-        self.__data.atrController.init(self.__ticker.getPricePrecision())
-        self.__data.averagesController.init(self.__ticker.getPricePrecision())
-        self.__data.signalController.init(self.__ticker, self)
-        return True
+    def isSync(self):
+        return self.__data.candlesController.sync()
 
     def loop(self):
-        if not self.__data.candlesController.update():
-            return
-
         for candle in self.__data.candlesController.getNotProcessedCandles():
             self.__data.averagesController.process(candle)
             self.__data.atrController.process(candle)
         self.__data.candlesController.markProcessed()
-        
+
         #self.__data.atrController.process(self.__data.candlesController.getLastCandle()) # to do
         self.__data.signalController.update(self.__data.candlesController.getLastCandle())
 

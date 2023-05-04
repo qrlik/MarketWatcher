@@ -28,7 +28,6 @@ class SignalController:
         self.__candlesController = candlesController
         self.__deltaController = atrController
 
-
     def __getAverageDirection(self, curCandle, top, botton):
         curFound = False
         for candle in self.__candlesController.getFinishedCandles()[::-1]:

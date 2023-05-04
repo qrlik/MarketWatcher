@@ -47,14 +47,14 @@ class TickerController:
     def getPricePrecision(self):
         return self.__data.pricePrecision
     
-    def __isAllTimeframesInited(self):
+    def __isAllTimeframesSync(self):
         result = True
         for _, tfController in self.__data.timeframes.items():
-            result &= tfController.checkInit()
+            result &= tfController.isSync()
         return result
 
     def loop(self):
-        if not self.__isAllTimeframesInited():
+        if not self.__isAllTimeframesSync():
             return
         for _, tfController in self.__data.timeframes.items():
             tfController.loop()
