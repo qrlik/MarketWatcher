@@ -29,11 +29,14 @@ class TickerController:
             os.mkdir(tickerFolder)
 
     def __initTimeframes(self):
+        isLowestCandleController = None
         for tf in configController.getTimeframes():
             tfController = timeframeController.TimeframeController(tf, self)
+            if not isLowestCandleController:
+                isLowestCandleController = tfController.getCandlesController()
             self.__data.timeframes.setdefault(tf, tfController)
         for _, tfController in self.__data.timeframes.items():
-            tfController.preInit()
+            tfController.preInit(isLowestCandleController)
     
     def getTicker(self):
         return self.__data.ticker

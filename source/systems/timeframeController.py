@@ -17,10 +17,9 @@ class TimeframeController:
     def __init__(self, tf: timeframe.Timeframe, tckController):
         self.__ticker = tckController
         self.__data = TimeframeData(tf)
-        self.__isInited = False
 
-    def preInit(self):
-        self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
+    def preInit(self, lowestCandleController):
+        self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit(), lowestCandleController)
         self.__data.atrController.init(self.__ticker.getPricePrecision())
         self.__data.averagesController.init(self.__ticker.getPricePrecision())
         self.__data.signalController.init(self.__ticker, self)

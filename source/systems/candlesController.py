@@ -11,18 +11,20 @@ class CandlesController(QObject):
 
     def __init__(self, tf: timeframe.Timeframe):
         super().__init__(None)
+        self.__lowestCandleController:CandlesController = None
         self.__requestedCandles:list = None
         self.__finishedCandles:list = []
         self.__lastProcessedOpenTime = 0
         self.__currentCandle:candle.Candle = None
 
+        self.__timeframe:timeframe.Timeframe = tf
         self.__amountForCache = 0
         self.__syncRequested = False
-        self.__timeframe:timeframe.Timeframe = tf
         asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
-    def init(self, ticker, arg):
+    def init(self, ticker, arg, lowestCandleController=None):
         self.__ticker = ticker
+        self.__lowestCandleController = lowestCandleController
         if isinstance(arg, str):
             self.__initTest(arg)
         else:
@@ -37,7 +39,7 @@ class CandlesController(QObject):
 
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
-        candles = utils.loadPickleJson(self.__getFilename())
+        candles = utils.loadPickleJson(self.__getFilename()) # to do try to decrease size
         self.__finishedCandles = [] if candles is None else candles
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
@@ -113,16 +115,24 @@ class CandlesController(QObject):
         self.__shrinkAndSave()
         return True
 
+    def __syncFromWebsocket(self):
+        return True
+
+    def __syncFromLowest(self):
+        return True
+
     def sync(self):
         if self.__syncRequested:
             if not self.__checkSyncResponse():
                 return False
-        #if min tf -> websocket sync
-        # else -> merge sync
-
-        return True # tmp
-        # to do update from websocket
-        # не забыть кейс когда большая свеча обновляется после простоя кучей маленьких
+        result = True
+        if self.__lowestCandleController == self:
+            result = self.__syncFromWebsocket()
+        else:
+            result = self.__syncFromLowest()
+        if not result:
+            self.__requestSync()
+        return result
 
     def getFinishedCandles(self):
         return self.__finishedCandles
