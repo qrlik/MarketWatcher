@@ -17,10 +17,11 @@ if __name__ == "__main__":
     app = QApplication([])
     widget = watcherWindow.WatcherWindow()
     widget.show()
-    sys.exit(app.exec())
+    result = app.exec()
+    sys.exit(result)
 
 # to do
 # to do add root logs handler also for binance logs
-# to do exlude situations for 3m 8h 3d
-# to do check cache with server before loading
+# to do check cache with server script
+# to do try to decrease size of cache
 # to do save closed candles on new finished candle

@@ -4,6 +4,7 @@ from api import api
 from models import timeframe
 from models import candle
 from widgets import asyncHelper
+from systems import websocketController
 from utilities import utils
 
 class CandlesController(QObject):
@@ -39,7 +40,7 @@ class CandlesController(QObject):
 
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
-        candles = utils.loadPickleJson(self.__getFilename()) # to do try to decrease size
+        candles = utils.loadPickleJson(self.__getFilename())
         self.__finishedCandles = [] if candles is None else candles
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
@@ -66,11 +67,17 @@ class CandlesController(QObject):
         self.__requestedCandles = await api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
         self.taskDoneSignal.emit() # to do try to move in update
 
-    def __shrinkAndSave(self): # to do think when call this
+    def __updateCandles(self, current, finished):
+        self.__currentCandle = current
+        if finished:
+            self.__finishedCandles.append(finished)
+            self.__shrinkAndSave()
+
+    def __shrinkAndSave(self):
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
         self.__checkCandlesSequence()
-        forSave = self.__finishedCandles
+        forSave = [c for c in self.__finishedCandles]
         if self.__currentCandle:
             forSave.append(self.__currentCandle)
         utils.savePickleJson(self.__getFilename(), forSave)
@@ -115,7 +122,55 @@ class CandlesController(QObject):
         self.__shrinkAndSave()
         return True
 
+    def __isCandleAfter(self, candle, otherCandle):
+        return candle.openTime + candle.interval == otherCandle.openTime
+
     def __syncFromWebsocket(self):
+        data = websocketController.getTickerData(self.__ticker)
+        currentCandle = data[0]
+        finishedCandle = data[1]
+        if currentCandle:
+            if self.__currentCandle:
+                if self.__currentCandle.openTime == currentCandle.openTime:
+                    self.__updateCandles(currentCandle, None)
+                    return True
+                elif finishedCandle and self.__isCandleAfter(currentCandle, self.__currentCandle):
+                    self.__updateCandles(currentCandle, finishedCandle)
+                    return True
+                elif currentCandle.openTime > self.__currentCandle.openTime:
+                    return False
+                return True
+            elif len(self.__finishedCandles) > 0:
+                if self.__isCandleAfter(currentCandle, self.__finishedCandles[-1]):
+                    self.__updateCandles(currentCandle, None)
+                    return True
+                elif finishedCandle and self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
+                    self.__updateCandles(currentCandle, finishedCandle)
+                    return True
+                elif currentCandle.openTime > self.__finishedCandles[-1].openTime:
+                    return False
+                return True
+            else:
+                self.__updateCandles(currentCandle, finishedCandle)
+                return True
+        elif finishedCandle:
+            if self.__currentCandle:
+                if self.__currentCandle.openTime == finishedCandle.openTime:
+                    self.__updateCandles(None, finishedCandle)
+                    return True
+                elif finishedCandle.openTime > self.__currentCandle.openTime:
+                    return False
+                return True
+            elif len(self.__finishedCandles) > 0:
+                if self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
+                    self.__updateCandles(None, finishedCandle)
+                    return True
+                elif finishedCandle.openTime > self.__finishedCandles[-1].openTime:
+                    return False
+                return True
+            else:
+                self.__updateCandles(None, finishedCandle)
+                return True
         return True
 
     def __syncFromLowest(self):

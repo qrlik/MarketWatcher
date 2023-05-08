@@ -44,7 +44,7 @@ class tickerData:
                     self.finishedCandle = None
                     self.currentCandle = candle
                     self.lastEventTime = time
-                elif time > self.lastEventTime:
+                elif candle.openTime == self.currentCandle.openTime and time > self.lastEventTime:
                     self.currentCandle = candle
                     self.lastEventTime = time
             self.__checkSequence()

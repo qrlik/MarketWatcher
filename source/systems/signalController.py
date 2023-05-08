@@ -56,6 +56,8 @@ class SignalController:
                     self.__signals.append((average, direction))
 
     def update(self, candle: candle.Candle):
+        if not candle:
+            return
         self.__signals.clear()
         self.__updateAverages(candle)
     

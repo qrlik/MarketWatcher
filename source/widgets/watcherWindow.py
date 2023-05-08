@@ -2,7 +2,7 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QFrame, QAbstractItemView
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QFrame, QAbstractItemView, QApplication
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
@@ -102,6 +102,7 @@ class WatcherWindow(QMainWindow):
 
     def closeEvent(self, event):
         api.atExit()
+        QApplication.exit(0)
         return super().closeEvent(event)
 
     def log(self, text:str):
