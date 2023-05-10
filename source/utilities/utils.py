@@ -1,4 +1,5 @@
 import json
+import msgspec
 import os.path
 import math
 import time
@@ -42,6 +43,20 @@ def saveJsonFile(filename, data):
     try:
         with open(filename + '.json', 'w') as outfile:
             json.dump(data, outfile)
+    except:
+        return None
+    
+def loadJsonMsgspecFile(filename):
+    try:
+        with open(filename + '.json', 'rb') as infile:
+            return msgspec.json.decode(infile.read())
+    except:
+        return None
+
+def saveJsonMsgspecFile(filename, data):
+    try:
+        with open(filename + '.json', 'wb') as outfile:
+            outfile.write(msgspec.json.encode(data))
     except:
         return None
     

@@ -41,7 +41,7 @@ class CandlesController(QObject):
 
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
-        jsonCandles = utils.loadJsonFile(self.__getFilename())
+        jsonCandles = utils.loadJsonMsgspecFile(self.__getFilename())
         self.__finishedCandles = [] if jsonCandles is None else [candle.createFromDict(c) for c in jsonCandles]
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
@@ -82,7 +82,7 @@ class CandlesController(QObject):
         forSave = [c for c in self.__finishedCandles]
         if self.__currentCandle:
             forSave.append(self.__currentCandle)
-        utils.saveJsonFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
+        utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
 
     def __checkCandlesSequence(self):
         if len(self.__finishedCandles) == 0:
@@ -220,7 +220,7 @@ class CandlesController(QObject):
             self.__syncIndex += 1
             if self.__syncIndex == self.__timeframe / lowestTimeframe:
                 self.__syncIndex = 0
-                self.__updateCandles(None, self.__currentCandle, false)
+                self.__updateCandles(None, self.__currentCandle, False)
         self.__mergeCandle(candles[1])
         return True
 
@@ -234,6 +234,7 @@ class CandlesController(QObject):
         else:
             result = self.__syncFromLowest()
         if not result:
+            utils.logError('candlesController:sync resync - ' + self.__ticker + ' ' + self.__timeframe.name)
             self.__requestSync()
         return result
 
