@@ -1,5 +1,4 @@
 import json
-import jsonpickle
 import os.path
 import math
 import time
@@ -39,24 +38,13 @@ def loadJsonFile(filename):
     except Exception as e:
         return None
 
-def loadPickleJson(filename):
-    try:
-        with open(filename + '.json') as infile:
-            return jsonpickle.decode(infile.read())
-    except Exception as e:
-        return None
-
 def saveJsonFile(filename, data):
     try:
         with open(filename + '.json', 'w') as outfile:
-            json.dump(data, outfile, indent=4)
+            json.dump(data, outfile)
     except:
         return None
     
-def savePickleJson(filename, data):
-    with open(filename + '.json', 'w') as outfile:
-        outfile.write(jsonpickle.encode(data))
-
 def addLogListener(obj):
     __listeners.add(obj)
 

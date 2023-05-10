@@ -23,5 +23,5 @@ if __name__ == "__main__":
 # to do
 # to do add root logs handler also for binance logs
 # to do check cache with server script
-# to do try to decrease size of cache
+# to do try to msgspec json load lib
 # to do save closed candles on new finished candle

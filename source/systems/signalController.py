@@ -30,7 +30,7 @@ class SignalController:
 
     def __getAverageDirection(self, curCandle, top, botton):
         curFound = False
-        for candle in self.__candlesController.getFinishedCandles()[::-1]:
+        for candle in self.__candlesController.getFinishedCandles()[::-1]: # to do actualize with current candle
             if not curFound:
                 if candle.time != curCandle.time:
                     continue
