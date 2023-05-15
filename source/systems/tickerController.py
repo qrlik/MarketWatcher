@@ -52,8 +52,13 @@ class TickerController:
     
     def __isAllTimeframesSync(self):
         result = True
+        isFirst = True
         for _, tfController in self.__data.timeframes.items():
             result &= tfController.isSync()
+            if isFirst: # wait lowest timeframe sync, then others
+                isFirst = False
+                if not result:
+                    return False
         return result
 
     def loop(self):

@@ -22,6 +22,7 @@ class CandlesController(QObject):
         self.__amountForCache = 0
         self.__syncIndex = 0
         self.__syncRequested = False
+        self.__inited = False
         asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
     def init(self, ticker, arg, lowestCandleController=None):
@@ -45,7 +46,8 @@ class CandlesController(QObject):
         self.__finishedCandles = [] if jsonCandles is None else [candle.createFromDict(c) for c in jsonCandles]
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
-        self.__requestSync()
+        if self.__isLowestTimeframe() or len(jsonCandles) == 0:
+            self.__requestSync()
 
     def __requestSync(self):
         if self.__syncRequested:
@@ -183,7 +185,6 @@ class CandlesController(QObject):
         if not c:
             return
         if not self.__currentCandle:
-            self.__syncIndex = 0
             self.__currentCandle = candle.Candle()
             self.__currentCandle.interval = self.__timeframe
             self.__currentCandle.openTime = c.openTime
@@ -192,13 +193,18 @@ class CandlesController(QObject):
             self.__currentCandle.open = c.open
             self.__currentCandle.low = c.low
             self.__currentCandle.close = c.close
-            self.__currentCandle.high = max(self.__currentCandle.high, c.high)
-            self.__currentCandle.low = min(self.__currentCandle.low, c.low)
+            self.__currentCandle.high = c.high
             self.__shrinkAndSave()
         else:
-            self.__currentCandle.close = c.close
-            self.__currentCandle.high = max(self.__currentCandle.high, c.high)
-            self.__currentCandle.low = min(self.__currentCandle.low, c.low)
+            if self.__currentCandle.openTime == c.openTime:
+                self.__currentCandle.open = c.open
+                self.__currentCandle.high = c.high
+                self.__currentCandle.low = c.low
+                self.__currentCandle.close = c.close
+            else:
+                self.__currentCandle.close = c.close
+                self.__currentCandle.high = max(self.__currentCandle.high, c.high)
+                self.__currentCandle.low = min(self.__currentCandle.low, c.low)
 
     def __getLastOpenTime(self):
         if self.__currentCandle:
@@ -224,18 +230,24 @@ class CandlesController(QObject):
         self.__mergeCandle(candles[1])
         return True
 
+    def __isLowestTimeframe(self):
+        return self.__lowestCandleController == self
+
     def sync(self):
         if self.__syncRequested:
             if not self.__checkSyncResponse():
                 return False
         result = True
-        if self.__lowestCandleController == self:
+        if self.__isLowestTimeframe():
             result = self.__syncFromWebsocket()
         else:
             result = self.__syncFromLowest()
         if not result:
-            utils.logError('candlesController:sync resync - ' + self.__ticker + ' ' + self.__timeframe.name)
+            if self.__inited:
+                utils.logError('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
             self.__requestSync()
+        else:
+            self.__inited = True
         return result
 
     def getTimeframe(self):

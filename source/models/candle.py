@@ -12,6 +12,16 @@ class Candle:
         self.low = 0.0
         self.close = 0.0
 
+    def __eq__(self, __value):
+        return self.interval == __value.interval \
+        and self.openTime == __value.openTime \
+        and self.closeTime == __value.closeTime \
+        and self.time == __value.time \
+        and self.open == __value.open \
+        and self.high == __value.high \
+        and self.low == __value.low \
+        and self.close == __value.close
+
 def toDict(candle:Candle):
     result = {}
     result.setdefault('i', candle.interval.name)
