@@ -73,7 +73,6 @@ class __binanceClient:
         self.__socketId += 1
     ###
 
-    ### async block
     def __parseResponce(self, responceCandles, interval: timeframe.Timeframe):
         c = candle.Candle()
         c.interval = interval
@@ -87,10 +86,11 @@ class __binanceClient:
         #c.volume = float(responceCandles[5])
         return c
 
+    ### async block
     async def __getCandelsTimed(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         return await self.__client.klinesAsync(symbol, interval, startTime = startPoint, limit = amount)
 
-    async def __getCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
+    async def __getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
         intervalStr = timeframe.timeframeToApiStr[interval]
         while amount > 0:
@@ -106,7 +106,7 @@ class __binanceClient:
 
     async def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
-        return await self.__makeApiCallAsync(self.__getCandles, symbol, interval, amount, startPoint)
+        return await self.__makeApiCallAsync(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
 
     async def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         result = await self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))

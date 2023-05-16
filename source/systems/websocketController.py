@@ -12,7 +12,6 @@ from utilities import utils
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
 __tickersData = {}
-__timeframe = None
 __started = False
 
 class tickerData:
@@ -25,26 +24,40 @@ class tickerData:
     def __checkSequence(self):
         if self.finishedCandle and self.currentCandle:
             if self.finishedCandle.openTime + self.finishedCandle.interval != self.currentCandle.openTime:
-                utils.logError('tickerData::__checkSequence wrong sequence')
+                utils.logError('websocketController::__checkSequence wrong sequence')
+
+    def __setFinished(self, finished):
+        self.finishedCandle = finished
+        self.currentCandle = None
+        self.lastEventTime = 0
 
     def update(self, time, candle:candle.Candle, isClosed):
         with self.lock:
             if isClosed:
-                if not self.finishedCandle or candle.openTime > self.finishedCandle.openTime:
-                    self.finishedCandle = candle
-                    self.currentCandle = None
-                    self.lastEventTime = 0
+                if self.currentCandle:
+                    if self.currentCandle.openTime == candle.openTime \
+                    or self.currentCandle.openTime < candle.openTime:
+                        self.__setFinished(candle)
+                elif self.finishedCandle:
+                    if self.finishedCandle.openTime < candle.openTime:
+                        self.__setFinished(candle)
+                else:
+                        self.__setFinished(candle)
             else:
-                if not self.currentCandle:
-                    self.currentCandle = candle
-                    self.lastEventTime = time
-                    if self.finishedCandle and self.finishedCandle.openTime + self.finishedCandle.interval != self.currentCandle.openTime:
+                if self.currentCandle:
+                    if self.currentCandle.openTime == candle.openTime and time > self.lastEventTime:
+                        self.currentCandle = candle
+                        self.lastEventTime = time
+                    elif self.currentCandle.openTime < candle.openTime:
                         self.finishedCandle = None
-                elif candle.openTime > self.currentCandle.openTime:
-                    self.finishedCandle = None
+                        self.currentCandle = candle
+                        self.lastEventTime = time
+                elif self.finishedCandle:
                     self.currentCandle = candle
                     self.lastEventTime = time
-                elif candle.openTime == self.currentCandle.openTime and time > self.lastEventTime:
+                    if self.finishedCandle.openTime + self.finishedCandle.interval != self.currentCandle.openTime:
+                        self.finishedCandle = None
+                else:
                     self.currentCandle = candle
                     self.lastEventTime = time
             self.__checkSequence()
@@ -55,23 +68,24 @@ class tickerData:
             result = (self.currentCandle, self.finishedCandle)
         return result
 
-def getTickerData(ticker:str):
+def getTickerData(ticker:str, tf:timeframe.Timeframe):
     global __tickersData
-    return __tickersData.get(ticker).get()
+    return __tickersData.get(ticker).get(tf).get()
 
-def start(tickers:list, tf:timeframe.Timeframe):
-    global __timeframe, __started, __tickersData
+def start(tickers:list, tfs:list):
+    global __started, __tickersData
     if __started:
         return
     __started = True
-    __timeframe = tf
     for ticker in tickers:
-        __tickersData.setdefault(ticker, tickerData())
-    api.Spot.subscribeKlines(tickers, tf, onMessage)
+        for tf in tfs:
+            __tickersData.setdefault(ticker, {}).setdefault(tf, tickerData())
+    for tf in tfs:
+        api.Spot.subscribeKlines(tickers, tf, onMessage)
 
 def parseCandle(data):
     c = candle.Candle()
-    c.interval = __timeframe
+    c.interval = timeframe.apiToTimeframe.get(data['i'])
     c.openTime = data['t']
     c.closeTime = data['T']
     c.time = datetime.fromtimestamp(c.openTime / 1000).strftime('%H:%M %d-%m')
@@ -96,5 +110,5 @@ def onMessage(message):
     
     global __tickersData
     c, isClosed = parseCandle(data['k'])
-    __tickersData[ticker].update(time, c, isClosed)
-    #print(ticker + ' ' + c.time + ' ' + str(c.close) + ' ' + str(isClosed))
+    __tickersData[ticker][c.interval].update(time, c, isClosed)
+    #print(ticker + '\t\t' + c.time + '\t\t' + str(time) + '\t\t' + str(c.open) + '\t\t' + str(c.close) + '\t\t' + str(c.high) + '\t\t' + str(c.low) + '\t\t' + str(isClosed))

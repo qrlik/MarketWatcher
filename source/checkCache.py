@@ -19,7 +19,8 @@ async def checkFile(ticker, tf):
     if not timestamp:
         utils.logError('checkCache: empty timestamp ' + ticker + ' ' + tf)
 
-    serverData = await api.Spot.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
+    #can raise exception
+    serverData = await api.Spot.__getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
     if len(cachedCandles) != len(serverData):
         utils.logError('checkCache: wrong length ' + ticker + ' ' + tf)
     for i in range(len(cachedCandles)):
@@ -33,6 +34,7 @@ async def checkCacheFolder():
         utils.logError('checkCache: no cache folder')
     if not os.path.exists('cache/tickers'):
         utils.logError('checkCache: no tickers folder')
+        
     for folder in os.scandir('cache/tickers/'):
         if folder.is_dir():
             for file in os.listdir(folder.path):

@@ -1,4 +1,3 @@
-from typing import Optional
 from PySide6.QtCore import Signal, QObject
 from api import api
 from models import timeframe
@@ -12,7 +11,6 @@ class CandlesController(QObject):
 
     def __init__(self, tf: timeframe.Timeframe):
         super().__init__(None)
-        self.__lowestCandleController:CandlesController = None
         self.__requestedCandles:list = None
         self.__finishedCandles:list = []
         self.__lastProcessedOpenTime = 0
@@ -20,14 +18,11 @@ class CandlesController(QObject):
 
         self.__timeframe:timeframe.Timeframe = tf
         self.__amountForCache = 0
-        self.__syncIndex = 0
         self.__syncRequested = False
-        self.__inited = False
         asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
-    def init(self, ticker, arg, lowestCandleController=None):
+    def init(self, ticker, arg):
         self.__ticker = ticker
-        self.__lowestCandleController = lowestCandleController
         if isinstance(arg, str):
             self.__initTest(arg)
         else:
@@ -46,8 +41,7 @@ class CandlesController(QObject):
         self.__finishedCandles = [] if jsonCandles is None else [candle.createFromDict(c) for c in jsonCandles]
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
-        if self.__isLowestTimeframe() or len(jsonCandles) == 0:
-            self.__requestSync()
+        self.__requestSync()
 
     def __requestSync(self):
         if self.__syncRequested:
@@ -134,7 +128,7 @@ class CandlesController(QObject):
         return beforeCandle.openTime + beforeCandle.interval == afterCandle.openTime
 
     def __syncFromWebsocket(self):
-        data = websocketController.getTickerData(self.__ticker)
+        data = websocketController.getTickerData(self.__ticker, self.__timeframe)
         currentCandle = data[0]
         finishedCandle = data[1]
         if currentCandle:
@@ -181,99 +175,18 @@ class CandlesController(QObject):
                 return True
         return True
 
-    def __mergeCandle(self, c):
-        if not c:
-            return
-        if not self.__currentCandle:
-            self.__currentCandle = candle.Candle()
-            self.__currentCandle.interval = self.__timeframe
-            self.__currentCandle.openTime = c.openTime
-            self.__currentCandle.closeTime = self.__currentCandle.openTime + self.__timeframe - 1
-            self.__currentCandle.time = c.time
-            self.__currentCandle.open = c.open
-            self.__currentCandle.low = c.low
-            self.__currentCandle.close = c.close
-            self.__currentCandle.high = c.high
-            self.__shrinkAndSave()
-        else:
-            if self.__currentCandle.openTime == c.openTime:
-                self.__currentCandle.open = c.open
-                self.__currentCandle.high = c.high
-                self.__currentCandle.low = c.low
-                self.__currentCandle.close = c.close
-            else:
-                self.__currentCandle.close = c.close
-                self.__currentCandle.high = max(self.__currentCandle.high, c.high)
-                self.__currentCandle.low = min(self.__currentCandle.low, c.low)
-
-    def __getLastOpenTime(self):
-        if self.__currentCandle:
-            return self.__currentCandle.openTime
-        if len(self.__finishedCandles) > 0:
-            return self.__finishedCandles[-1].openTime + self.__finishedCandles[-1].interval
-        return None
-
-    def __syncFromLowest(self):
-        lastOpenTime = self.__getLastOpenTime()
-        if not lastOpenTime:
-            return
-        lowestTimeframe = self.__lowestCandleController.getTimeframe()
-        candles = self.__lowestCandleController.getCandlesByOpenTime(lastOpenTime + self.__syncIndex * lowestTimeframe)
-        if not candles:
-            return False
-        for c in candles[0]:
-            self.__mergeCandle(c)
-            self.__syncIndex += 1
-            if self.__syncIndex == self.__timeframe / lowestTimeframe:
-                self.__syncIndex = 0
-                self.__updateCandles(None, self.__currentCandle, False)
-        self.__mergeCandle(candles[1])
-        return True
-
-    def __isLowestTimeframe(self):
-        return self.__lowestCandleController == self
-
     def sync(self):
         if self.__syncRequested:
             if not self.__checkSyncResponse():
                 return False
-        result = True
-        if self.__isLowestTimeframe():
-            result = self.__syncFromWebsocket()
-        else:
-            result = self.__syncFromLowest()
+        result = self.__syncFromWebsocket()
         if not result:
-            if self.__inited:
-                utils.logError('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
+            utils.log('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
             self.__requestSync()
-        else:
-            self.__inited = True
         return result
 
     def getTimeframe(self):
         return self.__timeframe
-
-    def getCandlesByOpenTime(self, openTime):
-        finished = []
-        for candle in self.__finishedCandles[::-1]:
-            if candle.openTime >= openTime:
-                finished.append(candle)
-            else:
-                break
-        finished.reverse()
-        current = None
-        if self.__currentCandle and self.__currentCandle.openTime >= openTime:
-            current = self.__currentCandle
-        if len(finished) > 0:
-            if finished[0].openTime == openTime:
-                return (finished, current)
-        else:
-            if current:
-                if current.openTime == openTime:
-                    return (finished, current)
-            else:
-                return (finished, current)
-        return None
 
     def getFinishedCandles(self):
         return self.__finishedCandles

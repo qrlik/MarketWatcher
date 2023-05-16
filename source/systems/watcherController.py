@@ -71,9 +71,9 @@ def getTicker(ticker:str):
 def start():
     global __tickers
     timeframes = configController.getTimeframes()
-    tickers = __getTickersList()
+    tickers = __getTickersList() #[('BTCUSDT', 2)]
     socketList = [ticker[0] for ticker in tickers]
-    websocketController.start(socketList, timeframes[0])
+    websocketController.start(socketList, timeframes)
 
     for ticker in tickers:
         controller = tickerController.TickerController(ticker[0], ticker[1])
