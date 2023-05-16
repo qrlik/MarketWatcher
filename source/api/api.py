@@ -78,7 +78,7 @@ class __binanceClient:
         c.interval = interval
         c.openTime = responceCandles[0]
         c.closeTime = responceCandles[6]
-        c.time = datetime.fromtimestamp(responceCandles[0] / 1000).strftime('%H:%M %d-%m')
+        c.time = datetime.fromtimestamp(responceCandles[0] / 1000).strftime('%H:%M %d-%m-%Y')
         c.open = float(responceCandles[1])
         c.high = float(responceCandles[2])
         c.low = float(responceCandles[3])

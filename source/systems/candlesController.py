@@ -75,25 +75,10 @@ class CandlesController(QObject):
     def __shrinkAndSave(self):
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
-        self.__checkCandlesSequence()
         forSave = [c for c in self.__finishedCandles]
         if self.__currentCandle:
             forSave.append(self.__currentCandle)
         utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
-
-    def __checkCandlesSequence(self):
-        if len(self.__finishedCandles) == 0:
-            return
-        lastOpen = self.__finishedCandles[0].openTime
-        errorStr = 'TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name
-        if len(self.__finishedCandles) > 1:
-            for candle in self.__finishedCandles[1:]:
-                if lastOpen + self.__timeframe != candle.openTime:
-                    utils.logError(errorStr + ' wrong finish sequence ' + candle.time)
-                lastOpen = candle.openTime
-        if self.__currentCandle:
-            if lastOpen + self.__timeframe != self.__currentCandle.openTime:
-                utils.logError(errorStr + ' wrong current sequence ' + self.__currentCandle.time)
 
     def __checkSyncResponse(self):
         if not self.__syncRequested or not self.__requestedCandles:
