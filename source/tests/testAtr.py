@@ -1,20 +1,23 @@
 from models import candle
+from models import timeframe
 from systems import atrController
+from systems import candlesController
 from utilities import utils
 
 class atrTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
+
+        self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
+        self.candlesController.init('', self.testData['candlesFileName'])
+        
         self.atrController = atrController.AtrController()
-        self.atrController.init(2)
+        self.atrController.init(self.candlesController, self.testData['precision'])
         self.atrController.setSize(self.testData['size'])
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
-
-        candles = utils.loadJsonFile('assets/candles/' + self.testData['candlesFileName'])
-        self.candles = [candle.createFromDict(c) for c in candles]
 
     def __checkError(self, result, index):
         if not result:
@@ -23,18 +26,19 @@ class atrTester:
 
     def test(self):
         result = True
-        result &= len(self.candles) > 0
+        candles = self.candlesController.getFinishedCandles()
+        result &= len(candles) > 0
         result &= self.checksAmount > 0
         self.__checkError(result, -1)
 
         checkIndex = 0
-        for candle in self.candles:
+        self.atrController.process()
+        for candle in candles:
             if self.checksAmount == checkIndex:
                 break
 
-            self.atrController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
-                atr1 = self.atrController.getAtr() # to do change
+                atr1 = candle.atr
                 atr2 = self.checks[checkIndex].get('atr', None)
                 result &= atr1 == atr2
                 self.__checkError(result, checkIndex)

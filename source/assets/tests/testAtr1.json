@@ -1,6 +1,7 @@
 {
 	"candlesFileName": "400_1d_BTC",
 	"size": 14,
+	"precision": 2,
 	"data": [
 		{
 			"time": "04:00 16-03-2023",
