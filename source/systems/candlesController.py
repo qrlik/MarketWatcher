@@ -19,6 +19,7 @@ class CandlesController(QObject):
         self.__timeframe:timeframe.Timeframe = tf
         self.__amountForCache = 0
         self.__syncRequested = False
+        self.__ticker = ''
         asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
     def init(self, ticker, arg):
@@ -113,7 +114,6 @@ class CandlesController(QObject):
 
         if lastOpenFound:
             self.__currentCandle = None
-            self.__syncIndex = 0
             if len(self.__finishedCandles) > 0:
                 self.__currentCandle = self.__finishedCandles.pop()
 

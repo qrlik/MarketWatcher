@@ -26,7 +26,6 @@ def __initTabs():
         tabWidget.setLayout(QVBoxLayout())
         __initDeltas(tabWidget)
         __initLine(tabWidget)
-        __initAverages(tabWidget, tf)
         tabWidget.layout().addStretch()
 
 def __initDeltas(tab:QWidget):
@@ -50,24 +49,6 @@ def __initLine(tab:QWidget):
     line.setFrameShadow(QFrame.Shadow.Sunken)
     line.setFrameShape(QFrame.Shape.HLine)
 
-def __initAverages(tab:QWidget, timeframe:timeframe.Timeframe):
-    layout = QVBoxLayout()
-    layout.setObjectName('averagesLayout')
-    tab.layout().addLayout(layout)
-    for average in configController.getTimeframeAverages(timeframe):
-        newLayout = QHBoxLayout()
-        newLayout.setObjectName(average.name + '_averageLayout')
-        layout.addLayout(newLayout)
-
-        averageLabel = QLabel(average.name)
-        averageLabel.setObjectName(average.name + '_averageLabel')
-        newLayout.addWidget(averageLabel)
-        newLayout.addStretch()
-
-        averageValue = QLabel('0.0')
-        averageValue.setObjectName(average.name + '_averageValue')
-        newLayout.addWidget(averageValue)
-
 def update(ticker:str):
     tickerController = watcherController.getTicker(ticker)
     timeframes = tickerController.getTimeframes()
@@ -85,7 +66,3 @@ def update(ticker:str):
         index += 1
         deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
         deltaValue.setText(str(controller.getAtrController().getAtr()))
-
-        for average, value in controller.getAveragesController().getAverages().items():
-            averageValue = tabWidget.findChild(QLabel, average.name + '_averageValue')
-            averageValue.setText(str(value))

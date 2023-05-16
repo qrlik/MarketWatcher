@@ -20,9 +20,9 @@ class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
 
-        configController.load(cacheController.getLastConfigFilename())
-        self.__initConfigWindow()
-        #self.__onStart()
+        configController.load('default')#(cacheController.getLastConfigFilename())
+        #self.__initConfigWindow()
+        self.__onStart()
         utils.addLogListener(self)
 
     def __del__(self):
@@ -57,8 +57,8 @@ class WatcherWindow(QMainWindow):
         self.__init()
 
         ##
-        self.__configsWindow.close()
-        self.__configsWindow = None
+        #self.__configsWindow.close()
+        #self.__configsWindow = None
 
     def __initValues(self):
         self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')

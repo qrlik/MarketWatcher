@@ -1,16 +1,8 @@
-from models import movingAverage
 from models import timeframe
 from systems import atrController
-from systems import movingAverageController
 from systems import candlesController
 from systems import signalController
 from utilities import utils
-
-def getAverages(json):
-    result = []
-    for name in json:
-        result.append(movingAverage.MovingAverageType[name])
-    return result
 
 def compareSignals(signals, json):
     result = len(signals) == len(json)
@@ -35,11 +27,8 @@ class signalTester:
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
         self.candlesController.init('', self.testData['candlesFileName'])
         
-        self.averageController = movingAverageController.MovingAverageController(getAverages(self.testData['averages']))
-        self.averageController.init(self.testData['precision'])
-
         self.signalController = signalController.SignalController()
-        self.signalController.initTest(self.averageController, self.candlesController, self.atrController)
+        self.signalController.initTest(self.candlesController)
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -63,7 +52,6 @@ class signalTester:
                 break
 
             self.atrController.process(candle)
-            self.averageController.process(candle)
             self.signalController.update(candle)
             if candle.time == self.checks[checkIndex]['time']:
                 result &= compareSignals(self.signalController.getSignals(), self.checks[checkIndex]['signals'])
@@ -77,4 +65,4 @@ class signalTester:
             utils.logError(self.name + ' FAILED')
 
 def test():
-    signalTester('testSignalAverages1').test()
+    pass
