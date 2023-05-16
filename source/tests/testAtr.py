@@ -34,7 +34,7 @@ class atrTester:
 
             self.atrController.process(candle)
             if candle.time == self.checks[checkIndex]['time']:
-                atr1 = self.atrController.getAtr()
+                atr1 = self.atrController.getAtr() # to do change
                 atr2 = self.checks[checkIndex].get('atr', None)
                 result &= atr1 == atr2
                 self.__checkError(result, checkIndex)

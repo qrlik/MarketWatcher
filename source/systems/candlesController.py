@@ -13,7 +13,6 @@ class CandlesController(QObject):
         super().__init__(None)
         self.__requestedCandles:list = None
         self.__finishedCandles:list = []
-        self.__lastProcessedOpenTime = 0
         self.__currentCandle:candle.Candle = None
 
         self.__timeframe:timeframe.Timeframe = tf
@@ -170,23 +169,27 @@ class CandlesController(QObject):
             self.__requestSync()
         return result
 
+    def getCandlesByOpenTime(self, openTime):
+        finished = []
+        for candle in self.__finishedCandles[::-1]:
+            if candle.openTime >= openTime:
+                finished.append(candle)
+            else:
+                break
+        finished.reverse()
+        if len(finished) > 0:
+            if finished[0].openTime == openTime or openTime == 0:
+                return finished
+            else:
+                return None
+        return finished
+
     def getTimeframe(self):
         return self.__timeframe
 
     def getFinishedCandles(self):
         return self.__finishedCandles
     
-    def getNotProcessedCandles(self):
-        result = []
-        for candle in self.__finishedCandles:
-            if candle.openTime > self.__lastProcessedOpenTime:
-                result.append(candle)
-        return result
-
-    def markProcessed(self):
-        if len(self.__finishedCandles) > 0:
-            self.__lastProcessedOpenTime = self.__finishedCandles[-1].openTime
-
     def getLastCandle(self):
         if self.__currentCandle:
             return self.__currentCandle

@@ -12,6 +12,8 @@ class Candle:
         self.low = 0.0
         self.close = 0.0
 
+        self.atr = None
+
     def __eq__(self, __value):
         return self.interval == __value.interval \
         and self.openTime == __value.openTime \

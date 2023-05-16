@@ -16,7 +16,7 @@ class TimeframeController:
         self.__ticker = tckController
         self.__data = TimeframeData(tf)
         self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
-        self.__data.atrController.init(self.__ticker.getPricePrecision())
+        self.__data.atrController.init(self.__data.candlesController, self.__ticker.getPricePrecision())
         self.__data.signalController.init(self)
 
     def __getCandlesAmountForInit(self):
@@ -26,11 +26,7 @@ class TimeframeController:
         return self.__data.candlesController.sync()
 
     def loop(self):
-        for candle in self.__data.candlesController.getNotProcessedCandles():
-            self.__data.atrController.process(candle)
-        self.__data.candlesController.markProcessed()
-
-        #self.__data.atrController.process(self.__data.candlesController.getLastCandle()) # to do
+        self.__data.atrController.process()
         self.__data.signalController.update(self.__data.candlesController.getLastCandle())
 
     def getTimeframe(self):

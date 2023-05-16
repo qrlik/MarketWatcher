@@ -65,4 +65,4 @@ def update(ticker:str):
         tabWidget = __tabs.widget(index)
         index += 1
         deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
-        deltaValue.setText(str(controller.getAtrController().getAtr()))
+        #deltaValue.setText(str(controller.getAtrController().getAtr()))

@@ -4,52 +4,62 @@ from systems import watcherController
 
 class AtrController:
     def __init__(self):
+        self.__candleController = None
         self.__size = settingsController.getSetting('atrAverageLength')
-        self.__atrs = []
-        self.__lastCandle = None
-        self.__prevCandle = None
-        self.__lastValue = None
-        self.__averageTrueRange = None
-        self.__precision = None
+        self.__precision = 0
+        self.__reset()
 
-    def init(self, precision:int):
+
+    def init(self, candleController, precision:int):
+        self.__candleController = candleController
         self.__precision = precision
 
     def setSize(self, size):
         self.__size = size
 
-    def getAtr(self):
-        if self.__averageTrueRange:
-            if self.__precision:
-                return round(self.__averageTrueRange, self.__precision)
-            return self.__averageTrueRange
-        return None
-    
     def getCandlesAmountForInit(self):
         return self.__size * settingsController.getSetting('emaFactor')
 
-    def __updateCandles(self,  candle: candle.Candle):
-        if self.__lastCandle is not None and self.__lastCandle.time != candle.time:
-            self.__prevCandle = self.__lastCandle
-        self.__lastCandle = candle
+    def __reset(self):
+        self.__lastOpenTime = 0
+        self.__lastCandle = None
+        self.__lastValue = None
+        self.__trueRanges = []
 
-    def __calculateTrueRange(self):
-        prevCandle = self.__lastCandle if self.__prevCandle is None else self.__prevCandle
-        return max(self.__lastCandle.high, prevCandle.close) - min(self.__lastCandle.low, prevCandle.close)
+    def __updateCandles(self,  candle):
+        self.__lastCandle = candle
+        self.__lastOpenTime = candle.openTime + candle.interval
+
+    def __addTrueRange(self, trueRange):
+        self.__trueRanges.append(trueRange)
+        if len(self.__trueRanges) > self.__size:
+            self.__trueRanges.pop(0)
+
+    def __calculateTrueRange(self, currentCandle):
+        lastCandle = currentCandle if self.__lastCandle is None else self.__lastCandle
+        return max(currentCandle.high, lastCandle.close) - min(currentCandle.low, lastCandle.close)
 
     def __calculateAverage(self):
         if self.__lastValue is None:
-            self.__lastValue = self.__atrs[-1]
+            self.__lastValue = self.__trueRanges[-1]
         else:
             alpha = 2 / (self.__size + 1)
-            self.__lastValue = alpha * self.__atrs[-1] + (1 - alpha) * self.__lastValue
-        if len(self.__atrs) < self.__size:
+            self.__lastValue = alpha * self.__trueRanges[-1] + (1 - alpha) * self.__lastValue
+        if len(self.__trueRanges) < self.__size:
             return None
         return self.__lastValue
 
-    def process(self, candle: candle.Candle):
-        self.__updateCandles(candle)
-        self.__atrs.append(self.__calculateTrueRange()) # to do possible mistake when candle repeating
-        if len(self.__atrs) > self.__size:
-            self.__atrs.pop(0)
-        self.__averageTrueRange = self.__calculateAverage()
+    def process(self):
+        candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
+        if not candles:
+            self.__reset()
+            candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
+        if not candles:
+            return
+        
+        for candle in candles:
+            self.__addTrueRange(self.__calculateTrueRange(candle))
+            atr = self.__calculateAverage()
+            candle.atr = round(atr, self.__precision) if atr else None
+            self.__updateCandles(candle)
+            
