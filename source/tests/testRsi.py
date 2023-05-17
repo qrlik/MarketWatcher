@@ -1,9 +1,9 @@
 from models import timeframe
-from systems import atrController
+from systems import rsiController
 from systems import candlesController
 from utilities import utils
 
-class atrTester:
+class rsiTester:
     def __init__(self, name:str):
         self.name = name
         self.testData = utils.loadJsonFile('assets/tests/' + self.name)
@@ -11,9 +11,9 @@ class atrTester:
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
         self.candlesController.init('', self.testData['candlesFileName'])
         
-        self.atrController = atrController.AtrController()
-        self.atrController.init(self.candlesController, self.testData['precision'])
-        self.atrController.setSize(self.testData['size'])
+        self.rsiController = rsiController.RsiController()
+        self.rsiController.init(self.candlesController)
+        self.rsiController.setSize(self.testData['size'])
 
         self.checks = self.testData['data']
         self.checksAmount = len(self.checks)
@@ -31,15 +31,15 @@ class atrTester:
         self.__checkError(result, -1)
 
         checkIndex = 0
-        self.atrController.process()
+        self.rsiController.process()
         for candle in candles:
             if self.checksAmount == checkIndex:
                 break
 
             if candle.time == self.checks[checkIndex]['time']:
-                atr1 = candle.atr
-                atr2 = self.checks[checkIndex].get('atr', None)
-                result &= atr1 == atr2
+                rsi1 = candle.rsi
+                rsi2 = self.checks[checkIndex].get('rsi', None)
+                result &= rsi1 == rsi2
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
 
@@ -50,4 +50,4 @@ class atrTester:
             utils.logError(self.name + ' FAILED')
 
 def test():
-    atrTester('testAtr1').test()
+    rsiTester('testRsi1').test()

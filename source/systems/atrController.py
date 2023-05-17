@@ -1,6 +1,4 @@
-from models import candle
 from systems import settingsController
-from systems import watcherController
 
 class AtrController:
     def __init__(self):
@@ -8,7 +6,6 @@ class AtrController:
         self.__size = settingsController.getSetting('atrAverageLength')
         self.__precision = 0
         self.__reset()
-
 
     def init(self, candleController, precision:int):
         self.__candleController = candleController
@@ -43,7 +40,7 @@ class AtrController:
         if self.__lastValue is None:
             self.__lastValue = self.__trueRanges[-1]
         else:
-            alpha = 2 / (self.__size + 1)
+            alpha = 2 / (self.__size + 1) #EMA
             self.__lastValue = alpha * self.__trueRanges[-1] + (1 - alpha) * self.__lastValue
         if len(self.__trueRanges) < self.__size:
             return None

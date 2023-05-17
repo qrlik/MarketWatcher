@@ -13,6 +13,7 @@ class Candle:
         self.close = 0.0
 
         self.atr = None
+        self.rsi = None
 
     def __eq__(self, __value):
         return self.interval == __value.interval \
