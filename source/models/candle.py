@@ -14,6 +14,7 @@ class Candle:
 
         self.atr = None
         self.rsi = None
+        self.vertex = None
 
     def __eq__(self, __value):
         return self.interval == __value.interval \
