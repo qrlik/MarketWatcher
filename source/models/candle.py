@@ -16,6 +16,9 @@ class Candle:
         self.rsi = None
         self.vertex = None
 
+        self.lastUpMaValue = None
+        self.lastDownMaValue = None
+
     def __eq__(self, __value):
         return self.interval == __value.interval \
         and self.openTime == __value.openTime \

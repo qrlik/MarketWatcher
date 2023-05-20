@@ -8,11 +8,8 @@ class RsiController:
         self.__reset()
 
     def __reset(self):
-        self.__upDeltas = []
-        self.__downDeltas = []
+        self.__counter = 0
         self.__lastOpenTime = 0
-        self.__lastUpValue = None
-        self.__lastDownValue = None
         self.__lastCandle = None
 
     def init(self, candleController):
@@ -25,30 +22,25 @@ class RsiController:
         self.__lastCandle = candle
         self.__lastOpenTime = candle.openTime + candle.interval
 
-    def __addDelta(self, container, delta):
-        container.append(delta)
-        if len(container) > self.__size:
-            container.pop(0)
-
-    def __calculateAverageUp(self):
-        if self.__lastUpValue is None:
-            self.__lastUpValue = self.__upDeltas[-1]
+    def __calculateAverageUp(self, candle, delta):
+        if self.__lastCandle is None:
+            candle.lastUpMaValue = delta
         else:
             alpha = 1 / self.__size
-            self.__lastUpValue = alpha * self.__upDeltas[-1] + (1 - alpha) * self.__lastUpValue
-        if len(self.__upDeltas) < self.__size:
+            candle.lastUpMaValue = alpha * delta + (1 - alpha) * self.__lastCandle.lastUpMaValue
+        if self.__counter < self.__size:
             return None
-        return self.__lastUpValue
+        return candle.lastUpMaValue
 
-    def __calculateAverageDown(self):
-        if self.__lastDownValue is None:
-            self.__lastDownValue = self.__downDeltas[-1]
+    def __calculateAverageDown(self, candle, delta):
+        if self.__lastCandle is None:
+            candle.lastDownMaValue = delta
         else:
             alpha = 1 / self.__size
-            self.__lastDownValue = alpha * self.__downDeltas[-1] + (1 - alpha) * self.__lastDownValue
-        if len(self.__downDeltas) < self.__size:
+            candle.lastDownMaValue = alpha * delta + (1 - alpha) * self.__lastCandle.lastDownMaValue
+        if self.__counter < self.__size:
             return None
-        return self.__lastDownValue
+        return candle.lastDownMaValue
 
     def __calculateCloseDelta(self, currentCandle):
         lastCandle = currentCandle if self.__lastCandle is None else self.__lastCandle
@@ -58,10 +50,9 @@ class RsiController:
         closeDelta = self.__calculateCloseDelta(candle)
         upDelta = closeDelta if closeDelta > 0.0 else 0.0
         downDelta = abs(closeDelta) if closeDelta < 0.0 else 0.0
-        self.__addDelta(self.__upDeltas, upDelta)
-        self.__addDelta(self.__downDeltas, downDelta)
-        upMa = self.__calculateAverageUp()
-        downMa = self.__calculateAverageDown()
+        self.__counter += 1
+        upMa = self.__calculateAverageUp(candle, upDelta)
+        downMa = self.__calculateAverageDown(candle, downDelta)
         if not upMa or not downMa:
             return None
         rs = upMa / downMa if downMa > 0.0 else sys.float_info.max

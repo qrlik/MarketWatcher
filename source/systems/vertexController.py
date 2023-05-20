@@ -33,6 +33,7 @@ class VertexController:
                 self.__lastCandle.vertex = None
         else:
             candle.vertex = self.__lastCandle.vertex
+            self.__lastCandle.vertex = None
 
     def process(self):
         candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
