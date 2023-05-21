@@ -1,6 +1,8 @@
 {
 	"emaFactor": 8,
 	"atrAverageLength": 50,
+	"divergenceMaxLength": 50,
+	"divergenceActualLength": 10,
 	"rsiLength": 14,
 	"loopInterval": 1000,
 	"baseAssetsExceptions": {

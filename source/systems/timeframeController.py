@@ -2,6 +2,7 @@
 from models import timeframe
 from systems import atrController
 from systems import rsiController
+from systems import divergenceController
 from systems import vertexController
 from systems import candlesController
 from systems import signalController
@@ -13,6 +14,7 @@ class TimeframeData:
         self.rsiController: rsiController.RsiController = rsiController.RsiController()
         self.vertexController: vertexController.VertexController = vertexController.VertexController()
         self.candlesController: candlesController.CandlesController = candlesController.CandlesController(tf)
+        self.divergenceController: divergenceController.DivergenceController = divergenceController.DivergenceController()
         self.signalController: signalController.SignalController = signalController.SignalController()
         
 class TimeframeController:
@@ -22,7 +24,8 @@ class TimeframeController:
         self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
         self.__data.atrController.init(self.__data.candlesController, self.__ticker.getPricePrecision())
         self.__data.rsiController.init(self.__data.candlesController)
-        self.__data.vertexController.init(self.__data.vertexController)
+        self.__data.divergenceController.init(self.__data.candlesController)
+        self.__data.vertexController.init(self.__data.candlesController)
         self.__data.signalController.init(self)
 
     def __getCandlesAmountForInit(self):
@@ -35,6 +38,7 @@ class TimeframeController:
         self.__data.atrController.process()
         self.__data.rsiController.process()
         self.__data.vertexController.process()
+        self.__data.divergenceController.process()
         self.__data.signalController.update(self.__data.candlesController.getLastCandle())
 
     def getTimeframe(self):
