@@ -39,7 +39,7 @@ class TimeframeController:
         self.__data.rsiController.process()
         self.__data.vertexController.process()
         self.__data.divergenceController.process()
-        self.__data.signalController.update(self.__data.candlesController.getLastCandle())
+        #self.__data.signalController.update(self.__data.candlesController.getLastCandle())
 
     def getTimeframe(self):
         return self.__data.timeframe

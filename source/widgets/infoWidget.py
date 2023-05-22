@@ -24,23 +24,38 @@ def __initTabs():
         tabWidget.setObjectName(tf.name + '_tab')
         __tabs.addTab(tabWidget, timeframe.getPrettyFormat(tf))
         tabWidget.setLayout(QVBoxLayout())
-        __initDeltas(tabWidget)
+        __initRsi(tabWidget)
+        __initAtr(tabWidget)
         __initLine(tabWidget)
         tabWidget.layout().addStretch()
 
-def __initDeltas(tab:QWidget):
+def __initRsi(tab:QWidget):
     layout = QHBoxLayout()
-    layout.setObjectName('deltaLayout')
+    layout.setObjectName('rsiLayout')
     tab.layout().addLayout(layout)
 
-    deltaLabel = QLabel('Delta, %')
-    deltaLabel.setObjectName('deltaLabel')
-    layout.addWidget(deltaLabel)
+    rsiLabel = QLabel('Rsi')
+    rsiLabel.setObjectName('rsiLabel')
+    layout.addWidget(rsiLabel)
     layout.addStretch()
 
-    deltaValue = QLabel('0.0')
-    deltaValue.setObjectName('deltaValue')
-    layout.addWidget(deltaValue)
+    rsiValue = QLabel('0.0')
+    rsiValue.setObjectName('rsiValue')
+    layout.addWidget(rsiValue)
+
+def __initAtr(tab:QWidget):
+    layout = QHBoxLayout()
+    layout.setObjectName('atrLayout')
+    tab.layout().addLayout(layout)
+
+    atrLabel = QLabel('Atr')
+    atrLabel.setObjectName('atrLabel')
+    layout.addWidget(atrLabel)
+    layout.addStretch()
+
+    atrValue = QLabel('0.0')
+    atrValue.setObjectName('atrValue')
+    layout.addWidget(atrValue)
 
 def __initLine(tab:QWidget):
     line = QFrame()
@@ -64,5 +79,13 @@ def update(ticker:str):
 
         tabWidget = __tabs.widget(index)
         index += 1
-        deltaValue = tabWidget.findChild(QLabel, 'deltaValue')
-        #deltaValue.setText(str(controller.getAtrController().getAtr()))
+        candle = None
+        candles = controller.getCandlesController().getFinishedCandles()
+        if len(candles) > 0:
+            candle = candles[-1]
+
+        atrValue = tabWidget.findChild(QLabel, 'atrValue')
+        atrValue.setText(str(candle.atr if candle else candle))
+
+        rsiValue = tabWidget.findChild(QLabel, 'rsiValue')
+        rsiValue.setText(str(candle.rsi if candle else candle))

@@ -60,10 +60,10 @@ class RsiController:
 
     def process(self):
         candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
-        if not candles:
+        if candles is None:
             self.__reset()
             candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
-        if not candles:
+        if candles is None:
             return
         
         for candle in candles:

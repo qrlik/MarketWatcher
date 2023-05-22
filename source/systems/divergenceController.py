@@ -58,7 +58,7 @@ class DivergenceController:
     def __processVertexs(self):
         for i in range(len(self.__candles)):
             fromC = self.__candles[i]
-            if not fromC.vertex or not fromC.rsi:
+            if not fromC.vertex or not fromC.rsi or not fromC.atr:
                 continue
             
             isHigh = fromC.vertex == vertexController.VertexType.HIGH
@@ -68,7 +68,7 @@ class DivergenceController:
             distance = min(self.__maxLength + 1, len(self.__candles) - i)
             for j in range(i + 1, i + distance):
                 toC = self.__candles[j]
-                if fromC.vertex != toC.vertex or not toC.rsi:
+                if fromC.vertex != toC.vertex or not toC.rsi or not toC.atr:
                     continue
                 newAnglePrice = math.atan((toC.close - fromC.close) / (j - i))
                 newAngleRsi = math.atan((toC.rsi - fromC.rsi) / (j - i))
@@ -172,6 +172,8 @@ class DivergenceController:
             return
         if candles[0].openTime != self.__lastOpenTime:
             self.__reset()
+        else:
+            return
 
         self.__updateCandles(candles)
         self.__processVertexs()
