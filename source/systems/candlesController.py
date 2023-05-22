@@ -184,6 +184,9 @@ class CandlesController(QObject):
                 return None
         return finished
 
+    def getTicker(self):
+        return self.__ticker
+
     def getTimeframe(self):
         return self.__timeframe
 

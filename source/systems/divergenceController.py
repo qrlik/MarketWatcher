@@ -115,8 +115,6 @@ class DivergenceController:
             info.breakDelta = abs(info.firstCandle.close - info.secondCandle.close)
             info.breakPercents = info.breakDelta / info.secondCandle.close * 100 + 1
         info.power = info.breakDelta / info.secondCandle.atr * info.breakPercents
-        if info.type == DivergenceSignalType.BEAR:
-            info.power = -info.power
 
     def __processDivergences(self):
         for firstVertex, lines in self.__lines.items():
@@ -163,6 +161,16 @@ class DivergenceController:
             if divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles):
                 self.__actuals.append(divergence)
  
+    def getPowers(self):
+        bullPower = 0.0
+        bearPower = 0.0
+        for divergence in self.__actuals:
+            if divergence.signal == DivergenceSignalType.BULL:
+                bullPower += divergence.power
+            else:
+                bearPower += divergence.power
+        return (bullPower, bearPower)
+
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.__maxLength + 1 + self.__actualLength

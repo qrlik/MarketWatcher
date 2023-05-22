@@ -2,16 +2,18 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QListWidget, QFrame, QAbstractItemView, QApplication
-from PySide6.QtCore import QFile, QTimer
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication
+from PySide6.QtCore import QFile, QTimer, Qt
 from PySide6.QtUiTools import QUiLoader
 
 from api import api
-from models import listTicketItem
 from systems import cacheController
 from systems import configController
 from systems import settingsController
 from systems import watcherController
+from widgets.watcherTableItems import divergenceAccumulatePowerItem
+from widgets.watcherTableItems import divergenceBearPowerItem
+from widgets.watcherTableItems import divergenceBullPowerItem
 from widgets import configsWindow
 from widgets import infoWidget
 from utilities import utils
@@ -62,16 +64,25 @@ class WatcherWindow(QMainWindow):
 
     def __initValues(self):
         self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')
-        self.__watcherList = self.__watcherWidget.findChild(QListWidget, 'watcherList')
+        self.__watcherTable:QTableWidget = self.__watcherWidget.findChild(QTableWidget, 'watcherTable')
         self.__infoWidget = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
         infoWidget.setWidget(self.__infoWidget)
 
     def __initList(self):
-        self.__watcherList.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.__watcherList.itemSelectionChanged.connect(self.__updateInfoWidget)
-        for ticker, _ in watcherController.getTickers().items():
-            self.__watcherList.insertItem(0, listTicketItem.ListTicketItem(ticker))
+        self.__watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.__watcherTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.__watcherTable.itemSelectionChanged.connect(self.__updateInfoWidget)
+        tickers = watcherController.getTickers().keys()
+        self.__watcherTable.setRowCount(len(tickers))
+        self.__watcherTable.setColumnCount(4)
+        row = 0
+        for ticker in tickers:
+            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker))
+            self.__watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
+            self.__watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
+            self.__watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
+            row += 1
 
     def __initSizes(self):
         self.setMinimumWidth(1000)
@@ -90,15 +101,17 @@ class WatcherWindow(QMainWindow):
         self.__updateInfoWidget()
 
     def __updateInfoWidget(self):
-        selectedItems = self.__watcherList.selectedItems()
+        selectedItems = self.__watcherTable.selectedItems()
         if len(selectedItems) == 0:
             return
-        infoWidget.update(selectedItems[0].getTicker())
+        infoWidget.update(selectedItems[0].text())
             
     def __updateList(self):
-        for i in range(self.__watcherList.count()):
-            self.__watcherList.item(i).update()
-        self.__watcherList.sortItems()
+        #to do is any dirty
+        for r in range(self.__watcherTable.rowCount()):
+            for c in range(1, self.__watcherTable.columnCount()):
+                self.__watcherTable.item(r, c).update()
+        self.__watcherTable.sortItems(1, order = Qt.SortOrder.DescendingOrder)
 
     def closeEvent(self, event):
         api.atExit()

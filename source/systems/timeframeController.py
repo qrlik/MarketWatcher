@@ -47,5 +47,7 @@ class TimeframeController:
         return self.__data.atrController
     def getCandlesController(self):
         return self.__data.candlesController
+    def getDivergenceController(self):
+        return self.__data.divergenceController
     def getSignalController(self):
         return self.__data.signalController
