@@ -20,15 +20,15 @@ if __name__ == "__main__":
     result = app.exec()
     sys.exit(result)
 
-        # import cProfile as profile
-        # import pstats
+    # import cProfile as profile
+    # import pstats
 
-        # prof = profile.Profile()
-        # prof.enable()
+    # prof = profile.Profile()
+    # prof.enable()
 
-        # prof.disable()
-        # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
-        # stats.print_stats(10) # top 10 rows
+    # prof.disable()
+    # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
+    # stats.print_stats(10) # top 10 rows
     
 # to do
 # to do get candle cach amount for rsi/vertex/divergence

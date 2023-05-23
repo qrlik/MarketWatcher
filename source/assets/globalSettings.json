@@ -10,5 +10,8 @@
 	},
 	"baseAssetsIgnores": [
 		"USDC"
-	]
+	],
+	"tickersStartTimestamps": {
+		"BNXUSDT": 1677052800000
+	}
 }

@@ -3,6 +3,7 @@ from api import api
 from models import timeframe
 from models import candle
 from widgets import asyncHelper
+from systems import settingsController
 from systems import websocketController
 from utilities import utils
 
@@ -85,6 +86,10 @@ class CandlesController(QObject):
         self.__syncRequested = False
 
         lastOpenFound = False
+        startTimestamp = settingsController.getTickerStartTimestamp(self.__ticker)
+        if startTimestamp:
+            self.__requestedCandles = [c for c in self.__requestedCandles if c.closeTime >= startTimestamp]
+            
         if len(self.__finishedCandles) == 0:
             lastOpenFound = True
             self.__finishedCandles.extend(self.__requestedCandles)
