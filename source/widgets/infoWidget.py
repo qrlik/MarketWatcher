@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget
+from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QListWidget,QAbstractItemView,QListWidgetItem
 
 from models import timeframe
 from systems import configController
@@ -27,6 +27,7 @@ def __initTabs():
         __initRsi(tabWidget)
         __initAtr(tabWidget)
         __initLine(tabWidget)
+        __initDivergenceList(tabWidget)
         tabWidget.layout().addStretch()
 
 def __initRsi(tab:QWidget):
@@ -64,6 +65,32 @@ def __initLine(tab:QWidget):
     line.setFrameShadow(QFrame.Shadow.Sunken)
     line.setFrameShape(QFrame.Shape.HLine)
 
+def __initDivergenceList(tab:QWidget):
+    list = QListWidget()
+    list.setObjectName('divergenceList')
+    tab.layout().addWidget(list)
+    list.itemSelectionChanged.connect(__showDivergenceTip)
+    list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+
+def __showDivergenceTip():
+    pass
+
+def __updateDivergenceList(list:QListWidget, controller):
+    divergences = controller.getActuals()
+    divergences.sort(key = lambda info:info.power, reverse = True)
+    insert = False
+    if len(divergences) != list.count():
+        insert = True
+        list.clear()
+    i = 0
+    for divergence in divergences:
+        text = divergence.type.name + '\t' + str(round(divergence.power, 2))
+        if insert:
+            list.insertItem(0, QListWidgetItem(text))
+        else:
+            list.item(i).setText(text)
+        i += 1
+
 def update(ticker:str):
     tickerController = watcherController.getTicker(ticker)
     timeframes = tickerController.getTimeframes()
@@ -89,3 +116,6 @@ def update(ticker:str):
 
         rsiValue = tabWidget.findChild(QLabel, 'rsiValue')
         rsiValue.setText(str(candle.rsi if candle else candle))
+
+        divergenceList = tabWidget.findChild(QListWidget, 'divergenceList')
+        __updateDivergenceList(divergenceList, controller.getDivergenceController())

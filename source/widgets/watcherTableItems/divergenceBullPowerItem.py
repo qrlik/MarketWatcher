@@ -19,5 +19,5 @@ class DivergenceBullPowerItem(QTableWidgetItem):
             allBullPower += bullPower
             allBearPower += bearPower
         self.__power = allBullPower
-        bearPercents = round(allBearPower / (allBullPower + allBearPower) * 100)
+        bearPercents = round(allBearPower / (allBullPower + allBearPower) * 100) if allBullPower + allBearPower > 0 else None
         super().setText(str(round(self.__power, 2)) + ' (' + str(100 - bearPercents) + ')')

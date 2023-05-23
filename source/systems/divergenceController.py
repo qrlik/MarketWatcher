@@ -161,6 +161,9 @@ class DivergenceController:
             if divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles):
                 self.__actuals.append(divergence)
  
+    def getActuals(self):
+        return self.__actuals
+
     def getPowers(self):
         bullPower = 0.0
         bearPower = 0.0
