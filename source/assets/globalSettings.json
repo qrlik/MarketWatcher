@@ -1,10 +1,13 @@
 {
 	"emaFactor": 8,
-	"atrAverageLength": 50,
-	"divergenceMaxLength": 50,
-	"divergenceActualLength": 10,
+	"atrAverageLength": 14,
+	"divergenceMaxLength": 30,
+	"divergenceActualLength": 5,
 	"rsiLength": 14,
 	"loopInterval": 1000,
+	"spotSymbolsExceptions": [
+		"BLUR"
+	],
 	"baseAssetsExceptions": {
 		"LUNA2": "LUNA"
 	},

@@ -29,7 +29,10 @@ class TimeframeController:
         self.__data.signalController.init(self)
 
     def __getCandlesAmountForInit(self):
-        return self.__data.atrController.getCandlesAmountForInit()
+        amount = self.__data.atrController.getCandlesAmountForInit()
+        amount = max(amount, self.__data.rsiController.getCandlesAmountForInit())
+        amount = max(amount, self.__data.divergenceController.getCandlesAmountForInit())
+        return amount
 
     def isSync(self):
         return self.__data.candlesController.sync()

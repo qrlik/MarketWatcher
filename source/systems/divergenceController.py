@@ -25,9 +25,6 @@ class DivergenceInfo:
         self.breakDelta = None
         self.power = None
 
-    def isValid(self):
-        return self.type and self.signal
-
 class DivergenceController:
     def __init__(self):
         self.__candleController = None
@@ -42,6 +39,9 @@ class DivergenceController:
         self.__divergences = OrderedDict()
         self.__actuals = []
         self.__lastOpenTime = 0
+
+    def getCandlesAmountForInit(self):
+        return self.__maxLength + 1 + self.__actualLength
 
     def init(self, candleController):
         self.__candleController = candleController
@@ -131,27 +131,31 @@ class DivergenceController:
                 if isRegularBreakout and isHiddenBreakout:
                     break
                 
-                info = DivergenceInfo()
-                info.firstCandle = firstCandle
-                info.firstIndex = firstVertex
-                info.secondCandle = secondCandle
-                info.secondIndex = secondVertex
+                type = None
+                signal = None
                 if (secondCandle.close > firstCandle.close) and (secondCandle.rsi < firstCandle.rsi):
                     if isHigh and not isRegularBreakout:
-                        info.type = DivergenceType.REGULAR
-                        info.signal = DivergenceSignalType.BEAR
+                        type = DivergenceType.REGULAR
+                        signal = DivergenceSignalType.BEAR
                     elif not isHigh and not isHiddenBreakout:
-                        info.type = DivergenceType.HIDDEN
-                        info.signal = DivergenceSignalType.BULL
+                        type = DivergenceType.HIDDEN
+                        signal = DivergenceSignalType.BULL
                 elif (secondCandle.close < firstCandle.close) and (secondCandle.rsi > firstCandle.rsi):
                     if isHigh and not isHiddenBreakout:
-                        info.type = DivergenceType.HIDDEN
-                        info.signal = DivergenceSignalType.BEAR
+                        type = DivergenceType.HIDDEN
+                        signal = DivergenceSignalType.BEAR
                     elif not isHigh and not isRegularBreakout:
-                        info.type = DivergenceType.REGULAR
-                        info.signal = DivergenceSignalType.BULL
+                        type = DivergenceType.REGULAR
+                        signal = DivergenceSignalType.BULL
 
-                if info.isValid():
+                if type and signal:
+                    info = DivergenceInfo()
+                    info.firstCandle = firstCandle
+                    info.firstIndex = firstVertex
+                    info.secondCandle = secondCandle
+                    info.secondIndex = secondVertex
+                    info.type = type
+                    info.signal = signal
                     self.__divergences.setdefault(firstVertex, info)
                     self.__calculatePower(info)
                     break
@@ -161,6 +165,9 @@ class DivergenceController:
             if divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles):
                 self.__actuals.append(divergence)
  
+    def isEmpty(self):
+        return len(self.__actuals) == 0
+
     def getActuals(self):
         return self.__actuals
 
@@ -176,7 +183,7 @@ class DivergenceController:
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
-        maxAmount = self.__maxLength + 1 + self.__actualLength
+        maxAmount = self.getCandlesAmountForInit()
         if len(candles) > maxAmount:
             candles = candles[-maxAmount:]
         elif len(candles) == 0:

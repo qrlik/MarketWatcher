@@ -12,6 +12,7 @@ def __getTickersList():
     basesFutures = set()
     exceptions = settingsController.getSetting('baseAssetsExceptions')
     ignores = settingsController.getSetting('baseAssetsIgnores')
+    spotIgnore = settingsController.getSetting('spotSymbolsExceptions')
     for symbol in infoFutures.get('symbols', []):
         status = symbol.get('status', '')
         baseAsset = symbol.get('baseAsset', '')
@@ -57,6 +58,8 @@ def __getTickersList():
                 break
 
     diffs = basesFutures.symmetric_difference(basesSpot)
+    for spot in spotIgnore:
+        diffs.discard(spot)
     if len(diffs) > 0:
         utils.log('watcherController::getTickersList not spot symbols - ' + str(diffs))
 

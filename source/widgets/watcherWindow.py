@@ -76,6 +76,7 @@ class WatcherWindow(QMainWindow):
         tickers = watcherController.getTickers().keys()
         self.__watcherTable.setRowCount(len(tickers))
         self.__watcherTable.setColumnCount(4)
+        self.__watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power', 'Bear Power'])
         row = 0
         for ticker in tickers:
             self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker))
@@ -85,9 +86,9 @@ class WatcherWindow(QMainWindow):
             row += 1
 
     def __initSizes(self):
-        self.setMinimumWidth(1000)
-        self.setMinimumHeight(600)
-        self.__infoWidget.setFixedWidth(300)
+        self.setFixedWidth(1100)
+        self.setFixedHeight(600)
+        self.__infoWidget.setFixedWidth(625)
         self.__logBrowser.setFixedHeight(150)
 
     def __initTimer(self):

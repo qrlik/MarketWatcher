@@ -31,7 +31,6 @@ if __name__ == "__main__":
     # stats.print_stats(10) # top 10 rows
     
 # to do
-# to do get candle cach amount for rsi/vertex/divergence
 # to do add root logs handler also for binance logs
 # to do request api system (from thread), every request return requestId, check for exceptions, limits
 

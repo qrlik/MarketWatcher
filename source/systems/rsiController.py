@@ -12,6 +12,9 @@ class RsiController:
         self.__lastOpenTime = 0
         self.__lastCandle = None
 
+    def getCandlesAmountForInit(self):
+        return self.__size * settingsController.getSetting('emaFactor')
+
     def init(self, candleController):
         self.__candleController = candleController
 

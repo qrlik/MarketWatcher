@@ -104,6 +104,9 @@ class __binanceClient:
 
         return [self.__parseResponce(responce, interval) for responce in result]
 
+    async def getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
+        return await self.__makeApiCallAsync(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
+
     async def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
         return await self.__makeApiCallAsync(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)

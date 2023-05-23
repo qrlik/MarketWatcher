@@ -19,8 +19,7 @@ async def checkFile(ticker, tf):
     if not timestamp:
         utils.logError('checkCache: empty timestamp ' + ticker + ' ' + tf)
 
-    #can raise exception
-    serverData = await api.Spot.__getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
+    serverData = await api.Spot.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
     if len(cachedCandles) != len(serverData):
         utils.logError('checkCache: wrong length ' + ticker + ' ' + tf)
     for i in range(len(cachedCandles)):
@@ -28,6 +27,19 @@ async def checkFile(ticker, tf):
         server = serverData[i]
         if cached != server:
             utils.logError('checkCache: not equal ' + ticker + ' ' + tf)
+    checkCandlesSequence(ticker, tf, cachedCandles)
+
+#LUNAUSDT 04:00 30-05-2022 its ok
+def checkCandlesSequence(ticker, timeframe, candles):
+    if len(candles) == 0:
+        return
+    lastOpen = candles[0].openTime
+    errorStr = 'TimeframeController: ' + ticker + ' ' + timeframe
+    if len(candles) > 1:
+        for candle in candles[1:]:
+            if lastOpen + candle.interval != candle.openTime:
+                utils.logError(errorStr + ' wrong finish sequence ' + candle.time)
+            lastOpen = candle.openTime
 
 async def checkCacheFolder():
     if not os.path.exists(utils.cacheFolder):
@@ -39,6 +51,7 @@ async def checkCacheFolder():
         if folder.is_dir():
             for file in os.listdir(folder.path):
                 await checkFile(folder.name, file.split('.')[0])
+        print(folder.name + ' finished')
     print('check finished')
 
 
