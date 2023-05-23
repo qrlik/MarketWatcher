@@ -65,8 +65,7 @@ class DivergenceController:
             anglePrice = -math.pi / 2 if isHigh else math.pi / 2
             angleRsi = -math.pi / 2 if isHigh else math.pi / 2
             self.__lines.setdefault(i, [])
-            distance = min(self.__maxLength + 1, len(self.__candles) - i)
-            for j in range(i + 1, i + distance):
+            for j in range(i + 1, len(self.__candles)):
                 toC = self.__candles[j]
                 if fromC.vertex != toC.vertex or not toC.rsi or not toC.atr:
                     continue
@@ -149,6 +148,8 @@ class DivergenceController:
                         signal = DivergenceSignalType.BULL
 
                 if type and signal:
+                    if secondVertex - firstVertex > self.__maxLength:
+                        break
                     info = DivergenceInfo()
                     info.firstCandle = firstCandle
                     info.firstIndex = firstVertex
@@ -160,9 +161,23 @@ class DivergenceController:
                     self.__calculatePower(info)
                     break
 
+    def __isDivergenceWorkedOut(self, divergence):
+        price = divergence.secondCandle.close
+        atrWorkout = divergence.secondCandle.atr
+        isBull = divergence.signal == DivergenceSignalType.BULL
+        priceWorkout = price + atrWorkout if isBull else price - atrWorkout
+        for index in range(divergence.secondIndex + 1, len(self.__candles)):
+            if (isBull and self.__candles[index].high >= priceWorkout) \
+            or (not isBull and self.__candles[index].low <= priceWorkout):
+                return True
+        return False
+
+    def __isDivergenceLengthActual(self, divergence):
+        return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
+
     def __processActuals(self):
         for _, divergence in self.__divergences.items():
-            if divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles):
+            if not self.__isDivergenceWorkedOut(divergence) and self.__isDivergenceLengthActual(divergence):
                 self.__actuals.append(divergence)
  
     def isEmpty(self):
