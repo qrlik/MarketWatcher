@@ -1,4 +1,7 @@
 from enum import Enum
+from systems import settingsController
+
+from collections import OrderedDict
 
 class VertexType(Enum):
     HIGH = 0,
@@ -7,11 +10,16 @@ class VertexType(Enum):
 class VertexController:
     def __init__(self):
         self.__candleController = None
+        self.__strengthClosesLength = 0
+        self.__strengthCloses = []
+        for strength in settingsController.getSetting('vertexStrengthToDivergenceLength').keys():
+            self.__strengthClosesLength = max(self.__strengthClosesLength, int(strength))
         self.__reset()
 
     def __reset(self):
         self.__lastOpenTime = 0
         self.__lastCandle = None
+        self.__strengthCloses.clear()
 
     def init(self, candleController):
         self.__candleController = candleController
@@ -19,6 +27,9 @@ class VertexController:
     def __updateCandles(self, candle):
         self.__lastCandle = candle
         self.__lastOpenTime = candle.openTime + candle.interval
+        self.__strengthCloses.append(candle.close)
+        if len(self.__strengthCloses) > self.__strengthClosesLength:
+            self.__strengthCloses.pop(0)
 
     def __calculateVertex(self, candle):
         if not self.__lastCandle:
@@ -34,6 +45,25 @@ class VertexController:
         else:
             candle.vertex = self.__lastCandle.vertex
             self.__lastCandle.vertex = None
+        self.__calculateVertexStrength(candle)
+
+    def __calculateVertexStrength(self, candle):
+        if candle.vertex is None:
+            return
+        for close in self.__strengthCloses[::-1]:
+            if candle.vertex == VertexType.HIGH:
+                if close <= candle.close:
+                    candle.vertexStrength += 1
+                else:
+                    break
+            elif candle.vertex == VertexType.LOW:
+                if close >= candle.close:
+                    candle.vertexStrength += 1
+                else:
+                    break
+        if len(self.__strengthCloses) != self.__strengthClosesLength \
+        and candle.vertexStrength == len(self.__strengthCloses):
+            candle.vertexStrength = self.__strengthClosesLength
 
     def process(self):
         candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)

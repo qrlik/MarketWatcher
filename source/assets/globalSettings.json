@@ -1,10 +1,13 @@
 {
+	"loopInterval": 1000,
 	"emaFactor": 8,
 	"atrAverageLength": 14,
-	"divergenceMaxLength": 30,
+	"vertexStrengthToDivergenceLength": {
+		"1": 15,
+		"6": 30
+	},
 	"divergenceActualLength": 5,
 	"rsiLength": 14,
-	"loopInterval": 1000,
 	"spotSymbolsExceptions": [
 		"BLUR"
 	],

@@ -15,6 +15,7 @@ class Candle:
         self.atr = None
         self.rsi = None
         self.vertex = None
+        self.vertexStrength = 0
 
         self.lastUpMaValue = None
         self.lastDownMaValue = None

@@ -28,7 +28,10 @@ class DivergenceInfo:
 class DivergenceController:
     def __init__(self):
         self.__candleController = None
-        self.__maxLength = settingsController.getSetting('divergenceMaxLength')
+        self.__strengthToLength = OrderedDict(settingsController.getSetting('vertexStrengthToDivergenceLength'))
+        self.__maxLength = 0
+        for _, length in self.__strengthToLength.items():
+            self.__maxLength = max(self.__maxLength, length)
         self.__actualLength = settingsController.getSetting('divergenceActualLength')
         self.__rsiSize = settingsController.getSetting('rsiLength')
         self.__reset()
@@ -46,8 +49,8 @@ class DivergenceController:
     def init(self, candleController):
         self.__candleController = candleController
 
-    def setSizes(self, max, actual, rsiSize):
-        self.__maxLength = max
+    def setSizes(self, strengthToLength, actual, rsiSize):
+        self.__strengthToLength = strengthToLength
         self.__actualLength = actual
         self.__rsiSize = rsiSize
 
@@ -115,9 +118,17 @@ class DivergenceController:
             info.breakPercents = info.breakDelta / info.secondCandle.close * 100 + 1
         info.power = info.breakDelta / info.secondCandle.atr * info.breakPercents
 
+    def __getDivergenceLength(self, vertexStrength):
+        maxLength = self.__maxLength
+        for strength, length in self.__strengthToLength.items():
+            if vertexStrength >= int(strength):
+                maxLength = length
+        return maxLength
+
     def __processDivergences(self):
         for firstVertex, lines in self.__lines.items():
             firstCandle = self.__candles[firstVertex]
+            maxLength = self.__getDivergenceLength(firstCandle.vertexStrength)
             isHigh = firstCandle.vertex == vertexController.VertexType.HIGH
             isRegularBreakout = False
             isHiddenBreakout = False
@@ -148,7 +159,7 @@ class DivergenceController:
                         signal = DivergenceSignalType.BULL
 
                 if type and signal:
-                    if secondVertex - firstVertex > self.__maxLength:
+                    if secondVertex - firstVertex > maxLength:
                         break
                     info = DivergenceInfo()
                     info.firstCandle = firstCandle
