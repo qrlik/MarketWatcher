@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
     
-# to do colors, change column order, sort tabs by power
+# to do add sort by columns
 # to do break in % from 0 to 100?
 # to do add root logs handler also for binance logs
 # to do request api system (from thread), every request return requestId, check for exceptions, limits

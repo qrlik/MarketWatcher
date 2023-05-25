@@ -99,13 +99,13 @@ class WatcherWindow(QMainWindow):
     def __loop(self):
         watcherController.loop()
         self.__updateList()
-        self.__updateInfoWidget()
+        self.__updateInfoWidget(False)
 
-    def __updateInfoWidget(self):
+    def __updateInfoWidget(self, byClick=True):
         selectedItems = self.__watcherTable.selectedItems()
         if len(selectedItems) == 0:
             return
-        infoWidget.update(selectedItems[0].text())
+        infoWidget.update(selectedItems[0].text(), byClick)
             
     def __updateList(self):
         #to do is any dirty

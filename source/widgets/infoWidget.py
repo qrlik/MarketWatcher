@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView
+from PySide6.QtCore import Qt
 
 from models import timeframe
 from systems import configController
@@ -23,7 +24,7 @@ def __init():
 def __initTabs():
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
-        tabWidget.setObjectName(tf.name + '_tab')
+        tabWidget.setObjectName(tf.name)
         __tabs.addTab(tabWidget, timeframe.getPrettyFormat(tf))
         tabWidget.setLayout(QVBoxLayout())
         __initRsi(tabWidget)
@@ -75,12 +76,30 @@ def __initDivergenceTable(tab:QWidget):
     table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     table.setColumnCount(7)
     table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+    table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+    table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
     table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)
-    table.setHorizontalHeaderLabels(['Type', 'Power', 'First', 'Second', 'Length', 'Break,%', 'Break/ATR'])
+    table.setHorizontalHeaderLabels(['Type', 'Power', 'Break,%', 'Break/ATR', 'Length', 'First', 'Second', ])
 
-def __updateDivergenceTable(table:QTableWidget, controller):
+def __updatePrice(tfController):
+    lastCandle = tfController.getCandlesController().getLastCandle()
+    price = lastCandle.close if lastCandle else 'null'
+    __priceValue.setText(str(price))
+
+def __updateTabValues(tabWidget:QWidget, cndlesController):
+    candle = None
+    candles = cndlesController.getFinishedCandles()
+    if len(candles) > 0:
+        candle = candles[-1]
+
+    atrValue = tabWidget.findChild(QLabel, 'atrValue')
+    atrValue.setText(str(candle.atr if candle else candle))
+
+    rsiValue = tabWidget.findChild(QLabel, 'rsiValue')
+    rsiValue.setText(str(candle.rsi if candle else candle))
+
+def __updateDivergenceTable(tabWidget:QWidget, controller):
+    table = tabWidget.findChild(QTableWidget, 'divergenceTable')
     divergences = controller.getActuals()
     divergences.sort(key = lambda info:info.power, reverse = True)
     if len(divergences) != table.rowCount():
@@ -97,44 +116,50 @@ def __updateDivergenceTable(table:QTableWidget, controller):
 
     row = 0
     for divergence in divergences:
+        color = Qt.GlobalColor.darkRed if divergence.signal.name == 'BEAR' else Qt.GlobalColor.darkGreen
         table.item(row, 0).setText(divergence.type.name)
+        table.item(row, 0).setForeground(color)
         table.item(row, 1).setText(str(round(divergence.power, 2)))
-        table.item(row, 2).setText(divergence.firstCandle.time)
-        table.item(row, 3).setText(divergence.secondCandle.time)
+        table.item(row, 2).setText(str(round(divergence.breakDelta / divergence.secondCandle.close * 100, 2)))
+        table.item(row, 3).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))
         table.item(row, 4).setText(str(divergence.secondIndex - divergence.firstIndex))
-        table.item(row, 5).setText(str(round(divergence.breakDelta / divergence.secondCandle.close * 100, 2)))
-        table.item(row, 6).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))
-        # to do may be change to current candle? or think about dynamic power
+        table.item(row, 5).setText(divergence.firstCandle.time)
+        table.item(row, 6).setText(divergence.secondCandle.time)
         row += 1
 
-def update(ticker:str):
+def __sortTabs(powerToName:list):
+    powerToName.sort(key = lambda tuple:tuple[0], reverse = True)
+    for sortIndex in range(len(powerToName)):
+        _, name = powerToName[sortIndex]
+        for tabIndex in range(__tabs.count()):
+            if __tabs.widget(tabIndex).objectName() == name:
+                __tabs.tabBar().moveTab(tabIndex, sortIndex)
+
+def __updateVisible(tickerController):
+    for tabIndex in range(__tabs.count()):
+        tabWidget = __tabs.widget(tabIndex)
+        tf = timeframe.Timeframe[tabWidget.objectName()]
+        tfController = tickerController.getTimeframe(tf)
+        __tabs.setTabVisible(tabIndex, not tfController.getDivergenceController().isEmpty())
+
+def update(ticker:str, byClick):
     tickerController = watcherController.getTicker(ticker)
-    timeframes = tickerController.getTimeframes()
-    first = True
 
-    index = -1
-    for _, controller in timeframes.items():
-        index += 1
-        if first:
-            first = False
-            lastCandle = controller.getCandlesController().getLastCandle()
-            price = lastCandle.close if lastCandle else 'null'
-            __priceValue.setText(str(price))
+    powerToName = []
+    for tabIndex in range(__tabs.count()):
+        tabWidget = __tabs.widget(tabIndex)
+        tf = timeframe.Timeframe[tabWidget.objectName()]
+        tfController = tickerController.getTimeframe(tf)
 
-        tabWidget = __tabs.widget(index)
-        
-        candle = None
-        candles = controller.getCandlesController().getFinishedCandles()
-        if len(candles) > 0:
-            candle = candles[-1]
-
-        atrValue = tabWidget.findChild(QLabel, 'atrValue')
-        atrValue.setText(str(candle.atr if candle else candle))
-
-        rsiValue = tabWidget.findChild(QLabel, 'rsiValue')
-        rsiValue.setText(str(candle.rsi if candle else candle))
-
-        divergenceTable = tabWidget.findChild(QTableWidget, 'divergenceTable')
-        __updateDivergenceTable(divergenceTable, controller.getDivergenceController())
-        __tabs.setTabVisible(index, not controller.getDivergenceController().isEmpty())
+        if tabIndex == 0:
+            __updatePrice(tfController)
+        __tabs.setTabVisible(tabIndex, True)
+        __updateTabValues(tabWidget, tfController.getCandlesController())
+        __updateDivergenceTable(tabWidget, tfController.getDivergenceController())
+        bullPower, bearPower = tfController.getDivergenceController().getPowers()
+        powerToName.append((abs(bullPower - bearPower), tf.name))
+    __sortTabs(powerToName)
+    __updateVisible(tickerController)
+    if byClick:
+        __tabs.setCurrentIndex(0)
             
