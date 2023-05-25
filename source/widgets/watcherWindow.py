@@ -67,6 +67,7 @@ class WatcherWindow(QMainWindow):
         self.__watcherTable:QTableWidget = self.__watcherWidget.findChild(QTableWidget, 'watcherTable')
         self.__infoWidget = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        self.__sortColumn = 1
         infoWidget.setWidget(self.__infoWidget)
 
     def __initList(self):
@@ -77,6 +78,8 @@ class WatcherWindow(QMainWindow):
         self.__watcherTable.setRowCount(len(tickers))
         self.__watcherTable.setColumnCount(4)
         self.__watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power', 'Bear Power'])
+        self.__watcherTable.horizontalHeader().sectionClicked.connect(self.__updateSortOrder)
+
         row = 0
         for ticker in tickers:
             self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker))
@@ -106,13 +109,23 @@ class WatcherWindow(QMainWindow):
         if len(selectedItems) == 0:
             return
         infoWidget.update(selectedItems[0].text(), byClick)
-            
+    
+    def __updateSortOrder(self, index):
+        if index != self.__sortColumn and (index == 0 or index == 1):
+            self.__sortColumn = index
+            self.__sortList()
+
     def __updateList(self):
-        #to do is any dirty
         for r in range(self.__watcherTable.rowCount()):
             for c in range(1, self.__watcherTable.columnCount()):
                 self.__watcherTable.item(r, c).update()
-        self.__watcherTable.sortItems(1, order = Qt.SortOrder.DescendingOrder)
+        self.__sortList()
+
+    def __sortList(self):
+        if self.__sortColumn == 0:
+            self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.AscendingOrder)
+        elif self.__sortColumn == 1:
+            self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
     def closeEvent(self, event):
         api.atExit()

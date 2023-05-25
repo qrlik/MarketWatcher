@@ -3,7 +3,8 @@
 	"emaFactor": 8,
 	"atrAverageLength": 14,
 	"vertexStrengthToDivergenceLength": {
-		"1": 15,
+		"1": 5,
+		"3": 15,
 		"6": 30
 	},
 	"divergenceActualLength": 5,
