@@ -84,5 +84,8 @@ def start():
         controller.init()
 
 def loop():
+    allProgress = len(__tickers)
+    curProgress = 0
     for _, controller in __tickers.items():
-        controller.loop()
+        curProgress += controller.loop()
+    return int(curProgress / allProgress * 100)

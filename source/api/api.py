@@ -1,3 +1,5 @@
+from api import apiRequests
+from api import apiLimits
 from models import candle
 from models import timeframe
 from utilities import utils
@@ -6,19 +8,21 @@ from binance.um_futures import UMFutures as Futures
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from binance.websocket.spot.websocket_client import SpotWebsocketClient
 from datetime import datetime
+import asyncio
 import os
 import socket
 import struct
 import win32api
+import time
 
 class __binanceClient:
     def __init__(self, isSpot:bool):
         self.__socketId = 1
         if isSpot:
-            self.__client = Spots(api_key=self.__KEY, api_secret=self.__SECRET)
+            self.__client = Spots(api_key=self.__KEY, api_secret=self.__SECRET, show_limit_usage=True)
             self.__websocket = SpotWebsocketClient()
         else:
-            self.__client = Futures(key=self.__KEY, secret=self.__SECRET)
+            self.__client = Futures(key=self.__KEY, secret=self.__SECRET, show_limit_usage=True)
             self.__websocket = UMFuturesWebsocketClient()
         self.__websocket.start()
 
@@ -42,27 +46,41 @@ class __binanceClient:
         except socket.timeout as e:
                 utils.logError(e)
 
-    def __makeApiCall(self, func, *args):
-        while True:
-            try:
-                return func(*args)
-            except Exception as e:
-                utils.logError(str(e))
-                if hasattr(e, 'error_code') and e.error_code == -1021:
-                    self.__updateTime()
-                else:
-                    return None
+    def __processError(self, e):
+        utils.logError(str(e))
+        if hasattr(e, 'error_code'):
+            if e.error_code == -1021:
+                self.__updateTime()
+            elif e.error_code == -1003:
+                x = 5
+            else:
+                x = 5
 
-    async def __makeApiCallAsync(self, func, *args):
-        while True:
-            try:
-                return await func(*args)
-            except Exception as e:
-                utils.logError(str(e))
-                if hasattr(e, 'error_code') and e.error_code == -1021:
-                    self.__updateTime()
-                else:
-                    return None
+    def __makeApiCall(self, func, *args):
+        result = None
+        while result is None:
+            if apiLimits.isAllowed():
+                try:
+                    result = func(*args)
+                except Exception as e:
+                    self.__processError(e)
+            else:
+                time.sleep(0.5)
+        apiLimits.onResponce(result.get('limit_usage', {}))
+        return result.get('data', result)
+
+    async def __makeApiCallAsync(self, func, **kwargs):
+        result = None
+        while result is None:
+            if apiLimits.isAllowed():
+                try:
+                    result = await func(**kwargs)
+                except Exception as e:
+                    self.__processError(e)
+            else:
+                asyncio.sleep(0.5)
+        apiLimits.onResponce(result.get('limit_usage', {}))
+        return result.get('data', result)
 
     ### sync block
     def getExchangeInfo(self):
@@ -88,7 +106,7 @@ class __binanceClient:
 
     ### async block
     async def __getCandelsTimed(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
-        return await self.__client.klinesAsync(symbol, interval, startTime = startPoint, limit = amount)
+        return await self.__makeApiCallAsync(self.__client.klinesAsync, symbol = symbol, interval = interval, startTime = startPoint, limit = amount)
 
     async def __getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
@@ -104,19 +122,19 @@ class __binanceClient:
 
         return [self.__parseResponce(responce, interval) for responce in result]
 
-    async def getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
-        return await self.__makeApiCallAsync(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
+    def getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
+        return apiRequests.requester.addAsyncRequest(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
 
-    async def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+    def getCandels(self, symbol: str, interval: timeframe.Timeframe, amount: int):
         startPoint = utils.getCurrentTime() - amount * interval
-        return await self.__makeApiCallAsync(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
-
-    async def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
-        result = await self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))
-        if result is not None and len(result) > 0:
-            result.pop()
-        return result
+        return apiRequests.requester.addAsyncRequest(self.__getCandlesByTimestamp, symbol, interval, amount, startPoint)
     ###
+
+    # async def getFinishedCandles(self, symbol: str, interval: timeframe.Timeframe, amount: int):
+    #     result = await self.getCandels(symbol, interval, (amount + 1 if amount > 0 else 0))
+    #     if result is not None and len(result) > 0:
+    #         result.pop()
+    #     return result
 
     __KEY = os.getenv('BINANCE_KEY')
     __SECRET = os.getenv('BINANCE_SECRET')

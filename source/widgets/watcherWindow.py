@@ -21,6 +21,8 @@ from utilities import utils
 class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
+        self.__sortColumn = 1
+        self.__lastProgress = -1
 
         configController.load('default')#(cacheController.getLastConfigFilename())
         #self.__initConfigWindow()
@@ -63,11 +65,10 @@ class WatcherWindow(QMainWindow):
         #self.__configsWindow = None
 
     def __initValues(self):
-        self.__watcherWidget = self.findChild(QWidget, 'watcherWidget')
+        self.__watcherWidget:QWidget = self.findChild(QWidget, 'watcherWidget')
         self.__watcherTable:QTableWidget = self.__watcherWidget.findChild(QTableWidget, 'watcherTable')
-        self.__infoWidget = self.__watcherWidget.findChild(QFrame, 'infoWidget')
-        self.__logBrowser = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
-        self.__sortColumn = 1
+        self.__infoWidget:QFrame = self.__watcherWidget.findChild(QFrame, 'infoWidget')
+        self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
         infoWidget.setWidget(self.__infoWidget)
 
     def __initList(self):
@@ -100,7 +101,8 @@ class WatcherWindow(QMainWindow):
         timer.start(settingsController.getSetting('loopInterval'))
 
     def __loop(self):
-        watcherController.loop()
+        progress = watcherController.loop()
+        self.__logProgress(progress)
         self.__updateList()
         self.__updateInfoWidget(False)
 
@@ -126,6 +128,13 @@ class WatcherWindow(QMainWindow):
             self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.AscendingOrder)
         elif self.__sortColumn == 1:
             self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.DescendingOrder)
+
+    def __logProgress(self, progress):
+        if self.__lastProgress >= 100:
+            return
+        text = '...' + (str(progress) if progress < 100 else 'ALL LOADED')
+        self.__logBrowser.insertPlainText(text)
+        self.__lastProgress = progress
 
     def closeEvent(self, event):
         api.atExit()

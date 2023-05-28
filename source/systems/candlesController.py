@@ -1,26 +1,22 @@
-from PySide6.QtCore import Signal, QObject
+from PySide6.QtCore import QObject
 from api import api
+from api import apiRequests
 from models import timeframe
 from models import candle
-from widgets import asyncHelper
 from systems import settingsController
 from systems import websocketController
 from utilities import utils
 
 class CandlesController(QObject):
-    taskDoneSignal = Signal()
-
     def __init__(self, tf: timeframe.Timeframe):
         super().__init__(None)
-        self.__requestedCandles:list = None
         self.__finishedCandles:list = []
         self.__currentCandle:candle.Candle = None
 
         self.__timeframe:timeframe.Timeframe = tf
         self.__amountForCache = 0
-        self.__syncRequested = False
+        self.__requestId = -1
         self.__ticker = ''
-        asyncHelper.Helper.addWorker(self.taskDoneSignal)
 
     def init(self, ticker, arg):
         self.__ticker = ticker
@@ -45,7 +41,7 @@ class CandlesController(QObject):
         self.__requestSync()
 
     def __requestSync(self):
-        if self.__syncRequested:
+        if self.__requestId >= 0:
             return
         amountForRequest = self.__amountForCache + 1
         if self.__currentCandle and utils.getCurrentTime() < self.__currentCandle.closeTime:
@@ -58,12 +54,7 @@ class CandlesController(QObject):
             else:
                 amountForRequest = amountFromLastOpen + 1
         if amountForRequest > 0:
-            self.__syncRequested = True
-            asyncHelper.Helper.addTask(self.__requestCandles, amountForRequest)
-
-    async def __requestCandles(self, amountForRequest):
-        self.__requestedCandles = await api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
-        self.taskDoneSignal.emit() # to do try to move in update
+            self.__requestId = api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
 
     def __updateCandles(self, current, finished, withSave):
         self.__currentCandle = current
@@ -81,21 +72,24 @@ class CandlesController(QObject):
         utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
 
     def __checkSyncResponse(self):
-        if not self.__syncRequested or not self.__requestedCandles:
+        if self.__requestId == -1:
             return False
-        self.__syncRequested = False
+        response = apiRequests.requester.getResponse(self.__requestId)
+        if response is None:
+            return False
+        self.__requestId = -1
 
         lastOpenFound = False
         startTimestamp = settingsController.getTickerStartTimestamp(self.__ticker)
         if startTimestamp:
-            self.__requestedCandles = [c for c in self.__requestedCandles if c.closeTime >= startTimestamp]
+            response = [c for c in response if c.closeTime >= startTimestamp]
             
         if len(self.__finishedCandles) == 0:
             lastOpenFound = True
-            self.__finishedCandles.extend(self.__requestedCandles)
+            self.__finishedCandles.extend(response)
         else:
             lastOpen = self.__finishedCandles[-1].openTime
-            for candle in self.__requestedCandles:
+            for candle in response:
                 if lastOpenFound:
                     self.__finishedCandles.append(candle)
                 elif lastOpen == candle.openTime:
@@ -109,7 +103,6 @@ class CandlesController(QObject):
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
-        self.__requestedCandles = None
         self.__shrinkAndSave()
         return True
 
@@ -165,7 +158,7 @@ class CandlesController(QObject):
         return True
 
     def sync(self):
-        if self.__syncRequested:
+        if self.__requestId >= 0:
             if not self.__checkSyncResponse():
                 return False
         result = self.__syncFromWebsocket()
