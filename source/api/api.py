@@ -5,7 +5,6 @@ from models import timeframe
 from utilities import utils
 from binance.spot import Spot as Spots
 from binance.um_futures import UMFutures as Futures
-from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from binance.websocket.spot.websocket_client import SpotWebsocketClient
 from datetime import datetime
 import asyncio
@@ -21,13 +20,14 @@ class __binanceClient:
         if isSpot:
             self.__client = Spots(api_key=self.__KEY, api_secret=self.__SECRET, show_limit_usage=True)
             self.__websocket = SpotWebsocketClient()
+            self.__websocket.start()
         else:
             self.__client = Futures(key=self.__KEY, secret=self.__SECRET, show_limit_usage=True)
-            self.__websocket = UMFuturesWebsocketClient()
-        self.__websocket.start()
+            self.__websocket = None
 
     def exit(self):
-        self.__websocket.close()
+        if self.__websocket:
+            self.__websocket.close()
 
     def __updateTime(self):
         TIME1970 = 2208988800
@@ -47,14 +47,15 @@ class __binanceClient:
                 utils.logError(e)
 
     def __processError(self, e):
-        utils.logError(str(e))
         if hasattr(e, 'error_code'):
             if e.error_code == -1021:
                 self.__updateTime()
-            elif e.error_code == -1003:
-                x = 5
+            elif e.status_code == 429 or e.status_code == 418 or e.error_code ==-1003:
+                apiLimits.onError(e.error_message)
             else:
-                x = 5
+                utils.logError(str(e))
+        else:
+            utils.logError(str(e))
 
     def __makeApiCall(self, func, *args):
         result = None
@@ -78,7 +79,7 @@ class __binanceClient:
                 except Exception as e:
                     self.__processError(e)
             else:
-                asyncio.sleep(0.5)
+                await asyncio.sleep(0.5)
         apiLimits.onResponce(result.get('limit_usage', {}))
         return result.get('data', result)
 
@@ -87,8 +88,9 @@ class __binanceClient:
         return self.__makeApiCall(self.__client.exchange_info)
 
     def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
-        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
-        self.__socketId += 1
+        if self.__websocket:
+            self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
+            self.__socketId += 1
     ###
 
     def __parseResponce(self, responceCandles, interval: timeframe.Timeframe):

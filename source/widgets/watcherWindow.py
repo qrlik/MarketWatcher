@@ -21,6 +21,7 @@ from utilities import utils
 class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
+        self.__watcherInited = False
         self.__sortColumn = 1
         self.__lastProgress = -1
 
@@ -40,8 +41,6 @@ class WatcherWindow(QMainWindow):
         self.setCentralWidget(self.__watcherWidget)
         #self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
 
-        watcherController.start()
-        self.__initList()
         self.__initTimer()
 
     def __loadUi(self):
@@ -52,10 +51,10 @@ class WatcherWindow(QMainWindow):
         loader.load(uiFile, self)
         uiFile.close()
 
-    def __initConfigWindow(self):
-        self.__configsWindow = configsWindow.ConfigsWindow()
-        self.setCentralWidget(self.__configsWindow)
-        self.__configsWindow.onStart.connect(self.__onStart)
+    # def __initConfigWindow(self):
+    #     self.__configsWindow = configsWindow.ConfigsWindow()
+    #     self.setCentralWidget(self.__configsWindow)
+    #     self.__configsWindow.onStart.connect(self.__onStart)
 
     def __onStart(self):
         self.__init()
@@ -101,6 +100,11 @@ class WatcherWindow(QMainWindow):
         timer.start(settingsController.getSetting('loopInterval'))
 
     def __loop(self):
+        if not self.__watcherInited:
+            watcherController.start()
+            self.__initList()
+            self.__watcherInited = True
+
         progress = watcherController.loop()
         self.__logProgress(progress)
         self.__updateList()
@@ -130,7 +134,7 @@ class WatcherWindow(QMainWindow):
             self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
     def __logProgress(self, progress):
-        if self.__lastProgress >= 100:
+        if self.__lastProgress >= 100 or self.__lastProgress >= progress:
             return
         text = '...' + (str(progress) if progress < 100 else 'ALL LOADED')
         self.__logBrowser.insertPlainText(text)
@@ -145,3 +149,4 @@ class WatcherWindow(QMainWindow):
         if not self.__logBrowser:
             return
         self.__logBrowser.append(datetime.datetime.now().strftime("%H:%M:%S") + ': ' + text)
+        self.__logBrowser.verticalScrollBar().setValue(self.__logBrowser.verticalScrollBar().maximum())
