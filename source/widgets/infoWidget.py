@@ -2,26 +2,31 @@ from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,Q
 from PySide6.QtCore import Qt
 
 from models import timeframe
+from systems import cacheController
 from systems import configController
 from systems import watcherController
 
 __widget:QFrame = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
+__tickerController = None
 
 def setWidget(widget:QFrame):
     global __widget, __priceValue, __tabs
     __widget = widget
     __priceValue = __widget.findChild(QLabel, 'priceValue')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
-    __tabs.tabBar().setDocumentMode(True)
-    __tabs.tabBar().setExpanding(True)
+
     __init()
 
 def __init():
     __initTabs()
 
 def __initTabs():
+    __tabs.tabBar().setDocumentMode(True)
+    __tabs.tabBar().setExpanding(True)
+    __tabs.currentChanged.connect(__onTabClicked)
+
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
         tabWidget.setObjectName(tf.name)
@@ -81,6 +86,18 @@ def __initDivergenceTable(tab:QWidget):
     table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
     table.setHorizontalHeaderLabels(['Type', 'Power', 'Break,%', 'Break/ATR', 'Length', 'First', 'Second', ])
 
+def __onTabClicked(index):
+    if __tickerController is None:
+        return
+    tabWidget = __tabs.widget(index)
+    tf = timeframe.Timeframe[tabWidget.objectName()]
+    controller = __tickerController.getTimeframe(tf).getDivergenceController()
+    divergences = controller.getActuals()
+    for divergence in divergences:
+        time1 = divergence.firstCandle.time
+        time2 = divergence.secondCandle.time
+        cacheController.setDivergenceViewed(__tickerController.getTicker(), tabWidget.objectName(), time1, time2, True)
+    
 def __updatePrice(tfController):
     lastCandle = tfController.getCandlesController().getLastCandle()
     price = lastCandle.close if lastCandle else 'null'
@@ -135,21 +152,22 @@ def __sortTabs(powerToName:list):
             if __tabs.widget(tabIndex).objectName() == name:
                 __tabs.tabBar().moveTab(tabIndex, sortIndex)
 
-def __updateVisible(tickerController):
+def __updateVisible():
     for tabIndex in range(__tabs.count()):
         tabWidget = __tabs.widget(tabIndex)
         tf = timeframe.Timeframe[tabWidget.objectName()]
-        tfController = tickerController.getTimeframe(tf)
+        tfController = __tickerController.getTimeframe(tf)
         __tabs.setTabVisible(tabIndex, not tfController.getDivergenceController().isEmpty())
 
 def update(ticker:str, byClick):
-    tickerController = watcherController.getTicker(ticker)
+    global __tickerController
+    __tickerController = watcherController.getTicker(ticker)
 
     powerToName = []
     for tabIndex in range(__tabs.count()):
         tabWidget = __tabs.widget(tabIndex)
         tf = timeframe.Timeframe[tabWidget.objectName()]
-        tfController = tickerController.getTimeframe(tf)
+        tfController = __tickerController.getTimeframe(tf)
 
         if tabIndex == 0:
             __updatePrice(tfController)
@@ -159,7 +177,9 @@ def update(ticker:str, byClick):
         bullPower, bearPower = tfController.getDivergenceController().getPowers()
         powerToName.append((abs(bullPower - bearPower), tf.name))
     __sortTabs(powerToName)
-    __updateVisible(tickerController)
+    __updateVisible()
     if byClick:
         __tabs.setCurrentIndex(0)
+    #to do update tabs colors
+
             

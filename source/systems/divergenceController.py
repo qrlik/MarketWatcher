@@ -1,3 +1,4 @@
+from systems import cacheController
 from systems import settingsController
 from systems import vertexController
 
@@ -25,7 +26,7 @@ class DivergenceInfo:
         self.breakDelta = None
         self.power = None
         self.finishedWorkedOut = None
-        self.new = True
+        self.viewed = True
 
 class DivergenceController:
     def __init__(self):
@@ -190,7 +191,7 @@ class DivergenceController:
     def __isDivergenceLengthActual(self, divergence):
         return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
 
-    def __processActuals(self):
+    def __processActualsByLength(self):
         for _, divergence in self.__divergences.items():
             if self.__isDivergenceLengthActual(divergence):
                 self.__actualsByLength.append(divergence)
@@ -248,4 +249,5 @@ class DivergenceController:
         self.__processDivergences()
         self.__processActualsByLength()
         self.__processActuals()
+        cacheController.updateViewedDivergences(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__actuals)
         

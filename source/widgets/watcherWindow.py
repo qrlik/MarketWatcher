@@ -115,6 +115,7 @@ class WatcherWindow(QMainWindow):
         if len(selectedItems) == 0:
             return
         infoWidget.update(selectedItems[0].text(), byClick)
+        #to do update colors
     
     def __updateSortOrder(self, index):
         if index != self.__sortColumn and (index == 0 or index == 1):
@@ -141,6 +142,7 @@ class WatcherWindow(QMainWindow):
         self.__lastProgress = progress
 
     def closeEvent(self, event):
+        cacheController.save()
         api.atExit()
         QApplication.exit(0)
         return super().closeEvent(event)
