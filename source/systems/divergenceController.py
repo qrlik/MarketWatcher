@@ -24,6 +24,7 @@ class DivergenceInfo:
         self.breakPercents = None
         self.breakDelta = None
         self.power = None
+        self.finishedWorkedOut = None
 
 class DivergenceController:
     def __init__(self):
@@ -172,44 +173,40 @@ class DivergenceController:
                     self.__calculatePower(info)
                     break
 
-    def __isDivergenceWorkedOut(self, divergence):
+    def __isCandleWorkedOut(self, divergence, candle):
+        if candle is None:
+            return False
         price = divergence.secondCandle.close
         atrWorkout = divergence.secondCandle.atr
         isBull = divergence.signal == DivergenceSignalType.BULL
         priceWorkout = price + atrWorkout if isBull else price - atrWorkout
-        for index in range(divergence.secondIndex + 1, len(self.__candles)):
-            if (isBull and self.__candles[index].high >= priceWorkout) \
-            or (not isBull and self.__candles[index].low <= priceWorkout):
-                return True
+        if (isBull and candle.high >= priceWorkout) \
+        or (not isBull and candle.low <= priceWorkout):
+            return True
         return False
 
-    def __isDivergenceWorkedOutActual(self, divergence):
-        price = divergence.secondCandle.close
-        atrWorkout = divergence.secondCandle.atr
-        isBull = divergence.signal == DivergenceSignalType.BULL
-        priceWorkout = price + atrWorkout if isBull else price - atrWorkout
-        lastCandle = self.__candleController.getLastCandle()
-        if lastCandle:
-            if (isBull and lastCandle.high >= priceWorkout) \
-            or (not isBull and lastCandle.low <= priceWorkout):
-                return True
-        return False
+    def __isDivergenceWorkedOut(self, divergence):
+        if divergence.finishedWorkedOut:
+            return True
+
+        if divergence.finishedWorkedOut is None:
+            for index in range(divergence.secondIndex + 1, len(self.__candles)):
+                if self.__isCandleWorkedOut(divergence, self.__candles[index]):
+                    divergence.finishedWorkedOut = True
+                    return True
+            divergence.finishedWorkedOut = False
+        
+        return self.__isCandleWorkedOut(divergence, self.__candleController.getCurrentCandle())
 
     def __isDivergenceLengthActual(self, divergence):
         return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
 
     def __processActuals(self):
+        self.__actuals.clear()
         for _, divergence in self.__divergences.items():
             if not self.__isDivergenceWorkedOut(divergence) and self.__isDivergenceLengthActual(divergence):
                 self.__actuals.append(divergence)
  
-    def __updateActuals(self):
-        newActuals = []
-        for divergence in self.__actuals:
-            if not self.__isDivergenceWorkedOutActual(divergence):
-                newActuals.append(divergence)
-        self.__actuals = newActuals
-
     def isEmpty(self):
         return len(self.__actuals) == 0
 
@@ -236,7 +233,7 @@ class DivergenceController:
         if candles[0].openTime != self.__lastOpenTime:
             self.__reset()
         else:
-            self.__updateActuals()
+            self.__processActuals()
             return
 
         self.__updateCandles(candles)

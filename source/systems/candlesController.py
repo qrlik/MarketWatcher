@@ -191,6 +191,9 @@ class CandlesController(QObject):
     def getFinishedCandles(self):
         return self.__finishedCandles
     
+    def getCurrentCandle(self):
+        return self.__currentCandle
+
     def getLastCandle(self):
         if self.__currentCandle:
             return self.__currentCandle
