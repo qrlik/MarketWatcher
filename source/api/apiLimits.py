@@ -1,9 +1,10 @@
 from utilities import utils
 
 __current = 0
-__limits = 1200
+__limits = 1100 # 1200 in fact
 __timestamp = 0
-__interval = 60000 #ms
+__interval = 65000 #ms 60sec in fact
+__maintenanceInterval = 120000
 __limited = False
 
 def parseRateLimits(data):
@@ -25,6 +26,11 @@ def isAllowed():
         __current = 0
         __limited = False
     return __limited or __current < __limits
+
+def onMaintenance():
+    global __maintenanceInterval,__timestamp,__current,__interval
+    __timestamp = utils.getCurrentTime() + __maintenanceInterval - __interval
+    __current = __limits
 
 def onError(message:str):
     global __current,__limits,__timestamp,__limited

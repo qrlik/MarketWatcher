@@ -52,6 +52,8 @@ class __binanceClient:
                 self.__updateTime()
             elif e.status_code == 429 or e.status_code == 418 or e.error_code ==-1003:
                 apiLimits.onError(e.error_message)
+            elif e.status_code == 403:
+                apiLimits.onMaintenance()
             else:
                 utils.logError(str(e))
         else:
