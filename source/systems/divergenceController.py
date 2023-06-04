@@ -25,6 +25,7 @@ class DivergenceInfo:
         self.breakDelta = None
         self.power = None
         self.finishedWorkedOut = None
+        self.new = True
 
 class DivergenceController:
     def __init__(self):
@@ -41,6 +42,7 @@ class DivergenceController:
         self.__candles = []
         self.__lines = OrderedDict()
         self.__divergences = OrderedDict()
+        self.__actualsByLength = []
         self.__actuals = []
         self.__lastOpenTime = 0
 
@@ -185,6 +187,14 @@ class DivergenceController:
             return True
         return False
 
+    def __isDivergenceLengthActual(self, divergence):
+        return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
+
+    def __processActuals(self):
+        for _, divergence in self.__divergences.items():
+            if self.__isDivergenceLengthActual(divergence):
+                self.__actualsByLength.append(divergence)
+ 
     def __isDivergenceWorkedOut(self, divergence):
         if divergence.finishedWorkedOut:
             return True
@@ -198,13 +208,10 @@ class DivergenceController:
         
         return self.__isCandleWorkedOut(divergence, self.__candleController.getCurrentCandle())
 
-    def __isDivergenceLengthActual(self, divergence):
-        return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
-
     def __processActuals(self):
         self.__actuals.clear()
-        for _, divergence in self.__divergences.items():
-            if not self.__isDivergenceWorkedOut(divergence) and self.__isDivergenceLengthActual(divergence):
+        for divergence in self.__actualsByLength:
+            if not self.__isDivergenceWorkedOut(divergence):
                 self.__actuals.append(divergence)
  
     def isEmpty(self):
@@ -239,5 +246,6 @@ class DivergenceController:
         self.__updateCandles(candles)
         self.__processVertexs()
         self.__processDivergences()
+        self.__processActualsByLength()
         self.__processActuals()
         
