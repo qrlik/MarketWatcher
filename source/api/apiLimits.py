@@ -1,9 +1,9 @@
 from utilities import utils
 
 __current = 0
-__limits = 1100 # 1200 in fact
+__limits = 1000 # 1200 in fact
 __timestamp = 0
-__interval = 65000 #ms 60sec in fact
+__interval = 70000 #ms 60sec in fact
 __maintenanceInterval = 120000
 __limited = False
 
