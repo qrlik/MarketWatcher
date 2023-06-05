@@ -1,5 +1,7 @@
 
 from PySide6.QtWidgets import QTableWidgetItem
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 
 from systems import watcherController
 
@@ -13,11 +15,19 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         return abs(self.__power) < abs(other.__power)
     
     def update(self):
-        allBullPower = 0.0
-        allBearPower = 0.0
-        for tf, controller in watcherController.getTicker(self.__ticker).getTimeframes().items():
-            bullPower, bearPower = controller.getDivergenceController().getPowers()
-            allBullPower += bullPower
-            allBearPower += bearPower
-        self.__power = allBullPower - allBearPower
-        super().setText(str(round(self.__power, 2)))
+        allPower = 0.0
+        allNewPower = 0.0
+        for _, controller in watcherController.getTicker(self.__ticker).getTimeframes().items():
+            powers = controller.getDivergenceController().getPowers()
+            allPower += powers.bullPower
+            allNewPower += powers.newBullPower
+            allPower += abs(powers.bearPower)
+            allNewPower += abs(powers.newBearPower)
+
+        self.__power = allPower
+        if allNewPower > 1:
+            super().setForeground(QColor(255,102,0,255))
+            super().setText(str(int(self.__power)) + ' (' + str(int(allNewPower)) + ')');
+        else:
+            super().setForeground(Qt.GlobalColor.black)
+            super().setText(str(int(self.__power)))

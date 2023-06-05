@@ -26,7 +26,14 @@ class DivergenceInfo:
         self.breakDelta = None
         self.power = None
         self.finishedWorkedOut = None
-        self.viewed = True
+        self.viewed = False
+
+class DivergencesPowersInfo:
+    def __init__(self):
+        self.bullPower = 0.0
+        self.bearPower = 0.0
+        self.newBullPower = 0.0
+        self.newBearPower = 0.0
 
 class DivergenceController:
     def __init__(self):
@@ -222,15 +229,18 @@ class DivergenceController:
         return self.__actuals
 
     def getPowers(self):
-        bullPower = 0.0
-        bearPower = 0.0
+        powers = DivergencesPowersInfo()
         for divergence in self.__actuals:
             if divergence.signal == DivergenceSignalType.BULL:
-                bullPower += divergence.power
+                powers.bullPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBullPower += divergence.power
             else:
-                bearPower += divergence.power
-        return (bullPower, bearPower)
-
+                powers.bearPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBearPower += divergence.power
+        return powers
+    
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()

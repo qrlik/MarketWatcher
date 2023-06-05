@@ -69,6 +69,7 @@ class WatcherWindow(QMainWindow):
         self.__infoWidget:QFrame = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
         infoWidget.setWidget(self.__infoWidget)
+        infoWidget.connectTabsChanged(self.__updateViewedDivergence)
 
     def __initList(self):
         self.__watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
@@ -77,7 +78,7 @@ class WatcherWindow(QMainWindow):
         tickers = watcherController.getTickers().keys()
         self.__watcherTable.setRowCount(len(tickers))
         self.__watcherTable.setColumnCount(4)
-        self.__watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power', 'Bear Power'])
+        self.__watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power,%', 'Bear Power,%'])
         self.__watcherTable.horizontalHeader().sectionClicked.connect(self.__updateSortOrder)
 
         row = 0
@@ -110,12 +111,17 @@ class WatcherWindow(QMainWindow):
         self.__updateList()
         self.__updateInfoWidget(False)
 
+    def __updateViewedDivergence(self):
+        selectedItems = self.__watcherTable.selectedItems()
+        if len(selectedItems) == 0:
+            return
+        selectedItems[1].update()
+
     def __updateInfoWidget(self, byClick=True):
         selectedItems = self.__watcherTable.selectedItems()
         if len(selectedItems) == 0:
             return
         infoWidget.update(selectedItems[0].text(), byClick)
-        #to do update colors
     
     def __updateSortOrder(self, index):
         if index != self.__sortColumn and (index == 0 or index == 1):
@@ -134,8 +140,11 @@ class WatcherWindow(QMainWindow):
         elif self.__sortColumn == 1:
             self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
+    def __isLoaded(self):
+        return self.__lastProgress >= 100
+
     def __logProgress(self, progress):
-        if self.__lastProgress >= 100 or self.__lastProgress >= progress:
+        if self.__isLoaded() or self.__lastProgress >= progress:
             return
         text = '...' + (str(progress) if progress < 100 else 'ALL LOADED')
         self.__logBrowser.insertPlainText(text)

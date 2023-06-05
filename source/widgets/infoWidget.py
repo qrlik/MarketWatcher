@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 
 from models import timeframe
 from systems import cacheController
@@ -37,6 +38,9 @@ def __initTabs():
         __initLine(tabWidget)
         __initDivergenceTable(tabWidget)
         tabWidget.layout().addStretch()
+
+def connectTabsChanged(func):
+    __tabs.currentChanged.connect(func)
 
 def __initRsi(tab:QWidget):
     layout = QHBoxLayout()
@@ -89,6 +93,7 @@ def __initDivergenceTable(tab:QWidget):
 def __onTabClicked(index):
     if __tickerController is None:
         return
+    __tabs.tabBar().setTabTextColor(index, Qt.GlobalColor.black)
     tabWidget = __tabs.widget(index)
     tf = timeframe.Timeframe[tabWidget.objectName()]
     controller = __tickerController.getTimeframe(tf).getDivergenceController()
@@ -97,6 +102,7 @@ def __onTabClicked(index):
         time1 = divergence.firstCandle.time
         time2 = divergence.secondCandle.time
         cacheController.setDivergenceViewed(__tickerController.getTicker(), tabWidget.objectName(), time1, time2, True)
+        divergence.viewed = True
     
 def __updatePrice(tfController):
     lastCandle = tfController.getCandlesController().getLastCandle()
@@ -174,8 +180,11 @@ def update(ticker:str, byClick):
         __tabs.setTabVisible(tabIndex, True)
         __updateTabValues(tabWidget, tfController.getCandlesController())
         __updateDivergenceTable(tabWidget, tfController.getDivergenceController())
-        bullPower, bearPower = tfController.getDivergenceController().getPowers()
-        powerToName.append((abs(bullPower - bearPower), tf.name))
+        powers = tfController.getDivergenceController().getPowers()
+        powerToName.append((powers.bullPower + abs(powers.bearPower), tf.name))
+        color = QColor(255,102,0,255) if powers.newBullPower > 0 or powers.newBearPower > 0 else Qt.GlobalColor.black
+        __tabs.tabBar().setTabTextColor(tabIndex, color)
+
     __sortTabs(powerToName)
     __updateVisible()
     if byClick:
