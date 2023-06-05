@@ -55,6 +55,13 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
+          <widget class="QPushButton" name="copyDataButton">
+           <property name="text">
+            <string>Copy Data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="priceLayout">
            <item>
             <widget class="QLabel" name="priceLabel">

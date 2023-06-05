@@ -28,6 +28,17 @@ class DivergenceInfo:
         self.finishedWorkedOut = None
         self.viewed = False
 
+    def toDict(self):
+        result = {}
+        result.setdefault('firstCandle', self.firstCandle.time)
+        result.setdefault('secondCandle', self.secondCandle.time)
+        result.setdefault('lenght', self.secondIndex - self.firstIndex)
+        result.setdefault('type', self.type.name)
+        result.setdefault('signal', self.signal.name)
+        result.setdefault('power', round(self.power))
+        result.setdefault('break', round(self.breakPercents, 2))
+        return result
+
 class DivergencesPowersInfo:
     def __init__(self):
         self.bullPower = 0.0
@@ -119,15 +130,15 @@ class DivergenceController:
             upMa = (1 - alpha) * info.secondCandle.lastUpMaValue
             downMa = upMa / rsToBreak
             info.breakDelta = (downMa - (1 - alpha) * info.secondCandle.lastDownMaValue) / alpha
-        info.breakPercents = info.breakDelta / info.secondCandle.close * 100 + 1
+        info.breakPercents = info.breakDelta / info.secondCandle.close * 100
 
     def __calculatePower(self, info: DivergenceInfo):
         if info.type == DivergenceType.REGULAR:
             self.__calculateRegularBreak(info)
         else:
             info.breakDelta = abs(info.firstCandle.close - info.secondCandle.close)
-            info.breakPercents = info.breakDelta / info.secondCandle.close * 100 + 1
-        info.power = info.breakDelta / info.secondCandle.atr * info.breakPercents
+            info.breakPercents = info.breakDelta / info.secondCandle.close * 100
+        info.power = info.breakDelta / info.secondCandle.atr * (info.breakPercents + 1)
 
     def __getDivergenceLength(self, vertexStrength):
         maxLength = self.__maxLength

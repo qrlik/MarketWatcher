@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView
+from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
@@ -7,21 +7,30 @@ from systems import cacheController
 from systems import configController
 from systems import watcherController
 
+import pyperclip
+import json
+
 __widget:QFrame = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
+__dataButton:QPushButton = None
 __tickerController = None
 
 def setWidget(widget:QFrame):
-    global __widget, __priceValue, __tabs
+    global __widget
     __widget = widget
-    __priceValue = __widget.findChild(QLabel, 'priceValue')
-    __tabs = __widget.findChild(QTabWidget, 'tabWidget')
-
     __init()
 
 def __init():
+    __initValues()
     __initTabs()
+
+def __initValues():
+    global __widget, __priceValue, __tabs, __dataButton
+    __priceValue = __widget.findChild(QLabel, 'priceValue')
+    __tabs = __widget.findChild(QTabWidget, 'tabWidget')
+    __dataButton = __widget.findChild(QPushButton, 'copyDataButton')
+    __dataButton.clicked.connect(__onDataCopyClicked)
 
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
@@ -103,7 +112,32 @@ def __onTabClicked(index):
         time2 = divergence.secondCandle.time
         cacheController.setDivergenceViewed(__tickerController.getTicker(), tabWidget.objectName(), time1, time2, True)
         divergence.viewed = True
+
+def __onDataCopyClicked():
+    data = {}
+    data.setdefault('number')
+    data.setdefault('ticker', __tickerController.getTicker() if __tickerController else None)
+    data.setdefault('time')
+    data.setdefault('type')
+    data.setdefault('price')
+    data.setdefault('stoploss')
+    data.setdefault('takeprofits', [])
+    data.setdefault('result')
+    divers = data.setdefault('divergences', {})
     
+    power = 0.0
+    if __tickerController:
+        for tabIndex in range(__tabs.count()):
+            tabWidget = __tabs.widget(tabIndex)
+            tf = timeframe.Timeframe[tabWidget.objectName()]
+            controller = __tickerController.getTimeframe(tf).getDivergenceController()
+            for divergence in controller.getActuals():
+                power += abs(divergence.power)
+                tfDivers = divers.setdefault(tabWidget.objectName(), [])
+                tfDivers.append(divergence.toDict())
+    data.setdefault('power', round(power))
+    pyperclip.copy(str(json.dumps(data, indent = 4)))
+
 def __updatePrice(tfController):
     lastCandle = tfController.getCandlesController().getLastCandle()
     price = lastCandle.close if lastCandle else 'null'
@@ -143,7 +177,7 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
         table.item(row, 0).setText(divergence.type.name)
         table.item(row, 0).setForeground(color)
         table.item(row, 1).setText(str(round(divergence.power, 2)))
-        table.item(row, 2).setText(str(round(divergence.breakDelta / divergence.secondCandle.close * 100, 2)))
+        table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
         table.item(row, 3).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))
         table.item(row, 4).setText(str(divergence.secondIndex - divergence.firstIndex))
         table.item(row, 5).setText(divergence.firstCandle.time)
