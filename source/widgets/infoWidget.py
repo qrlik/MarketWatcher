@@ -35,7 +35,7 @@ def __initValues():
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
     __tabs.tabBar().setExpanding(True)
-    __tabs.currentChanged.connect(__onTabClicked)
+    __tabs.tabBarClicked.connect(__onTabClicked)
 
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
@@ -49,7 +49,7 @@ def __initTabs():
         tabWidget.layout().addStretch()
 
 def connectTabsChanged(func):
-    __tabs.currentChanged.connect(func)
+    __tabs.tabBarClicked.connect(func)
 
 def __initRsi(tab:QWidget):
     layout = QHBoxLayout()
@@ -223,6 +223,5 @@ def update(ticker:str, byClick):
     __updateVisible()
     if byClick:
         __tabs.setCurrentIndex(0)
-    #to do update tabs colors
 
             
