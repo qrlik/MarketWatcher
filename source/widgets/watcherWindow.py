@@ -83,7 +83,7 @@ class WatcherWindow(QMainWindow):
 
         row = 0
         for ticker in tickers:
-            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker))
+            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker[:-4] if ticker.endswith('USDT') else ticker))
             self.__watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
             self.__watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
             self.__watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
