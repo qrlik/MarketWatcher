@@ -13,7 +13,6 @@ class Timeframe(IntEnum):
     EIGHT_HOUR = 28_800_000,
     TWELVE_HOUR = 43_200_000,
     ONE_DAY = 86_400_000,
-    THREE_DAY = 259_200_000,
     ONE_WEEK = 604_800_000
 
 timeframeToApiStr = {
@@ -29,7 +28,6 @@ timeframeToApiStr = {
     Timeframe.EIGHT_HOUR : '8h',
     Timeframe.TWELVE_HOUR : '12h',
     Timeframe.ONE_DAY : '1d',
-    Timeframe.THREE_DAY : '3d',
     Timeframe.ONE_WEEK : '1w' }
 
 apiToTimeframe = {
@@ -45,7 +43,6 @@ apiToTimeframe = {
     '8h' : Timeframe.EIGHT_HOUR,
     '12h' : Timeframe.TWELVE_HOUR,
     '1d' : Timeframe.ONE_DAY,
-    '3d' : Timeframe.THREE_DAY,
     '1w' : Timeframe.ONE_WEEK }
 
 timeframeToPrettyStr = {
@@ -61,7 +58,6 @@ timeframeToPrettyStr = {
     Timeframe.EIGHT_HOUR : '8h',
     Timeframe.TWELVE_HOUR : '12h',
     Timeframe.ONE_DAY : 'D',
-    Timeframe.THREE_DAY : '3D',
     Timeframe.ONE_WEEK : 'W' }
 
 def getPrettyFormat(timeframe:Timeframe):
