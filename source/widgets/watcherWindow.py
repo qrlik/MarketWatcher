@@ -10,6 +10,7 @@ from api import api
 from systems import cacheController
 from systems import configController
 from systems import settingsController
+from systems import soundNotifyController
 from systems import watcherController
 from widgets.watcherTableItems import divergenceAccumulatePowerItem
 from widgets.watcherTableItems import divergenceBearPowerItem
@@ -83,7 +84,7 @@ class WatcherWindow(QMainWindow):
 
         row = 0
         for ticker in tickers:
-            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker[:-4] if ticker.endswith('USDT') else ticker))
+            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker[:-4]))
             self.__watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
             self.__watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
             self.__watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
@@ -104,12 +105,14 @@ class WatcherWindow(QMainWindow):
         if not self.__watcherInited:
             watcherController.start()
             self.__initList()
+            soundNotifyController.init()
             self.__watcherInited = True
 
         progress = watcherController.loop()
         self.__logProgress(progress)
         self.__updateList()
         self.__updateInfoWidget(False)
+        soundNotifyController.update()
 
     def __updateViewedDivergence(self):
         selectedItems = self.__watcherTable.selectedItems()

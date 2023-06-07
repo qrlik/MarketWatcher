@@ -25,7 +25,7 @@ class DivergenceInfo:
         self.breakPercents = None
         self.breakDelta = None
         self.power = None
-        self.finishedWorkedOut = None
+        self.workedOut = None
         self.viewed = False
 
     def toDict(self):
@@ -215,17 +215,17 @@ class DivergenceController:
                 self.__actualsByLength.append(divergence)
  
     def __isDivergenceWorkedOut(self, divergence):
-        if divergence.finishedWorkedOut:
+        if divergence.workedOut:
             return True
 
-        if divergence.finishedWorkedOut is None:
+        if divergence.workedOut is None:
             for index in range(divergence.secondIndex + 1, len(self.__candles)):
                 if self.__isCandleWorkedOut(divergence, self.__candles[index]):
                     divergence.finishedWorkedOut = True
                     return True
-            divergence.finishedWorkedOut = False
-        
-        return self.__isCandleWorkedOut(divergence, self.__candleController.getCurrentCandle())
+                
+        divergence.workedOut = self.__isCandleWorkedOut(divergence, self.__candleController.getCurrentCandle())
+        return divergence.workedOut
 
     def __processActuals(self):
         self.__actuals.clear()

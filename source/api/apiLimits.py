@@ -18,7 +18,7 @@ def parseRateLimits(data):
             utils.logError('apiLimits:parseRateLimits unknown interval - ' + limit.get('interval', ''))
         else:
             __interval = __interval * limit.get('intervalNum', 1)
-            __limits = limit.get('limit', __limits)
+            __limits = limit.get('limit', __limits) * 0.8
 
 def isAllowed():
     global __timestamp,__interval,__current,__limited
@@ -48,14 +48,13 @@ def onError(message:str):
         waitFor = int((bannedUntil - utils.getCurrentTime()) / 1000)
         utils.log('Banned for ' + str(waitFor) + ' sec')
     else:
-        __timestamp += 5000
         waitFor = int((__timestamp + __interval - utils.getCurrentTime()) / 1000)
         utils.log('Limited for ' + str(waitFor) + ' sec')
 
 def onResponce(result):
     global __timestamp,__current
     if __current == 0:
-        __timestamp = utils.getCurrentTime() + 1000
+        __timestamp = utils.getCurrentTime()
     weight = result.get('x-mbx-used-weight-1m', None)
     if not weight:
         utils.logError('apiLimits:onResponce no weight - ' + str(result))
