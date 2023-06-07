@@ -1,6 +1,7 @@
 {
 	"loopInterval": 1000,
 	"emaFactor": 8,
+	"soundNotifyPretime": 60,
 	"atrAverageLength": 14,
 	"vertexStrengthToDivergenceLength": {
 		"1": 5,
