@@ -3,7 +3,10 @@ from PySide6.QtWidgets import QTableWidgetItem
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
+from systems import settingsController
 from systems import watcherController
+
+import sys
 
 class DivergenceAccumulatePowerItem(QTableWidgetItem):
     def __init__(self, ticker:str):
@@ -12,8 +15,20 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         super().__init__(str(self.__power))
 
     def __lt__(self, other):
-        return abs(self.__power) < abs(other.__power)
+        return self.getSortPower() < other.getSortPower()
     
+    def getSortPower(self):
+        starSymbols = settingsController.getSetting('starSymbols')
+        i = 0
+        for symbol in starSymbols[::-1]:
+            if self.__ticker == symbol:
+                return sys.float_info.max - i
+            i += 1
+        return self.__power
+
+    def getTicker(self):
+        return self.__ticker
+
     def update(self):
         allPower = 0.0
         allNewPower = 0.0

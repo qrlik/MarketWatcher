@@ -201,7 +201,7 @@ def __updateVisible():
 
 def update(ticker:str, byClick):
     global __tickerController
-    __tickerController = watcherController.getTicker(ticker + 'USDT')
+    __tickerController = watcherController.getTicker(ticker)
 
     powerToName = []
     for tabIndex in range(__tabs.count()):
