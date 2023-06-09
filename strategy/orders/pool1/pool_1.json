@@ -1,0 +1,694 @@
+[
+    {
+        "start": 3421.6
+    },
+    {
+        "number": 1,
+        "ticker": "XRPUSDT",
+        "timeframes": ["12h", "8h"],
+        "time": "2023-06-04 16:03:51",
+        "power": 69,
+        "type": "SHORT",
+        "price": 0.5239,
+        "stoploss": 0.5381,
+        "takeprofits": [ 0.5106, 0.5036 ],
+        "result": "STOP_LOSS",
+        "note": "продолжение движения после обманки, нужно ждать следующий уровень"
+    },
+    {
+        "number": 2,
+        "ticker": "CHRUSDT",
+        "timeframes": ["12h", "8h", "4h"],
+        "time": "2023-06-04 16:27:49",
+        "power": 33,
+        "type": "SHORT",
+        "price": 0.1638,
+        "stoploss": 0.1691,
+        "takeprofits": [ 0.1586, 0.1561 ],
+        "result": "ALL_TAKES",
+        "note": "дивер короче длины импульса + не было движений продовца до этого"
+    },
+    {
+        "number": 3,
+        "ticker": "LINAUSDT",
+        "time": "2023-06-05 23:14:33",
+        "type": "LONG",
+        "price": 0.01425,
+        "stoploss": 0.01364,
+        "takeprofits": [ 0.01509 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 26-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 20,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 61,
+                    "break": 33.21
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "21:00 04-06-2023",
+                    "secondCandle": "21:00 05-06-2023",
+                    "lenght": 24,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 57,
+                    "break": 16.37
+                },
+                {
+                    "firstCandle": "07:00 05-06-2023",
+                    "secondCandle": "21:00 05-06-2023",
+                    "lenght": 14,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 2,
+                    "break": 2.47
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "20:00 04-06-2023",
+                    "secondCandle": "20:00 05-06-2023",
+                    "lenght": 12,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 10,
+                    "break": 7.33
+                },
+                {
+                    "firstCandle": "06:00 05-06-2023",
+                    "secondCandle": "20:00 05-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.11
+                }
+            ]
+        },
+        "power": 130,
+        "note": "вход по 12ч - цель 1 atr плюс по часовику цель 2 atr"
+    },
+    {
+        "number": 4,
+        "ticker": "KAVAUSDT",
+        "time": "2023-06-06 00:07:13",
+        "type": "LONG",
+        "price": 0.9718,
+        "stoploss": 0.9620,
+        "takeprofits": [ 0.9840 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "09:00 05-06-2023",
+                    "secondCandle": "22:00 05-06-2023",
+                    "lenght": 13,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 30,
+                    "break": 11.27
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "08:00 05-06-2023",
+                    "secondCandle": "22:00 05-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 10,
+                    "break": 6.63
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 05-06-2023",
+                    "secondCandle": "20:00 05-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 4,
+                    "break": 3.77
+                }
+            ]
+        },
+        "power": 43
+    },
+    {
+        "number": 5,
+        "ticker": "1INCHUSDT",
+        "time": "2023-06-06 00:16:21",
+        "type": "LONG",
+        "price": 0.3278,
+        "stoploss": 0.3240,
+        "takeprofits": [ 0.3330 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "18:00 05-06-2023",
+                    "secondCandle": "22:00 05-06-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 4.61
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "19:00 05-06-2023",
+                    "secondCandle": "23:00 05-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 7,
+                    "break": 3.97
+                }
+            ]
+        },
+        "power": 15,
+        "note": "заход по коротким диверам после сильного импульса. сторона без силы и нет обманки"
+    },
+    {
+        "number": 6,
+        "ticker": "GMTUSDT",
+        "time": "2023-06-06 10:47:35",
+        "type": "LONG",
+        "price": 0.23730,
+        "stoploss": 0.2299,
+        "takeprofits": [ 0.2499 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 09-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 27,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 69,
+                    "break": 21.28
+                }
+            ]
+        },
+        "power": 69,
+        "note": "дивер без обманки и без силы стороны, на одном интервале"
+    },
+    {
+        "number": 7,
+        "ticker": "GMXUSDT",
+        "time": "2023-06-06 10:55:30",
+        "type": "LONG",
+        "price": 52.45,
+        "stoploss": 51.39,
+        "takeprofits": [ 54.99, 57.99 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 25-05-2023",
+                    "secondCandle": "16:00 05-06-2023",
+                    "lenght": 23,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 36,
+                    "break": 11.72
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 25-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 11,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 29,
+                    "break": 12.61
+                }
+            ]
+        },
+        "power": 65,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 8,
+        "ticker": "IDEXUSDT",
+        "time": "2023-06-06 12:03:46",
+        "type": "LONG",
+        "price": 0.0669,
+        "stoploss": 0.06589,
+        "takeprofits": [ 0.06789, 0.06899 ],
+        "result": "1_TAKE",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "01:00 06-06-2023",
+                    "secondCandle": "11:00 06-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 232,
+                    "break": 18.89
+                },
+                {
+                    "firstCandle": "05:00 06-06-2023",
+                    "secondCandle": "11:00 06-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 12,
+                    "break": 4.01
+                },
+                {
+                    "firstCandle": "07:00 06-06-2023",
+                    "secondCandle": "11:00 06-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 2,
+                    "break": 1.25
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "00:00 06-06-2023",
+                    "secondCandle": "10:00 06-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 33,
+                    "break": 9.04
+                },
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "10:00 06-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 0.91
+                }
+            ]
+        },
+        "power": 280,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 9,
+        "ticker": "BAKEUSDT",
+        "time": "2023-06-06 13:02:33",
+        "type": "LONG",
+        "price": 0.1156,
+        "stoploss": 0.1143,
+        "takeprofits": [ 0.1179, 0.1199 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "05:00 06-06-2023",
+                    "secondCandle": "12:00 06-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 45,
+                    "break": 6.64
+                }
+            ]
+        },
+        "power": 45,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 10,
+        "ticker": "MTLUSDT",
+        "time": "2023-06-06 16:03:16",
+        "type": "SHORT",
+        "price": 1.5136,
+        "stoploss": 1.6010,
+        "takeprofits": [ 1.381, 1.256 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 05-06-2023",
+                    "secondCandle": "06:00 06-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 240,
+                    "break": 41.69
+                },
+                {
+                    "firstCandle": "06:00 06-06-2023",
+                    "secondCandle": "12:00 06-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 5,
+                    "break": 5.47
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "07:00 06-06-2023",
+                    "secondCandle": "13:00 06-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 3.4
+                }
+            ]
+        },
+        "power": 248,
+        "note": "дивер с обманкой (только перехай), без силы. нужно ждать следующий уровень/хорошую тень"
+    },
+    {
+        "number": 11,
+        "ticker": "HFTUSDT",
+        "time": "2023-06-06 16:10:05",
+        "type": "LONG",
+        "price": 0.4022,
+        "stoploss": 0.3967,
+        "takeprofits": [],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "05:00 06-06-2023",
+                    "secondCandle": "15:00 06-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 19,
+                    "break": 4.29
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 11-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 25,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 17,
+                    "break": 10.84
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "14:00 06-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 3.46
+                }
+            ]
+        },
+        "power": 46,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 12,
+        "ticker": "XVSUSDT",
+        "time": "2023-06-07 12:17:10",
+        "type": "LONG",
+        "price": 4.197,
+        "stoploss": 4.07,
+        "takeprofits": [ 4.36, 4.54 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "08:00 07-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 85,
+                    "break": 14.43
+                },
+                {
+                    "firstCandle": "12:00 06-06-2023",
+                    "secondCandle": "08:00 07-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 28,
+                    "break": 8.12
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "20:00 05-06-2023",
+                    "secondCandle": "04:00 07-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 9,
+                    "break": 5.22
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "14:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 3.18
+                }
+            ]
+        },
+        "power": 131,
+        "note":"дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 13,
+        "ticker": "ALGOUSDT",
+        "time": "2023-06-07 12:20:48",
+        "type": "LONG",
+        "price": 0.1337,
+        "stoploss": 0.1304,
+        "takeprofits": [ 0.1378, 0.1419 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "06:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 14,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 71,
+                    "break": 9.25
+                },
+                {
+                    "firstCandle": "16:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 7,
+                    "break": 2.53
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "08:00 07-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 9,
+                    "break": 3.97
+                }
+            ],
+            "ONE_WEEK": [
+                {
+                    "firstCandle": "04:00 19-12-2022",
+                    "secondCandle": "04:00 29-05-2023",
+                    "lenght": 23,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 10,
+                    "break": 12.38
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "16:00 06-06-2023",
+                    "secondCandle": "11:00 07-06-2023",
+                    "lenght": 19,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 7,
+                    "break": 2.0
+                }
+            ]
+        },
+        "power": 105,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 14,
+        "ticker": "COTIUSDT",
+        "time": "2023-06-07 12:22:38",
+        "type": "LONG",
+        "price": 0.06014,
+        "stoploss": 0.0590,
+        "takeprofits": [ 0.0619, 0.0639 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 15,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 122,
+                    "break": 13.78
+                },
+                {
+                    "firstCandle": "16:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 2.32
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "16:00 06-06-2023",
+                    "secondCandle": "08:00 07-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 9,
+                    "break": 4.28
+                }
+            ]
+        },
+        "power": 140,
+        "note": "дивер без обманки и без силы стороны"
+    },
+    {
+        "number": 15,
+        "ticker": "SPELLUSDT",
+        "time": "2023-06-07 16:11:42",
+        "type": "LONG",
+        "price": 0.0005139,
+        "stoploss": 0.0005029,
+        "takeprofits": [ 0.0005599 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "22:00 05-06-2023",
+                    "secondCandle": "12:00 07-06-2023",
+                    "lenght": 19,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 79,
+                    "break": 10.48
+                },
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "12:00 07-06-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 31,
+                    "break": 6.38
+                },
+                {
+                    "firstCandle": "10:00 06-06-2023",
+                    "secondCandle": "12:00 07-06-2023",
+                    "lenght": 13,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 14,
+                    "break": 4.15
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 11-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 25,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 6.4
+                },
+                {
+                    "firstCandle": "04:00 13-05-2023",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 23,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 4.59
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "04:00 07-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 11,
+                    "break": 5.59
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "08:00 06-06-2023",
+                    "secondCandle": "12:00 07-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 4.08
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "12:00 06-06-2023",
+                    "secondCandle": "13:00 07-06-2023",
+                    "lenght": 25,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 1.76
+                }
+            ],
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "04:00 06-06-2023",
+                    "secondCandle": "10:00 07-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 3,
+                    "break": 2.42
+                }
+            ]
+        },
+        "power": 165,
+        "note":"дивер без обманки и без силы стороны"
+    }
+]
