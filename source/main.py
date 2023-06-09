@@ -32,8 +32,10 @@ if __name__ == "__main__":
 
 # to do atr new test
 # to do divergence test
+
 # to do opened orders to top
 # to do parse data from orders
+
 # to do add websocket sync check by time
 # to do add root logs handler also for binance logs
 # to do request api system (from thread), every request return requestId, check for exceptions, limits

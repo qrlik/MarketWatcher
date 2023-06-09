@@ -15,17 +15,8 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         super().__init__(str(self.__power))
 
     def __lt__(self, other):
-        return self.getSortPower() < other.getSortPower()
+        return abs(self.__power) < abs(other.__power)
     
-    def getSortPower(self):
-        starSymbols = settingsController.getSetting('starSymbols')
-        i = 0
-        for symbol in starSymbols[::-1]:
-            if self.__ticker == symbol:
-                return sys.float_info.max - i
-            i += 1
-        return self.__power
-
     def getTicker(self):
         return self.__ticker
 

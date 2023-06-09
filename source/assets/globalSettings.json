@@ -21,9 +21,5 @@
 	],
 	"tickersStartTimestamps": {
 		"BNXUSDT": 1677052800000
-	},
-	"starSymbols": [
-		"BTCUSDT",
-		"ETHUSDT"
-	]
+	}
 }
