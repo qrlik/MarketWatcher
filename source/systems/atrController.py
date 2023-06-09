@@ -40,7 +40,8 @@ class AtrController:
         if self.__lastValue is None:
             self.__lastValue = self.__trueRanges[-1]
         else:
-            alpha = 2 / (self.__size + 1) #EMA
+            #alpha = 2 / (self.__size + 1) #EMA
+            alpha = 1 / self.__size #RMA
             self.__lastValue = alpha * self.__trueRanges[-1] + (1 - alpha) * self.__lastValue
         if len(self.__trueRanges) < self.__size:
             return None
