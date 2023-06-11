@@ -6,6 +6,7 @@ from utilities import utils
 from binance.spot import Spot as Spots
 from binance.um_futures import UMFutures as Futures
 from binance.websocket.spot.websocket_client import SpotWebsocketClient
+from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from datetime import datetime
 import asyncio
 import os
@@ -23,11 +24,12 @@ class __binanceClient:
             self.__websocket.start()
         else:
             self.__client = Futures(key=self.__KEY, secret=self.__SECRET, show_limit_usage=True)
-            self.__websocket = None
+            self.__websocket = UMFuturesWebsocketClient()
+            self.__websocket.start()
 
     def exit(self):
-        if self.__websocket:
-            self.__websocket.close()
+        self.__websocket.close()
+        self.__websocket.stop()
 
     def __updateTime(self):
         TIME1970 = 2208988800
@@ -89,10 +91,20 @@ class __binanceClient:
     def getExchangeInfo(self):
         return self.__makeApiCall(self.__client.exchange_info)
 
+    def getPositions(self):
+        return self.__makeApiCall(self.__client.get_position_risk)
+
+    def getListenKey(self):
+        return self.__makeApiCall(self.__client.new_listen_key)['listenKey']
+
+    def subscribePositions(self, callback):
+        key = self.getListenKey()
+        self.__websocket.user_data(listen_key=key, id=self.__socketId, callback=callback)
+        self.__socketId += 1
+
     def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
-        if self.__websocket:
-            self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
-            self.__socketId += 1
+        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
+        self.__socketId += 1
     ###
 
     def __parseResponce(self, responceCandles, interval: timeframe.Timeframe):

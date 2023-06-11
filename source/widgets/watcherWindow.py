@@ -12,6 +12,7 @@ from systems import configController
 from systems import settingsController
 from systems import soundNotifyController
 from systems import watcherController
+from systems import userDataController
 from widgets.watcherTableItems import divergenceAccumulatePowerItem
 from widgets.watcherTableItems import divergenceBearPowerItem
 from widgets.watcherTableItems import divergenceBullPowerItem
@@ -104,11 +105,13 @@ class WatcherWindow(QMainWindow):
     def __loop(self):
         if not self.__watcherInited:
             watcherController.start()
+            userDataController.init()
             self.__initList()
             soundNotifyController.init()
             self.__watcherInited = True
 
         progress = watcherController.loop()
+        userDataController.update()
         self.__logProgress(progress)
         self.__updateList()
         self.__updateInfoWidget(False)

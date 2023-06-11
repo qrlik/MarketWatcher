@@ -3,10 +3,7 @@ from PySide6.QtWidgets import QTableWidgetItem
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
-from systems import settingsController
 from systems import watcherController
-
-import sys
 
 class DivergenceAccumulatePowerItem(QTableWidgetItem):
     def __init__(self, ticker:str):
