@@ -35,6 +35,7 @@ if __name__ == "__main__":
 
 # to do opened orders to top
 # to do parse data from orders
+# to do improve api limits
 
 # to do add websocket sync check by time
 # to do add root logs handler also for binance logs

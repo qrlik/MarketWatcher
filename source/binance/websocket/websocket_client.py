@@ -10,8 +10,9 @@ class BinanceWebsocketClient(BinanceSocketManager):
     def stop(self):
         try:
             self.close()
-        finally:
             reactor.stop()
+        except:
+            pass
 
     def _single_stream(self, stream):
         if isinstance(stream, str):

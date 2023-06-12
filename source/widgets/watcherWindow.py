@@ -13,6 +13,7 @@ from systems import settingsController
 from systems import soundNotifyController
 from systems import watcherController
 from systems import userDataController
+from widgets.watcherTableItems import tickerNameItem
 from widgets.watcherTableItems import divergenceAccumulatePowerItem
 from widgets.watcherTableItems import divergenceBearPowerItem
 from widgets.watcherTableItems import divergenceBullPowerItem
@@ -85,7 +86,7 @@ class WatcherWindow(QMainWindow):
 
         row = 0
         for ticker in tickers:
-            self.__watcherTable.setItem(row, 0, QTableWidgetItem(ticker[:-4] if ticker.endswith('USDT') else ticker))
+            self.__watcherTable.setItem(row, 0, tickerNameItem.TickerNameItem(ticker))
             self.__watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
             self.__watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
             self.__watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
@@ -127,7 +128,7 @@ class WatcherWindow(QMainWindow):
         selectedItems = self.__watcherTable.selectedItems()
         if len(selectedItems) == 0:
             return
-        infoWidget.update(selectedItems[1].getTicker(), byClick)
+        infoWidget.update(selectedItems[0].getTicker(), byClick)
     
     def __updateSortOrder(self, index):
         if index != self.__sortColumn and (index == 0 or index == 1):

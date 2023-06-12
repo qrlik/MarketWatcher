@@ -76,6 +76,9 @@ def __userDataStream(data):
                 info = __data.setdefault(symbol, TickerData())
                 info.parsePositionStream(time, pos)
 
+def getTickerUserData(ticker:str):
+    return __data.get(ticker)
+
 def init():
     global __keyTime
     __requestPositions()
