@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
 from systems import watcherController
+from systems import userDataController
 
 class DivergenceAccumulatePowerItem(QTableWidgetItem):
     def __init__(self, ticker:str):
@@ -12,8 +13,14 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         super().__init__(str(self.__power))
 
     def __lt__(self, other):
-        return abs(self.__power) < abs(other.__power)
+        return self.getSortPower() < other.getSortPower()
     
+    def getSortPower(self):
+        data = userDataController.getTickerUserData(self.__ticker)
+        if data.isOpened():
+            return data.getLastUpdate()
+        return self.__power
+
     def getTicker(self):
         return self.__ticker
 

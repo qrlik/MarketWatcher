@@ -8,6 +8,11 @@ __data:dict = {}
 __keyTime = 0
 
 class PositionInfo:
+    def __init__(self):
+        self.amount = 0.0
+        self.averagePrice = 0.0
+        self.lastUpdate = 0
+
     def isOpened(self):
         return self.amount > 0.0
 
@@ -43,6 +48,21 @@ class TickerData:
         elif side == 'SHORT':
             self.shortPosition.parseFromStream(time, data)
 
+    def isOpened(self):
+        return self.longPosition.isOpened() or self.shortPosition.isOpened()
+    
+    def getLastUpdate(self):
+        isLong = self.longPosition.isOpened()
+        isShort = self.shortPosition.isOpened()
+        if isLong and isShort:
+            return max(self.longPosition.lastUpdate, self.shortPosition.lastUpdate)
+        elif isLong:
+            return self.longPosition.lastUpdate
+        elif isShort:
+            self.shortPosition.lastUpdate
+        else:
+            return 0
+
     def getPositionColor(self):
         isLong = self.longPosition.isOpened()
         isShort = self.shortPosition.isOpened()
@@ -77,7 +97,7 @@ def __userDataStream(data):
                 info.parsePositionStream(time, pos)
 
 def getTickerUserData(ticker:str):
-    return __data.get(ticker)
+    return __data.get(ticker, TickerData())
 
 def init():
     global __keyTime
