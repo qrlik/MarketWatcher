@@ -6,7 +6,8 @@
 	"vertexStrengthToDivergenceLength": {
 		"1": 5,
 		"3": 15,
-		"6": 30
+		"6": 30,
+		"10": 50
 	},
 	"divergenceActualLength": 5,
 	"rsiLength": 14,
