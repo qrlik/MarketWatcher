@@ -14,7 +14,7 @@ class PositionInfo:
         self.lastUpdate = 0
 
     def isOpened(self):
-        return self.amount > 0.0
+        return abs(self.amount) > 0.0
 
     def parseFromResponse(self, data):
         self.amount = float(data.get('positionAmt', 0.0))
@@ -59,7 +59,7 @@ class TickerData:
         elif isLong:
             return self.longPosition.lastUpdate
         elif isShort:
-            self.shortPosition.lastUpdate
+            return self.shortPosition.lastUpdate
         else:
             return 0
 

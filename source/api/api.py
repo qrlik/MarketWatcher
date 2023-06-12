@@ -43,7 +43,7 @@ class __binanceClient:
             if data:
                 epoch_time = struct.unpack('!12I', data)[10]
                 epoch_time -= TIME1970
-                utcTime = datetime.datetime.utcfromtimestamp(epoch_time)
+                utcTime = datetime.utcfromtimestamp(epoch_time)
                 win32api.SetSystemTime(utcTime.year, utcTime.month, utcTime.weekday(), utcTime.day, utcTime.hour, utcTime.minute, utcTime.second, 0)
         except socket.timeout as e:
                 utils.logError(e)

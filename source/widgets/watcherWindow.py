@@ -137,7 +137,7 @@ class WatcherWindow(QMainWindow):
 
     def __updateList(self):
         for r in range(self.__watcherTable.rowCount()):
-            for c in range(1, self.__watcherTable.columnCount()):
+            for c in range(0, self.__watcherTable.columnCount()):
                 self.__watcherTable.item(r, c).update()
         self.__sortList()
 

@@ -1,0 +1,40 @@
+[
+    {
+        "start": 3380.5
+    },
+    {
+        "number": 1,
+        "ticker": "ADAUSDT",
+        "time": "2023-06-12 21:49:34",
+        "type": "SHORT",
+        "price": 0.27730,
+        "stoploss": 0.288,
+        "takeprofits": [ 0.2559, 0.2451 ],
+        "result": null,
+        "divergences": {
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "16:00 08-06-2023",
+                    "secondCandle": "12:00 12-06-2023",
+                    "lenght": 23,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 76,
+                    "break": 16.47
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 08-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 11,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 73,
+                    "break": 18.19
+                }
+            ]
+        },
+        "power": 149
+    }
+]
