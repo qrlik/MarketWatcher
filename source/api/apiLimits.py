@@ -3,7 +3,7 @@ from utilities import utils
 __current = 0
 __limits = 1000 # 1200 in fact
 __timestamp = 0
-__interval = 70000 #ms 60sec in fact
+__interval = 60000
 __maintenanceInterval = 120000
 __limited = False
 
@@ -28,8 +28,9 @@ def isAllowed():
     return __limited or __current < __limits
 
 def onMaintenance():
-    global __maintenanceInterval,__timestamp,__current,__interval
-    __timestamp = utils.getCurrentTime() + __maintenanceInterval - __interval
+    global __maintenanceInterval,__timestamp,__current,__interval,__limited
+    __timestamp = utils.getCurrentTime() + __maintenanceInterval + __interval
+    __limited = True
     __current = __limits
 
 def onError(message:str):
@@ -44,20 +45,23 @@ def onError(message:str):
         bannedUntil = firstSplit[1].split('. Please use')[0]
     if bannedUntil.isdigit():
         bannedUntil = int(bannedUntil) + 1000
-        __timestamp = bannedUntil - __interval
-        waitFor = int((bannedUntil - utils.getCurrentTime()) / 1000)
+        __timestamp = bannedUntil
+        waitFor = int((__timestamp + __interval - utils.getCurrentTime()) / 1000)
         utils.log('Banned for ' + str(waitFor) + ' sec')
     else:
+        __timestamp = utils.getCurrentTime()
         waitFor = int((__timestamp + __interval - utils.getCurrentTime()) / 1000)
         utils.log('Limited for ' + str(waitFor) + ' sec')
 
 def onResponce(result):
-    global __timestamp,__current
-    if __current == 0:
-        __timestamp = utils.getCurrentTime()
+    global __timestamp,__current,__limited
     weight = result.get('x-mbx-used-weight-1m', None)
     if not weight:
         utils.logError('apiLimits:onResponce no weight - ' + str(result))
     __current = max(__current, int(weight))
+    if __current >= __limits and not __limited:
+        __limited = True
+        __timestamp = utils.getCurrentTime()
+
 
 
