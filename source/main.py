@@ -33,9 +33,9 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
-# to do opened orders to top
+# to do menu tf filter
 # to do parse data from orders
-# to do improve api limits
+# to do add price delta for last N
 
 # to do add websocket sync check by time
 # to do add root logs handler also for binance logs

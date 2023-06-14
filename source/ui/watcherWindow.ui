@@ -137,24 +137,6 @@
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuState">
-    <property name="title">
-     <string>State</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuTimeframes">
-    <property name="title">
-     <string>Timeframes</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuAverages">
-    <property name="title">
-     <string>Averages</string>
-    </property>
-   </widget>
-   <addaction name="menuState"/>
-   <addaction name="menuTimeframes"/>
-   <addaction name="menuAverages"/>
   </widget>
   <action name="actiontest">
    <property name="text">

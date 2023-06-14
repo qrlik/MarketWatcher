@@ -2,7 +2,7 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication,QStyleFactory
 from PySide6.QtCore import QFile, QTimer, Qt
 from PySide6.QtUiTools import QUiLoader
 
@@ -19,6 +19,7 @@ from widgets.watcherTableItems import divergenceBearPowerItem
 from widgets.watcherTableItems import divergenceBullPowerItem
 from widgets import configsWindow
 from widgets import infoWidget
+from widgets import menuBar
 from utilities import utils
 
 class WatcherWindow(QMainWindow):
@@ -42,7 +43,9 @@ class WatcherWindow(QMainWindow):
         self.__initSizes()
 
         self.setCentralWidget(self.__watcherWidget)
-        #self.setMenuBar(self.findChild(QMenuBar, 'menuBar'))
+        bar = self.findChild(QMenuBar, 'menuBar')
+        self.setMenuBar(bar)
+        menuBar.init(bar)
 
         self.__initTimer()
 
@@ -158,6 +161,7 @@ class WatcherWindow(QMainWindow):
         self.__lastProgress = progress
 
     def closeEvent(self, event):
+        watcherController.saveData()
         cacheController.save()
         api.atExit()
         QApplication.exit(0)

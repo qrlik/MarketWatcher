@@ -63,14 +63,6 @@ class CandlesController(QObject):
         if withSave:
             self.__shrinkAndSave()
 
-    def __shrinkAndSave(self):
-        if len(self.__finishedCandles) > self.__amountForCache:
-            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
-        forSave = [c for c in self.__finishedCandles]
-        if self.__currentCandle:
-            forSave.append(self.__currentCandle)
-        utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
-
     def __checkSyncResponse(self):
         if self.__requestId == -1:
             return False
@@ -166,6 +158,14 @@ class CandlesController(QObject):
             utils.log('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
             self.__requestSync()
         return result
+
+    def shrinkAndSave(self):
+        if len(self.__finishedCandles) > self.__amountForCache:
+            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
+        forSave = [c for c in self.__finishedCandles]
+        if self.__currentCandle:
+            forSave.append(self.__currentCandle)
+        utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
 
     def getCandlesByOpenTime(self, openTime):
         finished = []

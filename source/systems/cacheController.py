@@ -26,7 +26,6 @@ def setDivergenceViewed(ticker:str, timeframe:str, time1:str, time2:str, value):
     state = __getViewedDivergences().setdefault(ticker, {}).setdefault(timeframe, {}).setdefault(time1, {})
     state.setdefault(time2, value)
     state[time2] = value
-    save()
 
 def updateViewedDivergences(ticker:str, timeframe:str, divers):
     forRemove1 = []
