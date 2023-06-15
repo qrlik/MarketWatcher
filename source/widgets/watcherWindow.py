@@ -2,8 +2,8 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication
-from PySide6.QtCore import QFile, QTimer, Qt
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QFrame, QApplication
+from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
 from api import api
@@ -13,11 +13,9 @@ from systems import settingsController
 from systems import soundNotifyController
 from systems import watcherController
 from systems import userDataController
-from widgets.watcherTableItems import tickerNameItem
-from widgets.watcherTableItems import divergenceAccumulatePowerItem
-from widgets.watcherTableItems import divergenceBearPowerItem
-from widgets.watcherTableItems import divergenceBullPowerItem
+
 from widgets import configsWindow
+from widgets import watcherTable
 from widgets import infoWidget
 from widgets import menuBar
 from utilities import utils
@@ -26,7 +24,6 @@ class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
         self.__watcherInited = False
-        self.__sortColumn = 1
         self.__lastProgress = -1
 
         configController.load('default')#(cacheController.getLastConfigFilename())
@@ -74,26 +71,9 @@ class WatcherWindow(QMainWindow):
         self.__watcherTable:QTableWidget = self.__watcherWidget.findChild(QTableWidget, 'watcherTable')
         self.__infoWidget:QFrame = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        watcherTable.setTable(self.__watcherTable)
         infoWidget.setWidget(self.__infoWidget)
-        infoWidget.connectTabsChanged(self.__updateViewedDivergence)
-
-    def __initList(self):
-        self.__watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.__watcherTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.__watcherTable.itemSelectionChanged.connect(self.__updateInfoWidget)
-        tickers = watcherController.getTickers().keys()
-        self.__watcherTable.setRowCount(len(tickers))
-        self.__watcherTable.setColumnCount(4)
-        self.__watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power,%', 'Bear Power,%'])
-        self.__watcherTable.horizontalHeader().sectionClicked.connect(self.__updateSortOrder)
-
-        row = 0
-        for ticker in tickers:
-            self.__watcherTable.setItem(row, 0, tickerNameItem.TickerNameItem(ticker))
-            self.__watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
-            self.__watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
-            self.__watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
-            row += 1
+        infoWidget.connectTabsChanged(watcherTable.updateViewedDivergence)
 
     def __initSizes(self):
         self.setFixedWidth(1025)
@@ -110,45 +90,15 @@ class WatcherWindow(QMainWindow):
         if not self.__watcherInited:
             watcherController.start()
             userDataController.init()
-            self.__initList()
+            watcherTable.initList()
             soundNotifyController.init()
             self.__watcherInited = True
 
         progress = watcherController.loop()
         userDataController.update()
         self.__logProgress(progress)
-        self.__updateList()
-        self.__updateInfoWidget(False)
+        watcherTable.update()
         soundNotifyController.update()
-
-    def __updateViewedDivergence(self):
-        selectedItems = self.__watcherTable.selectedItems()
-        if len(selectedItems) == 0:
-            return
-        selectedItems[1].update()
-
-    def __updateInfoWidget(self, byClick=True):
-        selectedItems = self.__watcherTable.selectedItems()
-        if len(selectedItems) == 0:
-            return
-        infoWidget.update(selectedItems[0].getTicker(), byClick)
-    
-    def __updateSortOrder(self, index):
-        if index != self.__sortColumn and (index == 0 or index == 1):
-            self.__sortColumn = index
-            self.__sortList()
-
-    def __updateList(self):
-        for r in range(self.__watcherTable.rowCount()):
-            for c in range(0, self.__watcherTable.columnCount()):
-                self.__watcherTable.item(r, c).update()
-        self.__sortList()
-
-    def __sortList(self):
-        if self.__sortColumn == 0:
-            self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.AscendingOrder)
-        elif self.__sortColumn == 1:
-            self.__watcherTable.sortItems(self.__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
     def __isLoaded(self):
         return self.__lastProgress >= 100
