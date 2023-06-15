@@ -2,6 +2,7 @@ import asyncio
 import os
 
 from api import api
+from api import apiRequests
 from models import candle
 from models import timeframe
 from utilities import utils
@@ -19,7 +20,11 @@ async def checkFile(ticker, tf):
     if not timestamp:
         utils.logError('checkCache: empty timestamp ' + ticker + ' ' + tf)
 
-    serverData = await api.Spot.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
+    requestId = api.Spot.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
+    serverData = None
+    while serverData is None:
+        serverData = apiRequests.requester.getResponse(requestId)
+
     if len(cachedCandles) != len(serverData):
         utils.logError('checkCache: wrong length ' + ticker + ' ' + tf)
     for i in range(len(cachedCandles)):
@@ -29,7 +34,10 @@ async def checkFile(ticker, tf):
             utils.logError('checkCache: not equal ' + ticker + ' ' + tf)
     checkCandlesSequence(ticker, tf, cachedCandles)
 
-#LUNAUSDT 04:00 30-05-2022 its ok
+#its ok
+#LUNAUSDT 04:00 30-05-2022
+#KEYUSDT 04:00 10-03-2023
+
 def checkCandlesSequence(ticker, timeframe, candles):
     if len(candles) == 0:
         return

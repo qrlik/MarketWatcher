@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton
+from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
@@ -6,6 +6,7 @@ from models import timeframe
 from systems import cacheController
 from systems import configController
 from systems import watcherController
+from utilities import guiDefines
 
 import pyperclip
 import json
@@ -14,6 +15,7 @@ __widget:QFrame = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
 __dataButton:QPushButton = None
+__divergenceRatio:QProgressBar = None
 __tickerController = None
 
 def setWidget(widget:QFrame):
@@ -23,12 +25,14 @@ def setWidget(widget:QFrame):
 
 def __init():
     __initValues()
+    __initProgressBar()
     __initTabs()
 
 def __initValues():
-    global __widget, __priceValue, __tabs, __dataButton
+    global __widget, __priceValue, __tabs, __dataButton,__divergenceRatio
     __priceValue = __widget.findChild(QLabel, 'priceValue')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
+    __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
     __dataButton = __widget.findChild(QPushButton, 'copyDataButton')
     __dataButton.clicked.connect(__onDataCopyClicked)
 
@@ -47,6 +51,10 @@ def __initTabs():
         __initLine(tabWidget)
         __initDivergenceTable(tabWidget)
         tabWidget.layout().addStretch()
+
+def __initProgressBar():
+    global __divergenceRatio
+    __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheed())
 
 def connectTabsChanged(func):
     __tabs.tabBarClicked.connect(func)
@@ -102,7 +110,7 @@ def __initDivergenceTable(tab:QWidget):
 def __onTabClicked(index):
     if __tickerController is None:
         return
-    __tabs.tabBar().setTabTextColor(index, Qt.GlobalColor.black)
+    __tabs.tabBar().setTabTextColor(index, guiDefines.defaultColor)
     tabWidget = __tabs.widget(index)
     tf = timeframe.Timeframe[tabWidget.objectName()]
     controller = __tickerController.getTimeframe(tf).getDivergenceController()
@@ -138,10 +146,33 @@ def __onDataCopyClicked():
     data.setdefault('power', round(power))
     pyperclip.copy(str(json.dumps(data, indent = 4)))
 
-def __updatePrice(tfController):
-    lastCandle = tfController.getCandlesController().getLastCandle()
-    price = lastCandle.close if lastCandle else 'null'
+def __updatePrice():
+    price = None
+    if __tickerController:
+        for _, controller in __tickerController.getTimeframes().items():
+            lastCandle = controller.getCandlesController().getLastCandle()
+            price = lastCandle.close if lastCandle else None
+            break
     __priceValue.setText(str(price))
+
+def __updateProgressBar():
+    if __tickerController is None:
+        return
+    global __divergenceRatio
+    allBullPower = 0.0
+    allBearPower = 0.0
+    for _, controller in __tickerController.getTimeframes().items():
+        powers = controller.getDivergenceController().getPowers()
+        allBullPower += powers.bullPower
+        allBearPower += powers.bearPower
+    summary = allBullPower + allBearPower
+    isEnabled = allBullPower + allBearPower > 0.0
+    if isEnabled:
+        __divergenceRatio.setStyleSheet(guiDefines.getDefaultProgressBarSheet())
+        __divergenceRatio.setValue(round(allBullPower / (summary) * 100))
+    else:
+        __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheed())
+        __divergenceRatio.setValue(0)
 
 def __updateTabValues(tabWidget:QWidget, cndlesController):
     candle = None
@@ -173,7 +204,7 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
 
     row = 0
     for divergence in divergences:
-        color = Qt.GlobalColor.darkRed if divergence.signal.name == 'BEAR' else Qt.GlobalColor.darkGreen
+        color = guiDefines.bearColor if divergence.signal.name == 'BEAR' else guiDefines.bullColor
         table.item(row, 0).setText(divergence.type.name)
         table.item(row, 0).setForeground(color)
         table.item(row, 1).setText(str(round(divergence.power, 2)))
@@ -204,19 +235,19 @@ def update(ticker:str, byClick):
     __tickerController = watcherController.getTicker(ticker)
 
     powerToName = []
+    __updateProgressBar()
+    __updatePrice()
     for tabIndex in range(__tabs.count()):
         tabWidget = __tabs.widget(tabIndex)
         tf = timeframe.Timeframe[tabWidget.objectName()]
         tfController = __tickerController.getTimeframe(tf)
 
-        if tabIndex == 0:
-            __updatePrice(tfController)
         __tabs.setTabVisible(tabIndex, True)
         __updateTabValues(tabWidget, tfController.getCandlesController())
         __updateDivergenceTable(tabWidget, tfController.getDivergenceController())
         powers = tfController.getDivergenceController().getPowers()
         powerToName.append((powers.bullPower + abs(powers.bearPower), tf.name))
-        color = QColor(255,102,0,255) if powers.newBullPower > 0 or powers.newBearPower > 0 else Qt.GlobalColor.black
+        color = QColor(255,102,0,255) if powers.newBullPower > 0 or powers.newBearPower > 0 else Qt.GlobalColor.white
         __tabs.tabBar().setTabTextColor(tabIndex, color)
 
     __sortTabs(powerToName)

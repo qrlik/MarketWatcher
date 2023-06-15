@@ -1,6 +1,6 @@
 import sys
 import traceback
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication,QStyleFactory
 
 from utilities import utils
 from widgets import watcherWindow
@@ -15,6 +15,7 @@ if __name__ == "__main__":
     
     sys.excepthook = excepthook
     app = QApplication([])
+    app.setStyle(QStyleFactory.create('Fusion'))
     widget = watcherWindow.WatcherWindow()
     widget.show()
     result = app.exec()
@@ -34,12 +35,13 @@ if __name__ == "__main__":
 # to do divergence test
 
 # to do menu tf filter
+# to do optimize loop
+
+# after stock exchange
 # to do parse data from orders
 # to do add price delta for last N
 
-# to do add websocket sync check by time
 # to do add root logs handler also for binance logs
-# to do request api system (from thread), every request return requestId, check for exceptions, limits
 
 # WARNING:root:WebSocket connection closed: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)"), code: 1006, clean: False, 
 # reason: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)")

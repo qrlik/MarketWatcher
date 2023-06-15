@@ -61,7 +61,7 @@ class CandlesController(QObject):
         if finished:
             self.__finishedCandles.append(finished)
         if withSave:
-            self.__shrinkAndSave()
+            self.shrinkAndSave()
 
     def __checkSyncResponse(self):
         if self.__requestId == -1:
@@ -95,7 +95,7 @@ class CandlesController(QObject):
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
-        self.__shrinkAndSave()
+        self.shrinkAndSave()
         return True
 
     def __isCandleAfter(self, afterCandle, beforeCandle):

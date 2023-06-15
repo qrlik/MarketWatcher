@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 import time
 
 from api import api
+from utilities import guiDefines
 from utilities import utils
 
 __data:dict = {}
@@ -69,11 +70,11 @@ class TickerData:
         if isLong and isShort:
             return Qt.GlobalColor.darkYellow
         elif isLong:
-            return Qt.GlobalColor.darkGreen
+            return guiDefines.bullColor
         elif isShort:
-            return Qt.GlobalColor.darkRed
+            return guiDefines.bearColor
         else:
-            return Qt.GlobalColor.black
+            return guiDefines.defaultColor
 
 def __requestPositions():
     global __data

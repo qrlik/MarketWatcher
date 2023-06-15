@@ -5,6 +5,7 @@ from PySide6.QtGui import QColor
 
 from systems import watcherController
 from systems import userDataController
+from utilities import guiDefines
 
 class DivergenceAccumulatePowerItem(QTableWidgetItem):
     def __init__(self, ticker:str):
@@ -39,5 +40,5 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
             super().setForeground(QColor(255,102,0,255))
             super().setText(str(int(self.__power)) + ' (' + str(int(allNewPower)) + ')');
         else:
-            super().setForeground(Qt.GlobalColor.black)
+            super().setForeground(guiDefines.defaultColor)
             super().setText(str(int(self.__power)))
