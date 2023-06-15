@@ -1,6 +1,8 @@
 import sys
 import traceback
 from PySide6.QtWidgets import QApplication,QStyleFactory
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt
 
 from utilities import utils
 from widgets import watcherWindow
@@ -9,13 +11,20 @@ def excepthook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
     utils.logError(tb)
 
+def setupGui(app):
+    app.setStyle(QStyleFactory.create('Fusion'))
+    app.setApplicationName(' ')
+    icon = QPixmap(32, 32)
+    icon.fill(Qt.GlobalColor.transparent);
+    app.setWindowIcon(icon)
+
 if __name__ == "__main__":
     utils.log('====================== PROGRAMM STARTED ======================')
     utils.logError('====================== PROGRAMM STARTED ======================')
     
     sys.excepthook = excepthook
     app = QApplication([])
-    app.setStyle(QStyleFactory.create('Fusion'))
+    setupGui(app)
     widget = watcherWindow.WatcherWindow()
     widget.show()
     result = app.exec()
