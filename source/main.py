@@ -15,7 +15,7 @@ def setupGui(app):
     app.setStyle(QStyleFactory.create('Fusion'))
     app.setApplicationName(' ')
     icon = QPixmap(32, 32)
-    icon.fill(Qt.GlobalColor.transparent);
+    icon.fill(Qt.GlobalColor.transparent)
     app.setWindowIcon(icon)
 
 if __name__ == "__main__":

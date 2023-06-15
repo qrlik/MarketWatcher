@@ -100,12 +100,12 @@ def __initDivergenceTable(tab:QWidget):
     tab.layout().addWidget(table)
     table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-    table.setColumnCount(7)
-    table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
-    table.setHorizontalHeaderLabels(['Type', 'Power', 'Break,%', 'Break/ATR', 'Length', 'First', 'Second', ])
+    
+    heads = ['Type', 'Power', 'Break,%', 'Break/ATR', 'Length', 'First', 'Second' ]
+    table.setColumnCount(len(heads))
+    for i in range(len(heads)):
+        table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+    table.setHorizontalHeaderLabels(heads)
 
 def __onTabClicked(index):
     if __tickerController is None:
@@ -193,14 +193,11 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
     if len(divergences) != table.rowCount():
         table.clearContents()
         table.setRowCount(len(divergences))
-        for i in range(len(divergences)):
-            table.setItem(i, 0, QTableWidgetItem())
-            table.setItem(i, 1, QTableWidgetItem())
-            table.setItem(i, 2, QTableWidgetItem())
-            table.setItem(i, 3, QTableWidgetItem())
-            table.setItem(i, 4, QTableWidgetItem())
-            table.setItem(i, 5, QTableWidgetItem())
-            table.setItem(i, 6, QTableWidgetItem())
+        for row in range(len(divergences)):
+            for column in range(7):
+                item = QTableWidgetItem()
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                table.setItem(row, column, item)
 
     row = 0
     for divergence in divergences:
@@ -211,8 +208,8 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
         table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
         table.item(row, 3).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))
         table.item(row, 4).setText(str(divergence.secondIndex - divergence.firstIndex))
-        table.item(row, 5).setText(divergence.firstCandle.time)
-        table.item(row, 6).setText(divergence.secondCandle.time)
+        table.item(row, 5).setText(divergence.firstCandle.time[:-5])
+        table.item(row, 6).setText(divergence.secondCandle.time[:-5])
         row += 1
 
 def __sortTabs(powerToName:list):

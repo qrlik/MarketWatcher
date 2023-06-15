@@ -2,7 +2,7 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication,QStyleFactory
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QTableWidgetItem, QFrame, QAbstractItemView, QApplication
 from PySide6.QtCore import QFile, QTimer, Qt
 from PySide6.QtUiTools import QUiLoader
 
@@ -96,9 +96,9 @@ class WatcherWindow(QMainWindow):
             row += 1
 
     def __initSizes(self):
-        self.setFixedWidth(1100)
+        self.setFixedWidth(1025)
         self.setFixedHeight(600)
-        self.__infoWidget.setFixedWidth(625)
+        self.__infoWidget.setFixedWidth(550)
         self.__logBrowser.setFixedHeight(150)
 
     def __initTimer(self):
