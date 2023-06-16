@@ -3,9 +3,12 @@ from threading import Lock
 from threading import Thread
 import asyncio
 
+from api import apiLimits
+
 class ApiRequests(Thread):
     def __init__(self):
         self.__newTasks = []
+        self.__tasksAmount = 0
         self.__taskLock = Lock()
 
         self.__responces = {}
@@ -27,19 +30,23 @@ class ApiRequests(Thread):
         result = await callback(*args)
         with self.__responceLock:
             self.__responces.setdefault(id, result)
+        with self.__taskLock:
+            self.__tasksAmount -= 1
 
     def __start(self):
         asyncio.set_event_loop(self.__loop)
         self.__loop.run_forever()
 
     def __continueLoop(self):
-        if len(self.__newTasks) > 0:
+        newTasksAmount = len(self.__newTasks)
+        allowedAmount = apiLimits.getLimits() - self.__tasksAmount
+        if allowedAmount >= newTasksAmount:
             with self.__taskLock:
+                self.__tasksAmount += newTasksAmount
                 for task in self.__newTasks:
                     self.__loop.create_task(self.__requestTask(task[0], task[1], *task[2]))
                 self.__newTasks.clear()
         
-
     def addAsyncRequest(self, callback, *args):
         requestId = self.__requestCounter
         self.__requestCounter += 1

@@ -20,6 +20,9 @@ def parseRateLimits(data):
             __interval = __interval * limit.get('intervalNum', 1)
             __limits = limit.get('limit', __limits) * 0.8
 
+def getLimits():
+    return __limits
+
 def isAllowed():
     global __timestamp,__interval,__current,__limited
     if utils.getCurrentTime() > __timestamp + __interval:
