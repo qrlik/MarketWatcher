@@ -2,7 +2,7 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QTableWidget, QFrame, QApplication
+from PySide6.QtWidgets import QMainWindow, QWidget, QMenuBar, QTextEdit, QFrame, QApplication
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
@@ -68,17 +68,14 @@ class WatcherWindow(QMainWindow):
 
     def __initValues(self):
         self.__watcherWidget:QWidget = self.findChild(QWidget, 'watcherWidget')
-        self.__watcherTable:QTableWidget = self.__watcherWidget.findChild(QTableWidget, 'watcherTable')
-        self.__infoWidget:QFrame = self.__watcherWidget.findChild(QFrame, 'infoWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
-        watcherTable.setTable(self.__watcherTable)
-        infoWidget.setWidget(self.__infoWidget)
+        watcherTable.init(self)
+        infoWidget.init(self)
         infoWidget.connectTabsChanged(watcherTable.updateViewedDivergence)
 
     def __initSizes(self):
         self.setFixedWidth(1025)
         self.setFixedHeight(600)
-        self.__infoWidget.setFixedWidth(550)
         self.__logBrowser.setFixedHeight(150)
 
     def __initTimer(self):

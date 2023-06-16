@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import QTableWidget,QAbstractItemView
+from PySide6.QtWidgets import QTableWidget,QAbstractItemView,QProgressBar
 from PySide6.QtCore import Qt
 
 from systems import watcherController
@@ -11,23 +11,39 @@ from widgets.watcherTableItems import divergenceBearPowerItem
 from widgets.watcherTableItems import divergenceBullPowerItem
 
 __watcherTable:QTableWidget = None
+__bullBar:QProgressBar = None
+__bearBar:QProgressBar = None
+__emptyBar:QProgressBar = None
 __sortColumn = 1
 
-def setTable(table):
-    global __watcherTable
-    __watcherTable = table
-    
-def initList():
+def init(parent):
+    global __watcherTable,__bullBar,__bearBar,__emptyBar
+    __watcherTable = parent.findChild(QTableWidget, 'watcherTable')
+    __bullBar = parent.findChild(QProgressBar, 'bullBar')
+    __bearBar = parent.findChild(QProgressBar, 'bearBar')
+    __emptyBar = parent.findChild(QProgressBar, 'emptyBar')
+    __initTable()
+    __initRatio()
+
+def __initTable():
     global __watcherTable
     __watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     __watcherTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     __watcherTable.itemSelectionChanged.connect(__updateInfoWidget)
-    tickers = watcherController.getTickers().keys()
-    __watcherTable.setRowCount(len(tickers))
     __watcherTable.setColumnCount(4)
     __watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power,%', 'Bear Power,%'])
     __watcherTable.horizontalHeader().sectionClicked.connect(__updateSortOrder)
 
+def __initRatio():
+    global __bullBar,__bearBar,__emptyBar
+    __bullBar.setStyleSheet('QProgressBar::chunk { background: darkGreen }')
+    __bearBar.setStyleSheet('QProgressBar::chunk { background: darkRed }')
+    __emptyBar.setStyleSheet('QProgressBar::chunk { background: darkGray }')
+
+def initList():
+    global __watcherTable
+    tickers = watcherController.getTickers().keys()
+    __watcherTable.setRowCount(len(tickers))
     row = 0
     for ticker in tickers:
         __watcherTable.setItem(row, 0, tickerNameItem.TickerNameItem(ticker))
@@ -51,8 +67,35 @@ def __sortList():
         __watcherTable.sortItems(__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
 def update():
+    __updateRatio()
     __updateList()
     __updateInfoWidget(False)
+
+def __updateRatio():
+    global __bullBar,__bearBar,__emptyBar,__watcherTable
+    bullTickers = 0
+    bearTickers = 0
+    summary = len(watcherController.getTickers())
+    for _, tickerController in watcherController.getTickers().items():
+        bullPower = 0.0
+        bearPower = 0.0
+        for _, timeframeController in tickerController.getTimeframes().items():
+            powers = timeframeController.getDivergenceController().getPowers()
+            bullPower += powers.bullPower
+            bearPower += powers.bearPower
+        isBullPower = bullPower > 0.0
+        isBearPower = bearPower > 0.0
+        if isBullPower and bullPower >= bearPower:
+            bullTickers += 1
+        if isBearPower and bearPower >= bullPower:
+            bearTickers += 1
+    bullFactor = bullTickers / summary
+    bearFactor = bearTickers / summary
+    emptyFactor = (summary - bullTickers - bearTickers) / summary
+    __bullBar.setFixedWidth(bullFactor * __watcherTable.width())
+    __bearBar.setFixedWidth(bearFactor * __watcherTable.width())
+    __emptyBar.setFixedWidth(emptyFactor * __watcherTable.width())
+
 
 def __updateList():
     global __watcherTable,__sortColumn

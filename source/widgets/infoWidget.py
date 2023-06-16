@@ -18,9 +18,10 @@ __dataButton:QPushButton = None
 __divergenceRatio:QProgressBar = None
 __tickerController = None
 
-def setWidget(widget:QFrame):
+def init(parent):
     global __widget
-    __widget = widget
+    __widget = parent.findChild(QFrame, 'infoWidget')
+    __widget.setFixedWidth(550)
     __init()
 
 def __init():
