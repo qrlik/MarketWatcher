@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import QTableWidget,QAbstractItemView,QProgressBar
+from PySide6.QtWidgets import QTableWidget,QAbstractItemView,QProgressBar,QHeaderView
 from PySide6.QtCore import Qt
 
 from systems import watcherController
@@ -7,13 +7,12 @@ from systems import watcherController
 from widgets import infoWidget
 from widgets.watcherTableItems import tickerNameItem
 from widgets.watcherTableItems import divergenceAccumulatePowerItem
-from widgets.watcherTableItems import divergenceBearPowerItem
-from widgets.watcherTableItems import divergenceBullPowerItem
 
 __watcherTable:QTableWidget = None
 __bullBar:QProgressBar = None
 __bearBar:QProgressBar = None
 __emptyBar:QProgressBar = None
+__headers:list = ['Ticker', 'Power' ]
 __sortColumn = 1
 
 def init(parent):
@@ -26,12 +25,13 @@ def init(parent):
     __initRatio()
 
 def __initTable():
-    global __watcherTable
+    global __watcherTable,__headers
     __watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     __watcherTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     __watcherTable.itemSelectionChanged.connect(__updateInfoWidget)
-    __watcherTable.setColumnCount(4)
-    __watcherTable.setHorizontalHeaderLabels(['Ticker', 'Power', 'Bull Power,%', 'Bear Power,%'])
+    __watcherTable.setColumnCount(len(__headers))
+    __watcherTable.setHorizontalHeaderLabels(__headers)
+    __watcherTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
     __watcherTable.horizontalHeader().sectionClicked.connect(__updateSortOrder)
 
 def __initRatio():
@@ -48,8 +48,6 @@ def initList():
     for ticker in tickers:
         __watcherTable.setItem(row, 0, tickerNameItem.TickerNameItem(ticker))
         __watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
-        __watcherTable.setItem(row, 2, divergenceBullPowerItem.DivergenceBullPowerItem(ticker))
-        __watcherTable.setItem(row, 3, divergenceBearPowerItem.DivergenceBearPowerItem(ticker))
         row += 1
 
 def updateViewedDivergence():
