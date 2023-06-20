@@ -21,7 +21,7 @@ def parseRateLimits(data):
             __limits = limit.get('limit', __limits) * 0.8
 
 def getLimits():
-    return __limits
+    return max(__limits - __current, 0)
 
 def isAllowed():
     global __timestamp,__interval,__current,__limited
@@ -63,6 +63,7 @@ def onResponce(result):
         utils.logError('apiLimits:onResponce no weight - ' + str(result))
     __current = max(__current, int(weight))
     if __current >= __limits and not __limited:
+        utils.log('Paused for ' + str(__interval / 1000) + ' sec')
         __limited = True
         __timestamp = utils.getCurrentTime()
 
