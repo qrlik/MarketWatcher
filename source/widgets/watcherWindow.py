@@ -15,6 +15,7 @@ from systems import watcherController
 from systems import userDataController
 
 from widgets import configsWindow
+from widgets.filters import filterWidget
 from widgets import watcherTable
 from widgets import infoWidget
 from widgets import menuBar
@@ -69,6 +70,7 @@ class WatcherWindow(QMainWindow):
     def __initValues(self):
         self.__watcherWidget:QWidget = self.findChild(QWidget, 'watcherWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        filterWidget.init(self)
         watcherTable.init(self)
         infoWidget.init(self)
         infoWidget.connectTabsChanged(watcherTable.updateViewedDivergence)

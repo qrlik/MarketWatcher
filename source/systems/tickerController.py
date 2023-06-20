@@ -5,6 +5,7 @@ from models import timeframe
 from systems import configController
 from systems import timeframeController
 from utilities import utils
+from widgets.filters import timeframesFilter
 
 class TickerData:
     def __init__(self, ticker:str, pricePrecision: int):
@@ -39,6 +40,13 @@ class TickerController:
     def getTimeframes(self):
         return self.__data.timeframes
     
+    def getFilteredTimeframes(self):
+        result = {}
+        for tf, controller in self.__data.timeframes.items():
+            if timeframesFilter.isEnabled(tf):
+                result.setdefault(tf, controller)
+        return result
+
     def getTimeframe(self, tf:timeframe.Timeframe):
         return self.__data.timeframes.get(tf)
 

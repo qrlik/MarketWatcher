@@ -28,7 +28,7 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
     def update(self):
         allPower = 0.0
         allNewPower = 0.0
-        for _, controller in watcherController.getTicker(self.__ticker).getTimeframes().items():
+        for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
             powers = controller.getDivergenceController().getPowers()
             allPower += powers.bullPower
             allNewPower += powers.newBullPower

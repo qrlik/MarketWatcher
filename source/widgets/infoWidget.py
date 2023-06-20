@@ -55,7 +55,7 @@ def __initTabs():
 
 def __initProgressBar():
     global __divergenceRatio
-    __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheed())
+    __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheet())
 
 def connectTabsChanged(func):
     __tabs.tabBarClicked.connect(func)
@@ -172,7 +172,7 @@ def __updateProgressBar():
         __divergenceRatio.setStyleSheet(guiDefines.getDefaultProgressBarSheet())
         __divergenceRatio.setValue(round(allBullPower / (summary) * 100))
     else:
-        __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheed())
+        __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheet())
         __divergenceRatio.setValue(0)
 
 def __updateTabValues(tabWidget:QWidget, cndlesController):

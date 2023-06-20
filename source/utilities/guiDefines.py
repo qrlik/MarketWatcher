@@ -8,5 +8,8 @@ defaultColor:QColor = Qt.GlobalColor.white
 def getDefaultProgressBarSheet():
     return 'QProgressBar { background: darkRed } QProgressBar::chunk { background: darkGreen }'
 
-def getEmptyProgressBarSheed():
+def getEmptyProgressBarSheet():
     return 'QProgressBar { background: darkGray } QProgressBar::chunk { background: darkGray }'
+
+def getCheckedButtonSheet():
+    return 'QPushButton::checked { background: lightGray; color: black }'

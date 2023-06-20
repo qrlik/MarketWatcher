@@ -21,7 +21,7 @@ def __initTools():
 
 def __onToolsViewAll():
     for ticker, tickerController in watcherController.getTickers().items():
-        for timeframe, timeframeController in tickerController.getTimeframes().items():
+        for timeframe, timeframeController in tickerController.getFilteredTimeframes().items():
             for divergence in timeframeController.getDivergenceController().getActuals():
                 time1 = divergence.firstCandle.time
                 time2 = divergence.secondCandle.time
