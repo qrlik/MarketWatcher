@@ -1,7 +1,7 @@
 from utilities import utils
 
 __current = 0
-__limits = 1000 # 1200 in fact
+__limits = 800 # 1200 in fact
 __timestamp = 0
 __interval = 60000
 __maintenanceInterval = 120000
@@ -16,11 +16,8 @@ def parseRateLimits(data):
             continue
         if limit.get('interval', '') != 'MINUTE':
             utils.logError('apiLimits:parseRateLimits unknown interval - ' + limit.get('interval', ''))
-        else:
-            __interval = __interval * limit.get('intervalNum', 1)
-            __limits = limit.get('limit', __limits) * 0.8
 
-def getLimits():
+def getAllowedAmount():
     return max(__limits - __current, 0)
 
 def isAllowed():

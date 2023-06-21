@@ -39,7 +39,7 @@ class ApiRequests(Thread):
 
     def __continueLoop(self):
         newTasksAmount = len(self.__newTasks)
-        allowedAmount = apiLimits.getLimits() - self.__tasksAmount
+        allowedAmount = apiLimits.getAllowedAmount() - self.__tasksAmount
         if allowedAmount >= newTasksAmount:
             with self.__taskLock:
                 self.__tasksAmount += newTasksAmount

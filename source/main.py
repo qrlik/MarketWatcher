@@ -43,12 +43,13 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
-# to do menu tf filter
+# to do logs what timeframes will be updated
+# to do think about color for tfs
+# to do add price delta for last N filter
 # to do optimize loop
 
 # after stock exchange
 # to do parse data from orders
-# to do add price delta for last N
 
 # to do add root logs handler also for binance logs
 
