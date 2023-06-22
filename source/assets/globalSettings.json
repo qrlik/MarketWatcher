@@ -9,7 +9,7 @@
 		"6": 30,
 		"10": 50
 	},
-	"divergenceActualLength": 3,
+	"divergenceActualLength": 0,
 	"rsiLength": 14,
 	"spotSymbolsExceptions": [
 		"BLUR"

@@ -43,6 +43,8 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
+# сделать индикатор на диверы
+
 # сделать actual length 0
 # убрать отработку по atр
 # убрать viewed

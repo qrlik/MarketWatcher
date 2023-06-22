@@ -25,8 +25,7 @@ class DivergenceInfo:
         self.breakPercents = None
         self.breakDelta = None
         self.power = None
-        self.workedOut = None
-        self.viewed = False
+        self.viewed = True
 
     def toDict(self):
         result = {}
@@ -61,7 +60,6 @@ class DivergenceController:
         self.__candles = []
         self.__lines = OrderedDict()
         self.__divergences = OrderedDict()
-        self.__actualsByPowerAndLength = []
         self.__actuals = []
         self.__lastOpenTime = 0
 
@@ -212,25 +210,6 @@ class DivergenceController:
     def __processActualsByPowerAndLength(self):
         for _, divergence in self.__divergences.items():
             if self.__isDivergenceLengthActual(divergence) and divergence.power >= 1.0:
-                self.__actualsByPowerAndLength.append(divergence)
- 
-    def __isDivergenceWorkedOut(self, divergence):
-        if divergence.workedOut:
-            return True
-
-        if divergence.workedOut is None:
-            for index in range(divergence.secondIndex + 1, len(self.__candles)):
-                if self.__isCandleWorkedOut(divergence, self.__candles[index]):
-                    divergence.finishedWorkedOut = True
-                    return True
-                
-        divergence.workedOut = self.__isCandleWorkedOut(divergence, self.__candleController.getCurrentCandle())
-        return divergence.workedOut
-
-    def __processActuals(self):
-        self.__actuals.clear()
-        for divergence in self.__actualsByPowerAndLength:
-            if not self.__isDivergenceWorkedOut(divergence):
                 self.__actuals.append(divergence)
  
     def isEmpty(self):
@@ -262,13 +241,11 @@ class DivergenceController:
         if candles[0].openTime != self.__lastOpenTime:
             self.__reset()
         else:
-            self.__processActuals()
             return
 
         self.__updateCandles(candles)
         self.__processVertexs()
         self.__processDivergences()
         self.__processActualsByPowerAndLength()
-        self.__processActuals()
         cacheController.updateViewedDivergences(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__actuals)
         
