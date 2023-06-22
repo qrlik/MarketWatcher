@@ -40,7 +40,6 @@ def __initValues():
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
     __tabs.tabBar().setExpanding(True)
-    __tabs.tabBarClicked.connect(__onTabClicked)
 
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
@@ -107,20 +106,6 @@ def __initDivergenceTable(tab:QWidget):
     for i in range(len(heads)):
         table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
     table.setHorizontalHeaderLabels(heads)
-
-def __onTabClicked(index):
-    if __tickerController is None:
-        return
-    __tabs.tabBar().setTabTextColor(index, guiDefines.defaultColor)
-    tabWidget = __tabs.widget(index)
-    tf = timeframe.Timeframe[tabWidget.objectName()]
-    controller = __tickerController.getTimeframe(tf).getDivergenceController()
-    divergences = controller.getActuals()
-    for divergence in divergences:
-        time1 = divergence.firstCandle.time
-        time2 = divergence.secondCandle.time
-        cacheController.setDivergenceViewed(__tickerController.getTicker(), tabWidget.objectName(), time1, time2, True)
-        divergence.viewed = True
 
 def __onDataCopyClicked():
     data = {}
@@ -245,8 +230,6 @@ def update(ticker:str, byClick):
         __updateDivergenceTable(tabWidget, tfController.getDivergenceController())
         powers = tfController.getDivergenceController().getPowers()
         powerToName.append((powers.bullPower + abs(powers.bearPower), tf.name))
-        color = QColor(255,102,0,255) if powers.newBullPower > 0 or powers.newBearPower > 0 else Qt.GlobalColor.white
-        __tabs.tabBar().setTabTextColor(tabIndex, color)
 
     __sortTabs(powerToName)
     __updateVisible()
