@@ -119,5 +119,7 @@ class WatcherWindow(QMainWindow):
     def log(self, text:str):
         if not self.__logBrowser:
             return
-        self.__logBrowser.append(datetime.datetime.now().strftime("%H:%M:%S") + ': ' + text)
+        self.__logBrowser.append(text)
         self.__logBrowser.verticalScrollBar().setValue(self.__logBrowser.verticalScrollBar().maximum())
+
+window = None

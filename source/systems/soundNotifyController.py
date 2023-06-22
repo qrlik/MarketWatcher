@@ -3,6 +3,9 @@ from systems import configController
 import time
 from playsound import playsound
 
+from models import timeframe
+from widgets import watcherWindow
+
 __startPoint = 1685923200
 __lastSoundedInterval = -1
 __interval = 0
@@ -34,3 +37,13 @@ def update():
     if int(time.time()) >= soundPoint:
         __lastSoundedInterval = intervalsSincePoint
         playsound('assets/notification.wav')
+        
+        comingPoint = __startPoint + (intervalsSincePoint + 1) * __interval
+        comingTfs = ''
+        for tf in configController.getTimeframes():
+            if comingPoint % (tf / 1000) == 0:
+                comingTfs += timeframe.getPrettyFormat(tf) + ','
+        comingTfs = comingTfs[:-1]
+        comingTfs += ' will update'
+        watcherWindow.window.log(comingTfs)
+        

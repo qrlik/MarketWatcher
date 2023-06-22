@@ -25,8 +25,8 @@ if __name__ == "__main__":
     sys.excepthook = excepthook
     app = QApplication([])
     setupGui(app)
-    widget = watcherWindow.WatcherWindow()
-    widget.show()
+    watcherWindow.window = watcherWindow.WatcherWindow()
+    watcherWindow.window.show()
     result = app.exec()
     sys.exit(result)
 
@@ -43,8 +43,19 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
-# to do logs what timeframes will be updated
-# to do think about color for tfs
+# сделать actual length 0
+# убрать отработку по atр
+# убрать viewed
+
+# сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
+# убрать общую шкалу
+# открывать наилучшую вкладку из фильтрованных тф
+
+# подумать 30м [1ч] 2ч [4ч] 8ч [12ч] д н
+
+# добавить tricked power/фильтр
+
+# to do add color for tickers, tabs
 # to do add price delta for last N filter
 # to do optimize loop
 
