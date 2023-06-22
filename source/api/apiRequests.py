@@ -46,6 +46,8 @@ class ApiRequests(Thread):
                 for task in self.__newTasks:
                     self.__loop.create_task(self.__requestTask(task[0], task[1], *task[2]))
                 self.__newTasks.clear()
+        else:
+            self.__loop.call_soon_threadsafe(self.__continueLoop)
         
     def addAsyncRequest(self, callback, *args):
         requestId = self.__requestCounter
