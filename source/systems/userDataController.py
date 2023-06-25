@@ -74,7 +74,7 @@ class TickerData:
         elif isShort:
             return guiDefines.bearColor
         else:
-            return guiDefines.defaultColor
+            return guiDefines.defaultFontColor
 
 def __requestPositions():
     global __data

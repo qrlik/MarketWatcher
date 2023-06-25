@@ -25,6 +25,7 @@ class DivergenceInfo:
         self.breakPercents = None
         self.breakDelta = None
         self.power = None
+        self.tricked = False
 
     def toDict(self):
         result = {}
@@ -56,7 +57,8 @@ class DivergenceController:
     def __reset(self):
         self.__candles = []
         self.__lines = OrderedDict()
-        self.__divergences = OrderedDict()
+        self.__divergencesByFirst = OrderedDict()
+        self.__divergencesBySecond = OrderedDict()
         self.__actuals = []
         self.__lastOpenTime = 0
 
@@ -81,10 +83,14 @@ class DivergenceController:
             if not fromC.vertex or not fromC.rsi or not fromC.atr:
                 continue
             
+            self.__lines.setdefault(i, [])
+            self.__divergencesByFirst.setdefault(i, [])
+            self.__divergencesBySecond.setdefault(i, [])
+
             isHigh = fromC.vertex == vertexController.VertexType.HIGH
             anglePrice = -math.pi / 2 if isHigh else math.pi / 2
             angleRsi = -math.pi / 2 if isHigh else math.pi / 2
-            self.__lines.setdefault(i, [])
+            
             for j in range(i + 1, len(self.__candles)):
                 toC = self.__candles[j]
                 if fromC.vertex != toC.vertex or not toC.rsi or not toC.atr:
@@ -97,21 +103,6 @@ class DivergenceController:
                     self.__lines[i].append(j)
                     anglePrice = newAnglePrice
                     angleRsi = newAngleRsi
-
-    def __checkDivergenceBreakout(self, isHigh, firstCandle, secondCandle):
-        isRegularBreakout = False
-        isHiddenBreakout = False
-        if isHigh:
-            if secondCandle.rsi >= firstCandle.rsi:
-                isRegularBreakout = True
-            if secondCandle.close >= firstCandle.close:
-                isHiddenBreakout = True
-        else:
-            if secondCandle.rsi <= firstCandle.rsi:
-                isRegularBreakout = True
-            if secondCandle.close <= firstCandle.close:
-                isHiddenBreakout = True
-        return (isRegularBreakout, isHiddenBreakout)
 
     def __calculateRegularBreak(self, info: DivergenceInfo):
         rsiToBreak = info.firstCandle.rsi
@@ -147,37 +138,29 @@ class DivergenceController:
             firstCandle = self.__candles[firstVertex]
             maxLength = self.__getDivergenceLength(firstCandle.vertexStrength)
             isHigh = firstCandle.vertex == vertexController.VertexType.HIGH
-            isRegularBreakout = False
-            isHiddenBreakout = False
-            isFirst = True
             for secondVertex in lines[::-1]:
                 secondCandle = self.__candles[secondVertex]
-                if isFirst:
-                    isRegularBreakout,isHiddenBreakout = self.__checkDivergenceBreakout(isHigh, firstCandle, secondCandle)
-                    isFirst = False
-                if isRegularBreakout and isHiddenBreakout:
-                    break
                 
                 type = None
                 signal = None
                 if (secondCandle.close > firstCandle.close) and (secondCandle.rsi < firstCandle.rsi):
-                    if isHigh and not isRegularBreakout:
+                    if isHigh:
                         type = DivergenceType.REGULAR
                         signal = DivergenceSignalType.BEAR
-                    elif not isHigh and not isHiddenBreakout:
+                    elif not isHigh:
                         type = DivergenceType.HIDDEN
                         signal = DivergenceSignalType.BULL
                 elif (secondCandle.close < firstCandle.close) and (secondCandle.rsi > firstCandle.rsi):
-                    if isHigh and not isHiddenBreakout:
+                    if isHigh:
                         type = DivergenceType.HIDDEN
                         signal = DivergenceSignalType.BEAR
-                    elif not isHigh and not isRegularBreakout:
+                    elif not isHigh:
                         type = DivergenceType.REGULAR
                         signal = DivergenceSignalType.BULL
 
                 if type and signal:
                     if secondVertex - firstVertex > maxLength:
-                        break
+                        continue
                     info = DivergenceInfo()
                     info.firstCandle = firstCandle
                     info.firstIndex = firstVertex
@@ -185,30 +168,43 @@ class DivergenceController:
                     info.secondIndex = secondVertex
                     info.type = type
                     info.signal = signal
-                    self.__divergences.setdefault(firstVertex, info)
+                    self.__divergencesByFirst[firstVertex].append(info)
+                    self.__divergencesBySecond[secondVertex].append(info)
                     self.__calculatePower(info)
-                    break
-
-    def __isCandleWorkedOut(self, divergence, candle):
-        if candle is None:
-            return False
-        price = divergence.secondCandle.close
-        atrWorkout = divergence.secondCandle.atr
-        isBull = divergence.signal == DivergenceSignalType.BULL
-        priceWorkout = price + atrWorkout if isBull else price - atrWorkout
-        if (isBull and candle.high >= priceWorkout) \
-        or (not isBull and candle.low <= priceWorkout):
-            return True
-        return False
+                    continue
 
     def __isDivergenceLengthActual(self, divergence):
         return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
 
     def __processActualsByPowerAndLength(self):
-        for _, divergence in self.__divergences.items():
-            if self.__isDivergenceLengthActual(divergence) and divergence.power >= 1.0:
-                self.__actuals.append(divergence)
+        for _, divergences in self.__divergencesByFirst.items():
+            if len(divergences) > 0 and self.__isDivergenceLengthActual(divergences[0]):
+                self.__actuals.append(divergences[0])
  
+    def __processTricked(self):
+        for divergence in self.__actuals:
+            length = divergence.secondIndex - divergence.firstIndex
+            for other in self.__divergencesByFirst[divergence.firstIndex]:
+                if divergence.tricked:
+                    break
+                if other == divergence:
+                    continue
+                if divergence.signal == other.signal:
+                    otherLength = other.secondIndex - other.firstIndex
+                    if length <= otherLength * 2:
+                        divergence.tricked = True
+            if divergence.tricked:
+                continue
+            for other in self.__divergencesBySecond[divergence.firstIndex]:
+                if divergence.tricked:
+                    break
+                if other == divergence:
+                    continue
+                if divergence.signal == other.signal:
+                    otherLength = other.secondIndex - other.firstIndex
+                    if length <= otherLength:
+                        divergence.tricked = True
+
     def isEmpty(self):
         return len(self.__actuals) == 0
 
@@ -240,4 +236,5 @@ class DivergenceController:
         self.__processVertexs()
         self.__processDivergences()
         self.__processActualsByPowerAndLength()
+        self.__processTricked()
         

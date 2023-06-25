@@ -188,8 +188,10 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
     row = 0
     for divergence in divergences:
         color = guiDefines.bearColor if divergence.signal.name == 'BEAR' else guiDefines.bullColor
+        trickedColor = guiDefines.trickedColor if divergence.tricked else guiDefines.defaultBgColor
         table.item(row, 0).setText(divergence.type.name)
         table.item(row, 0).setForeground(color)
+        table.item(row, 0).setBackground(trickedColor)
         table.item(row, 1).setText(str(round(divergence.power, 2)))
         table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
         table.item(row, 3).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))

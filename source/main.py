@@ -45,17 +45,11 @@ if __name__ == "__main__":
 
 # сделать индикатор на диверы
 
-# сделать actual length 0
-# убрать отработку по atр
-# убрать viewed
+# to do 1 to 5 factor length
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
 # убрать общую шкалу
 # открывать наилучшую вкладку из фильтрованных тф
-
-# подумать 30м [1ч] 2ч [4ч] 8ч [12ч] д н
-
-# добавить tricked power/фильтр
 
 # to do add color for tickers, tabs
 # to do add price delta for last N filter

@@ -3,7 +3,9 @@ from PySide6.QtGui import QColor
 
 bullColor:QColor = Qt.GlobalColor.darkGreen
 bearColor:QColor = Qt.GlobalColor.darkRed
-defaultColor:QColor = Qt.GlobalColor.white
+trickedColor:QColor = Qt.GlobalColor.gray
+defaultBgColor:QColor = QColor(45, 45, 45)
+defaultFontColor:QColor = Qt.GlobalColor.white
 
 def getDefaultProgressBarSheet():
     return 'QProgressBar { background: darkRed } QProgressBar::chunk { background: darkGreen }'
