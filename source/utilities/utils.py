@@ -63,9 +63,6 @@ def saveJsonMsgspecFile(filename, data):
 def addLogListener(obj):
     __listeners.add(obj)
 
-def deleteLogListener(obj):
-    __listeners.remove(obj)
-
 def __logListeners(logStr):
     for listener in __listeners:
         method = getattr(listener, 'log', None)

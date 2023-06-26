@@ -31,9 +31,6 @@ class WatcherWindow(QMainWindow):
         self.__onStart()
         utils.addLogListener(self)
 
-    def __del__(self):
-        utils.deleteLogListener(self)
-
     def __init(self):
         self.__loadUi()
         self.__initValues()

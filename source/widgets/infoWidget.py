@@ -1,12 +1,11 @@
 from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor
 
 from models import timeframe
-from systems import cacheController
 from systems import configController
 from systems import watcherController
 from utilities import guiDefines
+from widgets.filters import timeframesFilter
 
 import pyperclip
 import json
@@ -202,11 +201,15 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
 
 def __sortTabs(powerToName:list):
     powerToName.sort(key = lambda tuple:tuple[0], reverse = True)
+    indexForSelect = -1
     for sortIndex in range(len(powerToName)):
         _, name = powerToName[sortIndex]
+        if indexForSelect < 0 and timeframesFilter.isEnabled(timeframe.Timeframe[name]):
+            indexForSelect = sortIndex
         for tabIndex in range(__tabs.count()):
             if __tabs.widget(tabIndex).objectName() == name:
                 __tabs.tabBar().moveTab(tabIndex, sortIndex)
+    return indexForSelect if indexForSelect >= 0 else 0
 
 def __updateVisible():
     for tabIndex in range(__tabs.count()):
@@ -233,9 +236,9 @@ def update(ticker:str, byClick):
         powers = tfController.getDivergenceController().getPowers()
         powerToName.append((powers.bullPower + abs(powers.bearPower), tf.name))
 
-    __sortTabs(powerToName)
+    indexForSelect = __sortTabs(powerToName)
     __updateVisible()
     if byClick:
-        __tabs.setCurrentIndex(0)
+        __tabs.setCurrentIndex(indexForSelect)
 
             
