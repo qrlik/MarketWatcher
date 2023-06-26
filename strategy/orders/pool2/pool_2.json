@@ -9,8 +9,8 @@
         "type": "SHORT",
         "price": 0.27730,
         "stoploss": 0.288,
-        "takeprofits": [ 0.2559, 0.2451 ],
-        "result": null,
+        "takeprofits": [ 0.2559, 0.2451 ], // 2 ATR, >2 ATR
+        "result": "STOP_LOSS",
         "divergences": {
             "FOUR_HOUR": [
                 {
@@ -35,6 +35,1001 @@
                 }
             ]
         },
-        "power": 149
+        "power": 149,
+        "openNote": "сторона с силой, обманкой и уровнем на 4ч + тенью на 8 часах",
+        "note": "желательно не заходить когда часть сигнала уже отработана. лучше последить. сигнал хороший, но точка входа нет"
+    },
+    {
+        "number": 2,
+        "ticker": "SUIUSDT",
+        "time": "2023-06-12 22:11:37",
+        "type": "SHORT",
+        "price": 0.652200,
+        "stoploss": 0.6781,
+        "takeprofits": [ 0.6277, 0.6032 ], // ATR, 2ATR
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "14:00 09-06-2023",
+                    "secondCandle": "18:00 12-06-2023",
+                    "lenght": 38,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 56,
+                    "break": 13.59
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "12:00 09-06-2023",
+                    "secondCandle": "16:00 12-06-2023",
+                    "lenght": 19,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 38,
+                    "break": 13.59
+                }
+            ],
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "10:00 09-06-2023",
+                    "secondCandle": "10:00 12-06-2023",
+                    "lenght": 12,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 33,
+                    "break": 14.35
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 09-06-2023",
+                    "secondCandle": "12:00 12-06-2023",
+                    "lenght": 9,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 18,
+                    "break": 12.36
+                }
+            ]
+        },
+        "power": 146,
+        "openNote": "сторона с силой, несколько интервалов и уровни в виде касательных",
+        "note": "уровни были довольно слабые, в итоге пошла обманка и выбило"
+    },
+    {
+        "number": 3,
+        "ticker": "SUSHIUSDT",
+        "time": "2023-06-12 22:30:19",
+        "type": "SHORT",
+        "price": 0.5637,
+        "stoploss": 0.5781,
+        "takeprofits": [ 0.539, 0.521 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 8,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 69,
+                    "break": 17.56
+                },
+                {
+                    "firstCandle": "04:00 11-06-2023",
+                    "secondCandle": "10:00 12-06-2023",
+                    "lenght": 5,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 2.64
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "08:00 10-06-2023",
+                    "secondCandle": "08:00 12-06-2023",
+                    "lenght": 12,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 47,
+                    "break": 12.9
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 6,
+                    "break": 5.17
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "22:00 11-06-2023",
+                    "secondCandle": "14:00 12-06-2023",
+                    "lenght": 8,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 1.58
+                },
+                {
+                    "firstCandle": "14:00 12-06-2023",
+                    "secondCandle": "20:00 12-06-2023",
+                    "lenght": 3,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.35
+                }
+            ]
+        },
+        "power": 134,
+        "openNote": "сторона с силой, c обманкой на 2ч скрытая вниз. касательные на 1ч и 2ч",
+        "note": "сила была не внутри дивера. обманка не обновила вершину для цены! противоречащие сигналы"
+    },
+    {
+        "number": 4,
+        "ticker": "RSRUSDT",
+        "time": "2023-06-12 23:33:23",
+        "type": "SHORT",
+        "price": 0.001905,
+        "stoploss": 0.001956,
+        "takeprofits": [ 0.001856, 0.001806 ], // ATR, 2ATR
+        "result": "STOP_LOSS",
+        "divergences": {
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 8,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 89,
+                    "break": 21.36
+                },
+                {
+                    "firstCandle": "10:00 11-06-2023",
+                    "secondCandle": "16:00 12-06-2023",
+                    "lenght": 5,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 1.72
+                },
+                {
+                    "firstCandle": "04:00 11-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 1.76
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 10,
+                    "break": 7.21
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "14:00 11-06-2023",
+                    "secondCandle": "20:00 12-06-2023",
+                    "lenght": 15,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 1.72
+                }
+            ]
+        },
+        "power": 106,
+        "openNote": "сторона с силой, без обманки. на 2ч и дальше скрытые вниз",
+        "note": "сила стороны рассматривалась до дивера, а не на самом его формировании. обманки не было и уровень был слабый только на одном интервале. скрытые просто пробило"
+    },
+    {
+        "number": 5,
+        "ticker": "GALUSDT",
+        "time": "2023-06-12 23:52:47",
+        "type": "SHORT",
+        "price": 1.07704,
+        "stoploss": 1.1176,
+        "takeprofits": [ 0.9971, 0.9361 ], // 2ATR, >2ATR
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 09-06-2023",
+                    "secondCandle": "18:00 12-06-2023",
+                    "lenght": 37,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 24,
+                    "break": 7.54
+                }
+            ],
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 09-06-2023",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 6,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 21,
+                    "break": 10.84
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "16:00 09-06-2023",
+                    "secondCandle": "16:00 12-06-2023",
+                    "lenght": 18,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 13,
+                    "break": 6.43
+                }
+            ],
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "16:00 09-06-2023",
+                    "secondCandle": "16:00 12-06-2023",
+                    "lenght": 12,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 12,
+                    "break": 6.93
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 09-06-2023",
+                    "secondCandle": "12:00 12-06-2023",
+                    "lenght": 9,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 10,
+                    "break": 6.43
+                }
+            ],
+            "ONE_WEEK": [
+                {
+                    "firstCandle": "04:00 26-12-2022",
+                    "secondCandle": "04:00 05-06-2023",
+                    "lenght": 23,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 9,
+                    "break": 130.78
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "17:00 12-06-2023",
+                    "secondCandle": "22:00 12-06-2023",
+                    "lenght": 5,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 3,
+                    "break": 2.24
+                }
+            ]
+        },
+        "power": 92,
+        "openNote": "4ч. сторона с силой, с обманкой. тень на 4ч, касательные на несколько тф + диверы без обманки",
+        "note": "обманка была только на одном интервале. слишком сильный покупатель"
+    },
+    {
+        "number": 6,
+        "ticker": "CELRUSDT",
+        "time": "2023-06-13 11:10:50",
+        "type": "SHORT",
+        "price": 0.01477,
+        "stoploss": 0.01529,
+        "takeprofits": [ 0.01421, 0.01356], // ATR, 2ATR
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 09-06-2023",
+                    "secondCandle": "04:00 13-06-2023",
+                    "lenght": 42,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 81,
+                    "break": 13.05
+                }
+            ],
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "16:00 09-06-2023",
+                    "secondCandle": "22:00 12-06-2023",
+                    "lenght": 13,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 37,
+                    "break": 12.45
+                }
+            ]
+        },
+        "power": 118,
+        "openNote": "2ч, 6ч. дивер без силы, с обманкой, уровень в виде трендовой и касательных",
+        "note": "желательно не заходить когда часть сигнала уже отработана. лучше последить. сигнал хороший, но точка входа нет",
+        "note2": "была сила покупателя, плюс не разворотная модель чисто на скрытом дивере"
+    },
+    {
+        "number": 7,
+        "ticker": "WOOUSDT",
+        "time": "2023-06-14 12:53:15",
+        "type": "LONG",
+        "price": 0.16197,
+        "stoploss": 0.1574,
+        "takeprofits": [ 0.1689 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "08:00 10-06-2023",
+                    "secondCandle": "10:00 14-06-2023",
+                    "lenght": 49,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 72,
+                    "break": 12.74
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "16:00 10-06-2023",
+                    "secondCandle": "08:00 14-06-2023",
+                    "lenght": 22,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 40,
+                    "break": 12.09
+                },
+                {
+                    "firstCandle": "20:00 12-06-2023",
+                    "secondCandle": "08:00 14-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.88
+                }
+            ],
+            "SIX_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 14-06-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 7,
+                    "break": 5.38
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "02:00 14-06-2023",
+                    "secondCandle": "11:00 14-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 0.72
+                }
+            ]
+        },
+        "power": 121,
+        "openNote": "2ч. без силы стороны, обманка только на 2ч. total3 сигнал на рост 15м/30м",
+        "note": "закрыто на проливе индекса, который позже откупили -> нет внутреннего принятия факта что может случиться что угодно",
+        "note2": "на 30м можно было подождать отработку обманки с тенью"
+    },
+    {
+        "number": 8,
+        "ticker": "COMBOUSDT",
+        "time": "2023-06-15 21:25:33",
+        "type": "LONG",
+        "price": 0.8676,
+        "stoploss": 0.856,
+        "takeprofits": [ 0.8830 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "12:00 15-06-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 743,
+                    "break": 85.78
+                },
+                {
+                    "firstCandle": "04:00 12-06-2023",
+                    "secondCandle": "12:00 15-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 6.88
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "08:00 10-06-2023",
+                    "secondCandle": "16:00 15-06-2023",
+                    "lenght": 32,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 103,
+                    "break": 21.47
+                }
+            ],
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 15-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 46,
+                    "break": 26.29
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "00:00 15-06-2023",
+                    "secondCandle": "20:00 15-06-2023",
+                    "lenght": 20,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 35,
+                    "break": 7.26
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "04:00 15-06-2023",
+                    "secondCandle": "18:00 15-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.44
+                }
+            ]
+        },
+        "power": 932,
+        "openNote": "30м обманка, без силы стороны. уровень на 1ч и 4ч"
+    },
+    {
+        "number": 9,
+        "ticker": "COMBOUSDT",
+        "time": "2023-06-16 18:57:38",
+        "type": "LONG",
+        "price": 0.882,
+        "stoploss": 0.864,
+        "takeprofits": [ 0.924, 0.964 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "12:00 15-06-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 743,
+                    "break": 85.78
+                },
+                {
+                    "firstCandle": "04:00 12-06-2023",
+                    "secondCandle": "12:00 15-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 6.88
+                }
+            ],
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 16-06-2023",
+                    "lenght": 12,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 62,
+                    "break": 29.44
+                }
+            ]
+        },
+        "power": 810,
+        "openNote": "с силой стороны. обманка на 12ч,4ч,30м"
+    },
+    {
+        "number": 10,
+        "ticker": "XEMUSDT",
+        "time": "2023-06-19 16:31:59",
+        "type": "LONG",
+        "price": 0.0255,
+        "stoploss": 0.0251,
+        "takeprofits": [ 0.0263 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 10-06-2023",
+                    "secondCandle": "04:00 19-06-2023",
+                    "lenght": 18,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 67,
+                    "break": 15.26
+                },
+                {
+                    "firstCandle": "16:00 14-06-2023",
+                    "secondCandle": "04:00 19-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 4,
+                    "break": 3.51
+                }
+            ]
+        },
+        "power": 77,
+        "openNote": "12ч с обманкой и силой стороны. мини диверы на 30,1ч,2ч и уровень",
+        "note": "далекий стоп, не доехали до тейка"
+    },
+    {
+        "number": 11,
+        "ticker": "SFPUSDT",
+        "time": "2023-06-19 20:19:53",
+        "type": "SHORT",
+        "price": 0.4566,
+        "stoploss": 0.4731,
+        "takeprofits": [],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "12:00 18-06-2023",
+                    "secondCandle": "18:00 19-06-2023",
+                    "lenght": 15,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 109,
+                    "break": 20.75
+                },
+                {
+                    "firstCandle": "06:00 19-06-2023",
+                    "secondCandle": "18:00 19-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 1.72
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 19-06-2023",
+                    "secondCandle": "16:00 19-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 18,
+                    "break": 8.98
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "13:00 18-06-2023",
+                    "secondCandle": "19:00 19-06-2023",
+                    "lenght": 30,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 11,
+                    "break": 5.29
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 18-06-2023",
+                    "secondCandle": "12:00 19-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 8,
+                    "break": 6.56
+                }
+            ]
+        },
+        "power": 147,
+        "openNote": "4,2,1ч с обманкой и силой стороны. уровни + тень.",
+        "note": "сильные и резкие движения. вход против прогноза по индексу. тень в начале обманке подсказывала до куда пойдет обманка",
+        "note2": "обманки по сути не было, т.к это было шире первого дивера. по факту это была первая отработка дивера"
+    },
+    {
+        "number": 12,
+        "ticker": "SUIUSDT",
+        "time": "2023-06-20 15:17:30",
+        "type": "LONG",
+        "price": 0.768700,
+        "stoploss": 0.7589,
+        "takeprofits": [ 0.7879 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWELVE_HOUR": [
+                {
+                    "firstCandle": "04:00 29-05-2023",
+                    "secondCandle": "16:00 19-06-2023",
+                    "lenght": 43,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 186,
+                    "break": 37.43
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 28-05-2023",
+                    "secondCandle": "04:00 19-06-2023",
+                    "lenght": 22,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 71,
+                    "break": 35.23
+                },
+                {
+                    "firstCandle": "04:00 04-06-2023",
+                    "secondCandle": "04:00 19-06-2023",
+                    "lenght": 15,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 29,
+                    "break": 22.3
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "18:00 19-06-2023",
+                    "secondCandle": "14:00 20-06-2023",
+                    "lenght": 20,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 3,
+                    "break": 1.89
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "18:00 19-06-2023",
+                    "secondCandle": "12:00 20-06-2023",
+                    "lenght": 9,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 2,
+                    "break": 2.06
+                }
+            ]
+        },
+        "power": 291,
+        "openNote": "30м с силой стороны и обманкой. 1,2ч без обманки",
+        "note": "слабый дивер + противоположные диверы на больших интервалах",
+        "note2": "вход по скрытому диверу и маленькому обычному без обманки. вход на 30м, цель была слишком далеко"
+    },
+    {
+        "number": 13,
+        "ticker": "BALUSDT",
+        "time": "2023-06-21 13:04:02",
+        "type": "LONG",
+        "price": 4.626,
+        "stoploss": 4.599,
+        "takeprofits": [ 4.669 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "01:00 21-06-2023",
+                    "secondCandle": "12:00 21-06-2023",
+                    "lenght": 11,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 11,
+                    "break": 2.63
+                }
+            ]
+        },
+        "power": 11,
+        "openNote": "30м,1ч с силой стороны и обманкой",
+        "note": "вход после появления противоположного дивера"
+    },
+    {
+        "number": 14,
+        "ticker": "FLOWUSDT",
+        "time": "2023-06-21 17:35:29",
+        "type": "LONG",
+        "price": 0.537,
+        "stoploss": 0.527,
+        "takeprofits": [ 0.557 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "01:00 21-06-2023",
+                    "secondCandle": "16:00 21-06-2023",
+                    "lenght": 15,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 62,
+                    "break": 11.82
+                }
+            ],
+            "ONE_WEEK": [
+                {
+                    "firstCandle": "04:00 26-12-2022",
+                    "secondCandle": "04:00 12-06-2023",
+                    "lenght": 24,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 10,
+                    "break": 21.8
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "10:00 21-06-2023",
+                    "secondCandle": "14:00 21-06-2023",
+                    "lenght": 2,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 1.3
+                }
+            ]
+        },
+        "power": 73,
+        "openNote": "30м с силой стороны и обманки. 1ч без обманки. вход поздновато",
+        "note": "вход по скрытому диверу"
+    },
+    {
+        "number": 15,
+        "ticker": "STXUSDT",
+        "time": "2023-06-21 21:12:15",
+        "type": "SHORT",
+        "price": 0.8316,
+        "stoploss": 0.8781,
+        "takeprofits": [ 0.7856, 0.7426 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "00:30 21-06-2023",
+                    "secondCandle": "20:30 21-06-2023",
+                    "lenght": 40,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 303,
+                    "break": 26.83
+                },
+                {
+                    "firstCandle": "05:00 21-06-2023",
+                    "secondCandle": "20:30 21-06-2023",
+                    "lenght": 31,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 1.32
+                }
+            ],
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "00:00 21-06-2023",
+                    "secondCandle": "20:00 21-06-2023",
+                    "lenght": 20,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 73,
+                    "break": 14.48
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 03-05-2023",
+                    "secondCandle": "04:00 20-06-2023",
+                    "lenght": 48,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 8,
+                    "break": 7.44
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "20:00 20-06-2023",
+                    "secondCandle": "12:00 21-06-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 3.66
+                }
+            ]
+        },
+        "power": 389,
+        "openNote": "30м. 1ч. без силы стороны с обманкой.",
+        "note": "желательно искать что-то с силой стороны, а не брать первый дивер в списке. если обманка длиннее самого дивера -> это новый дивер без обманки. искать что-то +- похожее как на индексе. если входишь по определенному тф, бери стоп и цели в рамках этого тф"
+    },
+    {
+        "number": 16,
+        "ticker": "KLAYUSDT",
+        "time": "2023-06-23 13:35:53",
+        "type": "SHORT",
+        "price": 0.1691,
+        "stoploss": 0.1698,
+        "takeprofits": [ 0.1684 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "14:30 22-06-2023",
+                    "secondCandle": "13:00 23-06-2023",
+                    "lenght": 45,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 11,
+                    "break": 1.65
+                }
+            ]
+        },
+        "power": 11,
+        "openNote": "30м. сторона с силой, без обманки. уровень",
+        "note": "вход без обманки по скрытому диверу"
+    },
+    {
+        "number": 17,
+        "ticker": "XECUSDT",
+        "time": "2023-06-23 18:11:17",
+        "type": "SHORT",
+        "price": 0.02307,
+        "stoploss": 0.02346,
+        "takeprofits": [ 0.02271 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "04:00 22-06-2023",
+                    "secondCandle": "16:00 23-06-2023",
+                    "lenght": 18,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 114,
+                    "break": 14.33
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 22-06-2023",
+                    "secondCandle": "04:00 23-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 2.38
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "09:30 23-06-2023",
+                    "secondCandle": "17:30 23-06-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 0.99
+                }
+            ]
+        },
+        "power": 118,
+        "openNote": "2ч с силой стороны с обманкой, уровень",
+        "note": "нужен вход от минимального интервала. много проколов и рост объема"
+    },
+    {
+        "number": 18,
+        "ticker": "TUSDT",
+        "time": "2023-06-25 21:59:37",
+        "type": "LONG",
+        "price": 0.02382,
+        "stoploss": 0.02365,
+        "takeprofits": [ 0.02399 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "02:00 23-06-2023",
+                    "secondCandle": "18:00 25-06-2023",
+                    "lenght": 32,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 57,
+                    "break": 14.36
+                }
+            ]
+        },
+        "power": 57,
+        "note": "вход без обманки"
+    },
+    {
+        "number": 19,
+        "ticker": "TUSDT",
+        "time": "2023-06-25 22:34:45",
+        "type": "LONG",
+        "price": 0.02373,
+        "stoploss": 0.02356,
+        "takeprofits": [ 0.02390 ],
+        "result": "STOP_LOSS",
+        "note": "вход без обманки. можно было заходить по отработке мини дивера"
+    },
+    {
+        "number": 20,
+        "ticker": "UNIUSDT",
+        "time": "2023-06-26 04:31:21",
+        "type": "SHORT",
+        "price": 5.435,
+        "stoploss": 5.551,
+        "takeprofits": [ 5.301, 5.251 ],
+        "result": "1_TAKE",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "16:30 25-06-2023",
+                    "secondCandle": "04:00 26-06-2023",
+                    "lenght": 23,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 28,
+                    "break": 5.85
+                },
+                {
+                    "firstCandle": "02:30 26-06-2023",
+                    "secondCandle": "04:00 26-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.19
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "12:00 25-06-2023",
+                    "secondCandle": "02:00 26-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 1.99
+                }
+            ]
+        },
+        "power": 31
     }
 ]
