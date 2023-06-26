@@ -3,6 +3,7 @@ from PySide6.QtCore import Qt
 
 from models import timeframe
 from systems import configController
+from systems import userDataController
 from systems import watcherController
 from utilities import guiDefines
 from widgets.filters import timeframesFilter
@@ -107,12 +108,11 @@ def __initDivergenceTable(tab:QWidget):
     table.setHorizontalHeaderLabels(heads)
 
 def __onDataCopyClicked():
+    ticker = __tickerController.getTicker() if __tickerController else ''
     data = {}
     data.setdefault('number')
-    data.setdefault('ticker', __tickerController.getTicker() if __tickerController else None)
-    data.setdefault('time')
-    data.setdefault('type')
-    data.setdefault('price')
+    data.setdefault('ticker', ticker)
+    data.update(userDataController.getTickerJsonData(ticker))
     data.setdefault('stoploss')
     data.setdefault('takeprofits', [])
     data.setdefault('result')

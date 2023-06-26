@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from datetime import datetime
 import time
 
 from api import api
@@ -97,9 +98,6 @@ def __userDataStream(data):
                 info = __data.setdefault(symbol, TickerData())
                 info.parsePositionStream(time, pos)
 
-def getTickerUserData(ticker:str):
-    return __data.get(ticker, TickerData())
-
 def init():
     global __keyTime
     __requestPositions()
@@ -113,4 +111,27 @@ def update():
         api.Future.getListenKey()
         __keyTime = int(time.time())
 
+def getTickerUserData(ticker:str):
+    return __data.get(ticker, TickerData())
 
+def getTickerJsonData(ticker:str):
+    data = getTickerUserData(ticker)
+    result = {}
+
+    positionData = None
+    type = ''
+    if data.longPosition.isOpened():
+        positionData = data.longPosition
+        type = 'LONG'
+    if data.shortPosition.isOpened():
+        if not positionData or data.shortPosition.lastUpdate > data.longPosition.lastUpdate:
+            positionData = data.shortPosition
+            type = 'SHORT'
+
+    if positionData is None:
+        positionData = PositionInfo()
+    result.setdefault('time', datetime.fromtimestamp(positionData.lastUpdate / 1000).strftime('%H:%M %d-%m-%Y'))
+    result.setdefault('type', type)
+    result.setdefault('price', str(positionData.averagePrice))
+
+    return result

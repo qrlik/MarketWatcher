@@ -44,18 +44,18 @@ if __name__ == "__main__":
 # to do divergence test
 
 # сделать индикатор на диверы
-# подумать о равенсве при определении дивера
+# подумать о равенсве при определении дивера и при определении силы вершины
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
 # убрать общую шкалу
-# открывать наилучшую вкладку из фильтрованных тф
+
+# to do parse data from orders
 
 # to do add color for tickers, tabs
 # to do add price delta for last N filter
-# to do optimize loop
 
 # after stock exchange
-# to do parse data from orders
+# to do optimize loop
 
 # to do add root logs handler also for binance logs
 
