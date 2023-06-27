@@ -68,7 +68,7 @@ class WatcherWindow(QMainWindow):
         infoWidget.connectTabsChanged(watcherTable.updateViewedDivergence)
 
     def __initSizes(self):
-        self.setFixedWidth(850)
+        self.setFixedWidth(800)
         self.setFixedHeight(600)
         self.__logBrowser.setFixedHeight(150)
 

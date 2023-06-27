@@ -7,5 +7,5 @@ __widget:QFrame = None
 def init(parent):
     global __widget
     __widget = parent.findChild(QFrame, 'filterWidget')
-    __widget.setFixedWidth(550)
+    __widget.setFixedWidth(500)
     timeframesFilter.init(__widget)
