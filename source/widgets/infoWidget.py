@@ -10,11 +10,13 @@ from widgets.filters import timeframesFilter
 
 import pyperclip
 import json
+import webbrowser
 
 __widget:QFrame = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
 __dataButton:QPushButton = None
+__linkButton:QPushButton = None
 __divergenceRatio:QProgressBar = None
 __tickerController = None
 
@@ -26,16 +28,21 @@ def init(parent):
 
 def __init():
     __initValues()
+    __initButtons()
     __initProgressBar()
     __initTabs()
 
 def __initValues():
-    global __widget, __priceValue, __tabs, __dataButton,__divergenceRatio
+    global __widget, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton
     __priceValue = __widget.findChild(QLabel, 'priceValue')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
     __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
     __dataButton = __widget.findChild(QPushButton, 'copyDataButton')
+    __linkButton = __widget.findChild(QPushButton, 'openLinkButton')
+
+def __initButtons():
     __dataButton.clicked.connect(__onDataCopyClicked)
+    __linkButton.clicked.connect(__onOpenLinkClicked)
 
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
@@ -130,6 +137,14 @@ def __onDataCopyClicked():
                 tfDivers.append(divergence.toDict())
     data.setdefault('power', round(power))
     pyperclip.copy(str(json.dumps(data, indent = 4)))
+
+def __onOpenLinkClicked():
+    if not __tickerController:
+        return
+    url = 'https://www.tradingview.com/chart/?symbol=BINANCE:' + __tickerController.getTicker()
+    webbrowser.register('chrome', None,
+        webbrowser.BackgroundBrowser("C://Program Files//Google//Chrome//Application//chrome.exe"))
+    webbrowser.get('chrome').open(url)
 
 def __updatePrice():
     price = None

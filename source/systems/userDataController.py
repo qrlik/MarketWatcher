@@ -132,6 +132,6 @@ def getTickerJsonData(ticker:str):
         positionData = PositionInfo()
     result.setdefault('time', datetime.fromtimestamp(positionData.lastUpdate / 1000).strftime('%H:%M %d-%m-%Y'))
     result.setdefault('type', type)
-    result.setdefault('price', str(positionData.averagePrice))
+    result.setdefault('price', positionData.averagePrice)
 
     return result

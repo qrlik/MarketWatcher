@@ -99,11 +99,22 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="copyDataButton">
-           <property name="text">
-            <string>Copy Data</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="positionLayout">
+           <item>
+            <widget class="QPushButton" name="copyDataButton">
+             <property name="text">
+              <string>Copy Data</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="openLinkButton">
+             <property name="text">
+              <string>Open Link</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QProgressBar" name="divergenceRatio">
