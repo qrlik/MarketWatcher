@@ -220,6 +220,17 @@ class DivergenceController:
                 powers.bearPower += divergence.power
         return powers
     
+    def getRegularPowers(self):
+        powers = DivergencesPowersInfo()
+        for divergence in self.__actuals:
+            if divergence.type != DivergenceType.REGULAR:
+                continue
+            if divergence.signal == DivergenceSignalType.BULL:
+                powers.bullPower += divergence.power
+            else:
+                powers.bearPower += divergence.power
+        return powers
+
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()
