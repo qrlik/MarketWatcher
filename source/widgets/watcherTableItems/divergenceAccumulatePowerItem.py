@@ -33,4 +33,5 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
             allPower += abs(powers.bearPower)
 
         self.__power = allPower
-        super().setText(str(int(self.__power)))
+        power = int(self.__power) if self.__power >= 1.0 else round(self.__power, 2)
+        super().setText(str(power) if self.__power > 0.0 else '')
