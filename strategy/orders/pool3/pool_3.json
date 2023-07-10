@@ -1,0 +1,938 @@
+[
+    {
+        "start": 3360.4
+    },
+    {
+        "number": 1,
+        "ticker": "BCHUSDT",
+        "time": "00:03 27-06-2023",
+        "type": "SHORT",
+        "price": 222.94,
+        "stoploss": 229.3,
+        "takeprofits": [ 216.7, 196.6 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "20:00 24-06-2023",
+                    "secondCandle": "12:00 26-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2458,
+                    "break": 131.23
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 26-06-2023",
+                    "secondCandle": "22:00 26-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 3.07
+                }
+            ]
+        },
+        "power": 2461,
+        "openNote": "2ч с обманкой, 30м без обманки. ",
+        "note": "нужно ждать обманку на основном интервале"
+    },
+    {
+        "number": 2,
+        "ticker": "BCHUSDT",
+        "time": "01:30 27-06-2023",
+        "type": "SHORT",
+        "price": 228.03,
+        "stoploss": 235.01,
+        "takeprofits": [ 219.1, 200.1],
+        "result": "1_TAKES",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "20:00 24-06-2023",
+                    "secondCandle": "12:00 26-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2458,
+                    "break": 131.23
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "18:00 26-06-2023",
+                    "secondCandle": "01:00 27-06-2023",
+                    "lenght": 14,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 61,
+                    "break": 12.38
+                },
+                {
+                    "firstCandle": "22:30 26-06-2023",
+                    "secondCandle": "01:00 27-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.21
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 26-06-2023",
+                    "secondCandle": "22:00 26-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 3.07
+                }
+            ]
+        },
+        "power": 2522
+    },
+    {
+        "number": 3,
+        "ticker": "XVSUSDT",
+        "time": "01:29 27-06-2023",
+        "type": "LONG",
+        "price": 3.788,
+        "stoploss": 3.749,
+        "takeprofits": [ 3.829, 3.91 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "06:00 26-06-2023",
+                    "secondCandle": "01:00 27-06-2023",
+                    "lenght": 38,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 8,
+                    "break": 2.51
+                },
+                {
+                    "firstCandle": "22:00 26-06-2023",
+                    "secondCandle": "01:00 27-06-2023",
+                    "lenght": 6,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.23
+                },
+                {
+                    "firstCandle": "23:00 26-06-2023",
+                    "secondCandle": "01:00 27-06-2023",
+                    "lenght": 4,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.09
+                }
+            ]
+        },
+        "power": 9,
+        "note": "пробовать ждать прострел | стоит ждать обновления вершины не только на цене, но и на дивере?",
+        "note2": "не стесняться строить линии и каналы"
+    },
+    {
+        "number": 4,
+        "ticker": "DYDXUSDT",
+        "time": "11:31 27-06-2023",
+        "type": "SHORT",
+        "price": 2.034,
+        "stoploss": 2.056,
+        "takeprofits": [ 1.992, 1.931 ],
+        "result": "1_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "19:00 26-06-2023",
+                    "secondCandle": "11:00 27-06-2023",
+                    "lenght": 32,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 4,
+                    "break": 1.75
+                },
+                {
+                    "firstCandle": "08:30 27-06-2023",
+                    "secondCandle": "11:00 27-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.12
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 26-06-2023",
+                    "secondCandle": "20:00 26-06-2023",
+                    "lenght": 2,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.67
+                }
+            ]
+        },
+        "power": 4,
+        "openNote": "2ч еще не закрылся, а дивер по нему уже сознанием обработан"
+    },
+    {
+        "number": 5,
+        "ticker": "HOOKUSDT",
+        "time": "11:34 27-06-2023",
+        "type": "SHORT",
+        "price": 1.198,
+        "stoploss": 1.211,
+        "takeprofits": [ 1.171, 1.113 ],
+        "result": "1_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "07:30 27-06-2023",
+                    "secondCandle": "11:00 27-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 1.3
+                },
+                {
+                    "firstCandle": "09:30 27-06-2023",
+                    "secondCandle": "11:00 27-06-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.49
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 25-06-2023",
+                    "secondCandle": "20:00 26-06-2023",
+                    "lenght": 4,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.31
+                }
+            ],
+            "ONE_DAY": [
+                {
+                    "firstCandle": "04:00 23-06-2023",
+                    "secondCandle": "04:00 26-06-2023",
+                    "lenght": 3,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.06
+                }
+            ]
+        },
+        "power": 3,
+        "openNote": "2ч еще не закрылся, а дивер по нему уже сознанием обработан",
+        "note": "ближе к цене закрытия"
+    },
+    {
+        "number": 6,
+        "ticker": "INJUSDT",
+        "time": "12:02 27-06-2023",
+        "type": "SHORT",
+        "price": 7.694,
+        "stoploss": 7.806,
+        "takeprofits": [ 7.581, 7.456 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "17:30 26-06-2023",
+                    "secondCandle": "11:30 27-06-2023",
+                    "lenght": 36,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 56,
+                    "break": 8.36
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 22-06-2023",
+                    "secondCandle": "04:00 27-06-2023",
+                    "lenght": 15,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 13,
+                    "break": 7.45
+                },
+                {
+                    "firstCandle": "12:00 26-06-2023",
+                    "secondCandle": "04:00 27-06-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.45
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 26-06-2023",
+                    "secondCandle": "10:00 27-06-2023",
+                    "lenght": 9,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 10,
+                    "break": 4.77
+                }
+            ]
+        },
+        "power": 79,
+        "note": "ближе к цене закрытия"
+    },
+    {
+        "number": 7,
+        "ticker": "NKNUSDT",
+        "time": "18:51 27-06-2023",
+        "type": "SHORT",
+        "price": 0.10073,
+        "stoploss": 0.10176,
+        "takeprofits": [ 0.09971 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "08:30 27-06-2023",
+                    "secondCandle": "18:00 27-06-2023",
+                    "lenght": 19,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.45
+                },
+                {
+                    "firstCandle": "09:30 27-06-2023",
+                    "secondCandle": "18:00 27-06-2023",
+                    "lenght": 17,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.34
+                }
+            ]
+        },
+        "power": 1,
+        "openNote": "слабенький дивер на краю фигуры и горизонтальном уровне"
+    },
+    {
+        "number": 8,
+        "ticker": "COMPUSDT",
+        "time": "13:32 28-06-2023",
+        "type": "SHORT",
+        "price": 43.03,
+        "stoploss": 43.91,
+        "takeprofits": [ 42.16 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "09:30 28-06-2023",
+                    "secondCandle": "13:00 28-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 1.13
+                },
+                {
+                    "firstCandle": "12:00 28-06-2023",
+                    "secondCandle": "13:00 28-06-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.07
+                }
+            ]
+        },
+        "power": 1,
+        "openNote": "слабенький дивер на горизонтальном уровне c обманкой",
+        "note": "если микро дивер внутри макро дивера. и идет возможное формирование обманки, лучше подождать макро дивер"
+    },
+    {
+        "number": 9,
+        "ticker": "IMXUSDT",
+        "time": "16:54 28-06-2023",
+        "type": "LONG",
+        "price": 0.7139,
+        "stoploss": 0.7068,
+        "takeprofits": [ 0.7209 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "06:30 28-06-2023",
+                    "secondCandle": "16:00 28-06-2023",
+                    "lenght": 19,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 0.75
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "00:00 27-06-2023",
+                    "secondCandle": "14:00 28-06-2023",
+                    "lenght": 19,
+                    "type": "HIDDEN",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.42
+                }
+            ]
+        },
+        "power": 2
+    },
+    {
+        "number": 10,
+        "ticker": "IMXUSDT",
+        "time": "22:08 28-06-2023",
+        "type": "LONG",
+        "price": 0.7113,
+        "stoploss": 0.7042,
+        "takeprofits": [ 0.7184 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "08:00 26-06-2023",
+                    "secondCandle": "20:00 28-06-2023",
+                    "lenght": 30,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.33
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "16:30 28-06-2023",
+                    "secondCandle": "21:30 28-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.06
+                }
+            ]
+        },
+        "power": 0,
+        "note": "не открывать позицию на глаз, проверять наличие дивера в софте. иначе нахуй я его писал",
+        "note2": "также был скрытый дивер на падение"
+    },
+    {
+        "number": 11,
+        "ticker": "PERPUSDT",
+        "time": "22:20 28-06-2023",
+        "type": "LONG",
+        "price": 0.4856,
+        "stoploss": 0.4817,
+        "takeprofits": [ 0.4895, 0.4929 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "16:30 28-06-2023",
+                    "secondCandle": "21:30 28-06-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 5,
+                    "break": 1.52
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "16:00 28-06-2023",
+                    "secondCandle": "20:00 28-06-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1,
+                    "break": 0.79
+                }
+            ]
+        },
+        "power": 5,
+        "note": "Хватит открывать несколько позиций по одной схеме в моменте"
+    },
+    {
+        "number": 12,
+        "ticker": "MAGICUSDT",
+        "time": "23:02 28-06-2023",
+        "type": "LONG",
+        "price": 0.8436,
+        "stoploss": 0.8334,
+        "takeprofits": [ 0.8539 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "12:30 28-06-2023",
+                    "secondCandle": "22:30 28-06-2023",
+                    "lenght": 20,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 6,
+                    "break": 2.17
+                },
+                {
+                    "firstCandle": "16:30 28-06-2023",
+                    "secondCandle": "22:30 28-06-2023",
+                    "lenght": 12,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.02
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "10:00 28-06-2023",
+                    "secondCandle": "20:00 28-06-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0,
+                    "break": 0.11
+                }
+            ]
+        },
+        "power": 6,
+        "note": "Хватит открывать несколько позиций по одной схеме в моменте",
+        "note2": "Смотреть импульсы сторон, тут продавец лишь увеличил свой импульс"
+    },
+    {
+        "number": 13,
+        "ticker": "VETUSDT",
+        "time": "13:15 30-06-2023",
+        "type": "SHORT",
+        "price": 0.01948,
+        "stoploss": 0.0197,
+        "takeprofits": [ 0.01926 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "20:00 23-06-2023",
+                    "secondCandle": "04:00 30-06-2023",
+                    "lenght": 19,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 49,
+                    "break": 13.88
+                },
+                {
+                    "firstCandle": "20:00 27-06-2023",
+                    "secondCandle": "04:00 30-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 2.42
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "09:00 30-06-2023",
+                    "secondCandle": "12:30 30-06-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 0.91
+                }
+            ]
+        },
+        "power": 53,
+        "note": "вход не от уровня",
+        "note2": "при входе от уровня там был бы очень слабый дивер + на двух часовике напрашивалась обманка у макро дивера"
+    },
+    {
+        "number": 14,
+        "ticker": "LINKUSDT",
+        "time": "12:02 03-07-2023",
+        "type": "SHORT",
+        "price": 6.633,
+        "stoploss": 6.666,
+        "takeprofits": [ 6.533 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 25-06-2023",
+                    "secondCandle": "04:00 03-07-2023",
+                    "lenght": 24,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 18,
+                    "break": 7.28
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "06:30 03-07-2023",
+                    "secondCandle": "11:30 03-07-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.67
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "02:00 02-07-2023",
+                    "secondCandle": "10:00 03-07-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.4
+                }
+            ]
+        },
+        "power": 19
+    },
+    {
+        "number": 15,
+        "ticker": "CTKUSDT",
+        "time": "19:02 03-07-2023",
+        "type": "SHORT",
+        "price": 0.6504,
+        "stoploss": 0.6450,
+        "takeprofits": [ 0.6449, 0.6311 ],
+        "result": "1_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "06:00 03-07-2023",
+                    "secondCandle": "18:30 03-07-2023",
+                    "lenght": 25,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 12,
+                    "break": 2.29
+                },
+                {
+                    "firstCandle": "13:00 03-07-2023",
+                    "secondCandle": "18:30 03-07-2023",
+                    "lenght": 11,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2,
+                    "break": 0.67
+                },
+                {
+                    "firstCandle": "15:00 03-07-2023",
+                    "secondCandle": "18:30 03-07-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.15
+                }
+            ]
+        },
+        "power": 14
+    },
+    {
+        "number": 16,
+        "ticker": "FXSUSDT",
+        "time": "11:32 04-07-2023",
+        "type": "SHORT",
+        "price": 6.549,
+        "stoploss": 6.626,
+        "takeprofits": [ 6.474, 6.291 ],
+        "result": "ZERO",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "19:30 03-07-2023",
+                    "secondCandle": "11:00 04-07-2023",
+                    "lenght": 31,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 15,
+                    "break": 3.58
+                }
+            ],
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "02:00 04-07-2023",
+                    "secondCandle": "08:00 04-07-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.33
+                }
+            ]
+        },
+        "power": 15
+    },
+    {
+        "number": 17,
+        "ticker": "DGBUSDT",
+        "time": "14:44 04-07-2023",
+        "type": "SHORT",
+        "price": 0.00917,
+        "stoploss": 0.00948,
+        "takeprofits": [ 0.00886, 0.00831 ],
+        "result": "1.5_TAKES",
+        "divergences": {
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "05:00 04-07-2023",
+                    "secondCandle": "14:00 04-07-2023",
+                    "lenght": 18,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 38,
+                    "break": 10.57
+                }
+            ],
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 03-07-2023",
+                    "secondCandle": "04:00 04-07-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.68
+                }
+            ]
+        },
+        "power": 38
+    },
+    {
+        "number": 18,
+        "ticker": "AAVEUSDT",
+        "time": "20:36 04-07-2023",
+        "type": "SHORT",
+        "price": 79.25,
+        "stoploss": 80.68 ,
+        "takeprofits": [ 77.81 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "12:00 25-06-2023",
+                    "secondCandle": "12:00 04-07-2023",
+                    "lenght": 27,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 146,
+                    "break": 26.68
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "16:00 04-07-2023",
+                    "secondCandle": "20:00 04-07-2023",
+                    "lenght": 8,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.69
+                }
+            ]
+        },
+        "power": 147
+    },
+    {
+        "number": 19,
+        "ticker": "EDUUSDT",
+        "time": "22:01 04-07-2023",
+        "type": "SHORT",
+        "price": 0.7221,
+        "stoploss": 0.7312,
+        "takeprofits": [ 0.7026, 0.6801 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "10:00 04-07-2023",
+                    "secondCandle": "20:00 04-07-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 3,
+                    "break": 2.66
+                },
+                {
+                    "firstCandle": "16:00 04-07-2023",
+                    "secondCandle": "20:00 04-07-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.62
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "19:00 04-07-2023",
+                    "secondCandle": "21:30 04-07-2023",
+                    "lenght": 5,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.2
+                }
+            ]
+        },
+        "power": 4,
+        "note": "вообще не понятно где тут диверы"
+    },
+    {
+        "number": 20,
+        "ticker": "ARUSDT",
+        "time": "08:56 05-07-2023",
+        "type": "SHORT",
+        "price": 6.168,
+        "stoploss": 6.251,
+        "takeprofits": [ 6.085 ],
+        "result": "ZERO",
+        "divergences": {
+            "TWO_HOUR": [
+                {
+                    "firstCandle": "06:00 03-07-2023",
+                    "secondCandle": "06:00 05-07-2023",
+                    "lenght": 24,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 23,
+                    "break": 6.52
+                },
+                {
+                    "firstCandle": "22:00 03-07-2023",
+                    "secondCandle": "06:00 05-07-2023",
+                    "lenght": 16,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.08
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "20:00 04-07-2023",
+                    "secondCandle": "08:00 05-07-2023",
+                    "lenght": 24,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 6,
+                    "break": 2.33
+                },
+                {
+                    "firstCandle": "03:00 05-07-2023",
+                    "secondCandle": "08:00 05-07-2023",
+                    "lenght": 10,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.58
+                },
+                {
+                    "firstCandle": "06:30 05-07-2023",
+                    "secondCandle": "08:00 05-07-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 0,
+                    "break": 0.13
+                }
+            ]
+        },
+        "power": 30
+    },
+    {
+        "number": 21,
+        "ticker": "STMXUSDT",
+        "time": "09:34 05-07-2023",
+        "type": "SHORT",
+        "price": 0.00438,
+        "stoploss": 0.00444,
+        "takeprofits": [ 0.00431 ],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 25-06-2023",
+                    "secondCandle": "20:00 04-07-2023",
+                    "lenght": 29,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 32,
+                    "break": 9.28
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "08:00 05-07-2023",
+                    "secondCandle": "09:00 05-07-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.5
+                }
+            ]
+        },
+        "power": 32
+    },
+    {
+        "number": 22,
+        "ticker": "STMXUSDT",
+        "time": "09:46 05-07-2023",
+        "type": "SHORT",
+        "price": 0.00445,
+        "stoploss": 0.00449,
+        "takeprofits": [ 0.0044 ],
+        "result": "ALL_TAKES",
+        "divergences": {
+            "EIGHT_HOUR": [
+                {
+                    "firstCandle": "04:00 25-06-2023",
+                    "secondCandle": "20:00 04-07-2023",
+                    "lenght": 29,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 32,
+                    "break": 9.28
+                }
+            ],
+            "THIRTY_MIN": [
+                {
+                    "firstCandle": "08:00 05-07-2023",
+                    "secondCandle": "09:00 05-07-2023",
+                    "lenght": 2,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 1,
+                    "break": 0.5
+                }
+            ]
+        },
+        "power": 32
+    }
+]
