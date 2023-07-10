@@ -143,18 +143,18 @@ class DivergenceController:
                 
                 type = None
                 signal = None
-                if (secondCandle.close > firstCandle.close) and (secondCandle.rsi < firstCandle.rsi):
-                    if isHigh:
+                if secondCandle.rsi < firstCandle.rsi:
+                    if isHigh and secondCandle.close >= firstCandle.close:
                         type = DivergenceType.REGULAR
                         signal = DivergenceSignalType.BEAR
-                    elif not isHigh:
+                    elif not isHigh and secondCandle.close > firstCandle.close:
                         type = DivergenceType.HIDDEN
                         signal = DivergenceSignalType.BULL
-                elif (secondCandle.close < firstCandle.close) and (secondCandle.rsi > firstCandle.rsi):
-                    if isHigh:
+                elif secondCandle.rsi > firstCandle.rsi:
+                    if isHigh and secondCandle.close < firstCandle.close:
                         type = DivergenceType.HIDDEN
                         signal = DivergenceSignalType.BEAR
-                    elif not isHigh:
+                    elif not isHigh and secondCandle.close <= firstCandle.close:
                         type = DivergenceType.REGULAR
                         signal = DivergenceSignalType.BULL
 
