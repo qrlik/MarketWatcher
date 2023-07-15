@@ -1,0 +1,169 @@
+//@version=5
+indicator("Divergences", shorttitle = "Divs", overlay=true, max_bars_back = 500)
+lb = input.int(5, title="Left Bars", minval=1)
+rb = input.int(5, title="Right Bars", minval=1)
+
+showhidden = input(false, title = "Show Hidden Divergences")
+chcut = input(false, title = "Check Cut-Through in indicators !")
+chwidth = input(true, title = "Change Width by Number of Divergence")
+showlimit = input.int(1, title="Minimum Number of Divergence", minval = 1, maxval = 11)
+
+rsi = ta.rsi(close, 14) 
+
+
+float top = na
+float bot = na
+top := ta.pivothigh(lb, rb) 
+bot := ta.pivotlow(lb, rb)
+
+
+topc = 0, botc = 0
+topc := top ? lb : nz(topc[1]) + 1
+botc := bot ? lb : nz(botc[1]) + 1
+
+// plotchar(topc, "Bar Index", "G", location = location.top)
+
+// Negative Divergence or Hidden Positive  Divergence
+newtop = ta.pivothigh(lb, 0) // check only left side
+emptyh = true // ok
+if not na(newtop) and ((newtop > high[topc] and not showhidden) or (newtop < high[topc] and showhidden))  // there must not close price higher than the line between last PH and current high
+    diff = (newtop - high[topc]) / topc
+    hline = newtop - diff                   // virtual line to check there is no close price higher than it
+    for x = 1 to topc -1
+        if close[x] > hline
+            emptyh := false
+            break
+        hline := hline - diff
+else
+    emptyh := false
+
+
+
+// check cut-through in indicators
+nocut1(indi, len)=>
+    _ret = true
+    diff = (indi - nz(indi[len])) / len
+    ln = indi - diff
+    for x = 1 to len -1
+        if nz(indi[x]) > ln
+            _ret := false
+            break
+        ln := ln - diff
+    _ret
+
+rsiok = nocut1(rsi, topc)
+
+negdivergence = 0
+negdivtxt = ""
+isrsineg = false
+if emptyh and not na(newtop) and not showhidden
+    if rsi[topc] > rsi and (not chcut or rsiok)
+        negdivergence := negdivergence + 1
+        negdivtxt := "RSI\n"
+        isrsineg := true
+
+
+
+// Hidden divergence
+hposdivergence = 0
+hposdivtxt = ""
+isrsihpos = false
+if emptyh and not na(newtop) and showhidden
+    if rsi[topc] < rsi and (not chcut or rsiok)
+        hposdivergence := hposdivergence + 1
+        hposdivtxt := "RSI\n"
+        isrsihpos := true
+
+newareah = false
+newareah := top ? false : nz(newareah[1], false)
+if ((negdivergence >= showlimit or hposdivergence >= showlimit) and (isrsineg == true or isrsihpos == true))
+    var line divlh = na
+    var label labh = na
+    if newareah                             // we remove old line until It reaches new pivot point (like animation ;)
+        line.delete(divlh)
+        label.delete(labh)
+    newwd = not showhidden ?
+       (not chwidth ? 2 :
+       negdivergence <= 2 ? 2 :
+       negdivergence <= 5 ? 3 :
+       negdivergence <= 8 ? 4 : 5) :
+       (not chwidth ? 2 :
+       hposdivergence <= 2 ? 2 :
+       hposdivergence <= 5 ? 3 :
+       hposdivergence <= 8 ? 4 : 5)
+       
+    divlh := line.new(bar_index - topc, high[topc], bar_index, high, color = color.red, width = newwd)
+    newareah := true 
+
+// Positive or Hidden Negative Divergence
+newbot = ta.pivotlow(lb, 0) // check only left side
+emptyl = true
+if not na(newbot) and ((newbot < low[botc] and not showhidden) or   (newbot > low[botc] and showhidden))  // there must not close price lower than the line between last PL and current low
+    diff = (newbot - low[botc]) / botc
+    lline = newbot - diff                   // virtual line to check there is no close price lower than it
+    for x = 1 to botc -1
+        if close[x] < lline
+            emptyl := false
+            break
+        lline := lline - diff
+else
+    emptyl := false
+
+// check cut-through in indicators
+nocut2(indi, len)=>
+    _ret = true
+    diff = (indi - nz(indi[len])) / len
+    ln = indi - diff
+    for x = 1 to len -1
+        if nz(indi[x]) < ln
+            _ret := false
+            break
+        ln := ln - diff
+    _ret
+
+rsiok := nocut2(rsi, botc)
+
+posdivergence = 0
+posdivtxt = ""
+isrsipos = false
+if emptyl and not na(newbot) and not showhidden
+    if rsi[botc] < rsi and (not chcut or rsiok)
+        posdivergence := 1
+        posdivtxt := "RSI\n"
+        isrsipos := true
+
+// Hidden Divergences
+hnegdivergence = 0
+hnegdivtxt = ""
+isrsihneg = false
+if emptyl and not na(newbot) and showhidden
+    if rsi[botc] > rsi and (not chcut or rsiok)
+        hnegdivergence := 1
+        hnegdivtxt := "RSI\n"
+        isrsihneg := true
+
+newareal = false
+newareal := bot ? false : nz(newareal[1], false)
+if ((posdivergence >= showlimit or hnegdivergence >= showlimit) and (isrsipos == true or isrsihneg == true))
+    var line divl = na
+    var label lab = na
+    if newareal                             // we remove old line until It reaches new pivot point (like animation ;)
+        line.delete(divl)
+        label.delete(lab)
+    newwd = not showhidden ?
+       (not chwidth ? 2 :
+       posdivergence <= 2 ? 2 :
+       posdivergence <= 5 ? 3 :
+       posdivergence <= 8 ? 4 : 5) :
+       (not chwidth ? 2 :
+       hnegdivergence <= 2 ? 2 :
+       hnegdivergence <= 5 ? 3 :
+       hnegdivergence <= 8 ? 4 : 5)
+       
+    divl := line.new(bar_index - botc, low[botc], bar_index, low, color = color.lime, width = newwd)
+    newareal := true
+ 
+alertcondition(posdivergence >= showlimit and not showhidden, title='Positive Divergence', message='Positive Divergence')
+alertcondition(negdivergence >= showlimit and not showhidden, title='Negative Divergence', message='Negative Divergence')
+alertcondition(hposdivergence >= showlimit and showhidden, title='Positive Hidden Divergence', message='Positive Hidden Divergence')
+alertcondition(hnegdivergence >= showlimit and showhidden, title='Negative Hidden Divergence', message='Negative Hidden Divergence')
