@@ -19,12 +19,19 @@ class TickerNameItem(QTableWidgetItem):
     def update(self):
         positionColor = userDataController.getTickerUserData(self.__ticker).getPositionColor()
         super().setForeground(positionColor)
-        if positionColor == guiDefines.defaultFontColor:
-            allPower = 0.0
-            for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
-                powers = controller.getDivergenceController().getRegularPowers()
-                allPower += powers.bullPower
-                allPower += abs(powers.bearPower)
+        if positionColor != guiDefines.defaultFontColor:
+            return
+        
+        allPower = 0.0
+        for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
+            powers = controller.getDivergenceController().getRegularPowers()
+            if powers.bullPower == 0.0 and powers.bearPower == 0.0:
+                allPower = 0.0
+                break
+            
+            allPower += powers.bullPower
+            allPower += abs(powers.bearPower)
 
-            if allPower == 0.0:
-                super().setForeground(guiDefines.zeroColor)
+
+        if allPower == 0.0:
+            super().setForeground(guiDefines.zeroColor)

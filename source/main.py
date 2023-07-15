@@ -48,8 +48,8 @@ if __name__ == "__main__":
 # подумать о равенсве при определении дивера и при определении силы вершины
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
-# убрать общую шкалу
 
+# to do auto order open
 # to do parse data from orders
 
 # to do add color for tickers, tabs
