@@ -124,7 +124,7 @@ class DivergenceController:
         else:
             info.breakDelta = abs(info.firstCandle.close - info.secondCandle.close)
             info.breakPercents = info.breakDelta / info.secondCandle.close * 100
-        info.power = info.breakDelta / info.secondCandle.atr * (info.breakPercents + 1)
+        info.power = info.breakDelta / info.secondCandle.atr
 
     def __getDivergenceLength(self, vertexStrength):
         maxLength = self.__maxLength
