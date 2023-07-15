@@ -44,14 +44,16 @@ class DivergencesPowersInfo:
         self.bearPower = 0.0
 
 class DivergenceController:
+    __actualLength = settingsController.getSetting('divergenceActualLength')
+    __trickedMinLength = settingsController.getSetting('divergenceTrickedMinLength')
+    __rsiSize = settingsController.getSetting('rsiLength')
+
     def __init__(self):
         self.__candleController = None
         self.__strengthToLength = OrderedDict(settingsController.getSetting('vertexStrengthToDivergenceLength'))
         self.__maxLength = 0
         for _, length in self.__strengthToLength.items():
             self.__maxLength = max(self.__maxLength, length)
-        self.__actualLength = settingsController.getSetting('divergenceActualLength')
-        self.__rsiSize = settingsController.getSetting('rsiLength')
         self.__reset()
 
     def __reset(self):
@@ -183,26 +185,30 @@ class DivergenceController:
  
     def __processTricked(self):
         for divergence in self.__actuals:
+            if divergence.type != DivergenceType.REGULAR:
+                continue
+
             length = divergence.secondIndex - divergence.firstIndex
             for other in self.__divergencesByFirst[divergence.firstIndex]:
                 if divergence.tricked:
                     break
-                if other == divergence:
+                if other == divergence or other.type != DivergenceType.REGULAR:
                     continue
                 if divergence.signal == other.signal:
                     otherLength = other.secondIndex - other.firstIndex
-                    if length <= otherLength * 2:
+                    if length - otherLength > self.__trickedMinLength and length <= otherLength * 2:
                         divergence.tricked = True
             if divergence.tricked:
                 continue
+            
             for other in self.__divergencesBySecond[divergence.firstIndex]:
                 if divergence.tricked:
                     break
-                if other == divergence:
+                if other == divergence or other.type != DivergenceType.REGULAR:
                     continue
                 if divergence.signal == other.signal:
                     otherLength = other.secondIndex - other.firstIndex
-                    if length <= otherLength:
+                    if length > self.__trickedMinLength and length <= otherLength:
                         divergence.tricked = True
 
     def isEmpty(self):

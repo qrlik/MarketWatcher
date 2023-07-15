@@ -10,21 +10,25 @@ plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 atr = ta.rma(ta.tr(true), 200)
 up = line.new(bar_index + 1, close + atr, bar_index + 2, close + atr, color = color.new(color.orange, 0), width = 2)
 line.delete(up[1])
+plotchar(close + atr, title = "Up Atr", char="", location=location.top, color=color.orange)
+
 down = line.new(bar_index + 1, close - atr, bar_index + 2, close - atr, color = color.new(color.orange, 0), width = 2)
 line.delete(down[1])
+plotchar(close - atr, title = "Down Atr", char="", location=location.top, color=color.orange)
 
 // show future price
 is_need_future = str.endswith(syminfo.tickerid, 'USDT')
 target_ticker = is_need_future ? syminfo.tickerid + ".P" : syminfo.tickerid
-[target_price, target_atr] = request.security(target_ticker, timeframe.period, [close, ta.rma(ta.tr(true), 200)])
+[target_price, target_atr] = request.security(target_ticker, timeframe.period, [close, ta.rma(ta.tr(true), 200)], ignore_invalid_symbol = true)
 alpha = is_need_future ? 0 : 100
 future = line.new(bar_index + 1, target_price, bar_index + 2, target_price, color = color.new(color.fuchsia, alpha), width = 2)
 line.delete(future[1])
 
 // show position amount
-stop_percents = target_atr / close * 100
+atr_for_position = na(target_atr) ? atr : target_atr
+stop_percents = atr_for_position / close * 100
 order_size = math.round(risk * 100 / stop_percents)
-pos_label = label.new(bar_index + 7, close, text=str.tostring(order_size), color=color.silver)
+pos_label = label.new(bar_index + 15, close, text=str.tostring(order_size), color=color.silver)
 label.delete(pos_label[1])
 
 // mark not closed bar
