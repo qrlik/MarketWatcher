@@ -100,10 +100,11 @@ class WatcherWindow(QMainWindow):
         text = '...' + (str(progress) if progress < 100 else 'ALL LOADED')
         self.__logBrowser.insertPlainText(text)
         self.__lastProgress = progress
+        cacheController.saveCandles()
 
     def closeEvent(self, event):
-        watcherController.saveData()
         cacheController.save()
+        cacheController.saveCandles()
         api.atExit()
         QApplication.exit(0)
         return super().closeEvent(event)

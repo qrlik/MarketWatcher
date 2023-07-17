@@ -1,5 +1,7 @@
 from models import timeframe
 
+from datetime import datetime
+
 class Candle:
     def __init__(self):
         self.interval = None
@@ -30,26 +32,24 @@ class Candle:
         and self.low == __value.low \
         and self.close == __value.close
 
-def toDict(candle:Candle):
-    result = {}
-    result.setdefault('i', candle.interval.name)
-    result.setdefault('t', candle.openTime)
-    result.setdefault('T', candle.closeTime)
-    result.setdefault('s', candle.time)
-    result.setdefault('o', candle.open)
-    result.setdefault('h', candle.high)
-    result.setdefault('l', candle.low)
-    result.setdefault('c', candle.close)
+def toJson(candle:Candle):
+    result = []
+    result.append(candle.openTime)
+    result.append(candle.closeTime)
+    result.append(candle.open)
+    result.append(candle.high)
+    result.append(candle.low)
+    result.append(candle.close)
     return result
 
-def createFromDict(candleDict:dict):
+def fromJson(data, tf:str):
     result = Candle()
-    result.interval = timeframe.Timeframe[candleDict.get('i', None)]
-    result.openTime = candleDict.get('t', 0)
-    result.closeTime = candleDict.get('T', 0)
-    result.time = candleDict.get('s', '')
-    result.open = candleDict.get('o', 0.0)
-    result.high = candleDict.get('h', 0.0)
-    result.low = candleDict.get('l', 0.0)
-    result.close = candleDict.get('c', 0.0)
+    result.interval = timeframe.Timeframe[tf]
+    result.openTime = data[0]
+    result.closeTime = data[1]
+    result.time = datetime.fromtimestamp(result.openTime / 1000).strftime('%H:%M %d-%m-%Y')
+    result.open = data[2]
+    result.high = data[3]
+    result.low = data[4]
+    result.close = data[5]
     return result

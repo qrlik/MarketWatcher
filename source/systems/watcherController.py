@@ -71,11 +71,6 @@ def getTickers():
 def getTicker(ticker:str):
     return __tickers.get(ticker)
 
-def saveData():
-    for _, tickerController in __tickers.items():
-        for _, timeframeController in tickerController.getTimeframes().items():
-            timeframeController.getCandlesController().shrinkAndSave()
-
 def start():
     global __tickers
     timeframes = configController.getTimeframes()

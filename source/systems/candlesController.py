@@ -3,6 +3,7 @@ from api import api
 from api import apiRequests
 from models import timeframe
 from models import candle
+from systems import cacheController
 from systems import settingsController
 from systems import websocketController
 from utilities import utils
@@ -27,15 +28,11 @@ class CandlesController(QObject):
     
     def __initTest(self, filename:str):
         candles = utils.loadJsonFile('assets/candles/' + filename)
-        self.__finishedCandles = [candle.createFromDict(c) for c in candles]
+        self.__finishedCandles = [candle.fromJson(c, self.__timeframe.name) for c in candles]
     
-    def __getFilename(self):
-        return utils.cacheFolder + 'tickers/' + self.__ticker + '/' + self.__timeframe.name
-
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
-        jsonCandles = utils.loadJsonMsgspecFile(self.__getFilename())
-        self.__finishedCandles = [] if jsonCandles is None else [candle.createFromDict(c) for c in jsonCandles]
+        self.__finishedCandles = cacheController.getCandles(self.__ticker, self.__timeframe.name)
         if len(self.__finishedCandles) > 0:
             self.__currentCandle = self.__finishedCandles.pop()
         self.__requestSync()
@@ -56,12 +53,10 @@ class CandlesController(QObject):
         if amountForRequest > 0:
             self.__requestId = api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
 
-    def __updateCandles(self, current, finished, withSave):
+    def __updateCandles(self, current, finished):
         self.__currentCandle = current
         if finished:
             self.__finishedCandles.append(finished)
-        if withSave:
-            self.shrinkAndSave()
 
     def __checkSyncResponse(self):
         if self.__requestId == -1:
@@ -95,7 +90,6 @@ class CandlesController(QObject):
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
-        self.shrinkAndSave()
         return True
 
     def __isCandleAfter(self, afterCandle, beforeCandle):
@@ -108,44 +102,44 @@ class CandlesController(QObject):
         if currentCandle:
             if self.__currentCandle:
                 if self.__currentCandle.openTime == currentCandle.openTime:
-                    self.__updateCandles(currentCandle, None, False)
+                    self.__updateCandles(currentCandle, None)
                     return True
                 elif finishedCandle and self.__isCandleAfter(currentCandle, self.__currentCandle):
-                    self.__updateCandles(currentCandle, finishedCandle, True)
+                    self.__updateCandles(currentCandle, finishedCandle)
                     return True
                 elif currentCandle.openTime > self.__currentCandle.openTime:
                     return False
                 return True
             elif len(self.__finishedCandles) > 0:
                 if self.__isCandleAfter(currentCandle, self.__finishedCandles[-1]):
-                    self.__updateCandles(currentCandle, None, True)
+                    self.__updateCandles(currentCandle, None)
                     return True
                 elif finishedCandle and self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
-                    self.__updateCandles(currentCandle, finishedCandle, True)
+                    self.__updateCandles(currentCandle, finishedCandle)
                     return True
                 elif currentCandle.openTime > self.__finishedCandles[-1].openTime:
                     return False
                 return True
             else:
-                self.__updateCandles(currentCandle, finishedCandle, True)
+                self.__updateCandles(currentCandle, finishedCandle)
                 return True
         elif finishedCandle:
             if self.__currentCandle:
                 if self.__currentCandle.openTime == finishedCandle.openTime:
-                    self.__updateCandles(None, finishedCandle, False)
+                    self.__updateCandles(None, finishedCandle)
                     return True
                 elif finishedCandle.openTime > self.__currentCandle.openTime:
                     return False
                 return True
             elif len(self.__finishedCandles) > 0:
                 if self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
-                    self.__updateCandles(None, finishedCandle, True)
+                    self.__updateCandles(None, finishedCandle)
                     return True
                 elif finishedCandle.openTime > self.__finishedCandles[-1].openTime:
                     return False
                 return True
             else:
-                self.__updateCandles(None, finishedCandle, True)
+                self.__updateCandles(None, finishedCandle)
                 return True
         return True
 
@@ -159,13 +153,13 @@ class CandlesController(QObject):
             self.__requestSync()
         return result
 
-    def shrinkAndSave(self):
+    def getJsonData(self):
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
-        forSave = [c for c in self.__finishedCandles]
+        jsonData = [candle.toJson(c) for c in self.__finishedCandles]
         if self.__currentCandle:
-            forSave.append(self.__currentCandle)
-        utils.saveJsonMsgspecFile(self.__getFilename(), [candle.toDict(c) for c in forSave])
+            jsonData.append(candle.toJson(self.__currentCandle))
+        return jsonData
 
     def getCandlesByOpenTime(self, openTime):
         finished = []

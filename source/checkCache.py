@@ -9,7 +9,7 @@ from utilities import utils
 
 async def checkFile(ticker, tf):
     cachedData = utils.loadJsonMsgspecFile(utils.cacheFolder + 'tickers/' + ticker + '/' + tf)
-    cachedCandles = [candle.createFromDict(c) for c in cachedData]
+    cachedCandles = [candle.createFromDict(c) for c in cachedData] # to do
     if len(cachedCandles) == 0:
         utils.logError('checkCache: empty cache ' + ticker + ' ' + tf)
     cachedCandles.pop()

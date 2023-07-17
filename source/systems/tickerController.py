@@ -16,18 +16,9 @@ class TickerData:
 class TickerController:
     def __init__(self, ticker:str, pricePrecision: int):
         self.__data = TickerData(ticker,pricePrecision)
-        self.__initCacheFolder()
 
     def init(self):
         self.__initTimeframes()
-
-    def __initCacheFolder(self):
-        tickersFolder = utils.cacheFolder + 'tickers'
-        if not os.path.exists(tickersFolder):
-            os.mkdir(tickersFolder)
-        tickerFolder = tickersFolder + '/' + self.__data.ticker
-        if not os.path.exists(tickerFolder):
-            os.mkdir(tickerFolder)
 
     def __initTimeframes(self):
         for tf in configController.getTimeframes():
