@@ -8,6 +8,8 @@ plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 
 // show atr range
 atr = ta.rma(ta.tr(true), 200)
+plotchar(atr, title = "Atr", char="", location=location.top, color=color.fuchsia)
+
 up = line.new(bar_index + 1, close + atr, bar_index + 2, close + atr, color = color.new(color.orange, 0), width = 2)
 line.delete(up[1])
 plotchar(close + atr, title = "Up Atr", char="", location=location.top, color=color.orange)

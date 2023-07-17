@@ -108,7 +108,7 @@ def __initDivergenceTable(tab:QWidget):
     table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     
-    heads = ['Type', 'Power', 'Break,%', 'Break/ATR', 'Length', 'From' ]
+    heads = ['Type', 'Power', 'Break,%', 'Length', 'From' ]
     table.setColumnCount(len(heads))
     for i in range(len(heads)):
         table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
@@ -206,11 +206,10 @@ def __updateDivergenceTable(tabWidget:QWidget, controller):
         table.item(row, 0).setText(divergence.type.name)
         table.item(row, 0).setForeground(color)
         table.item(row, 0).setBackground(trickedColor)
-        table.item(row, 1).setText(str(round(divergence.power, 2)))
+        table.item(row, 1).setText(str(divergence.power))
         table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
-        table.item(row, 3).setText(str(round(divergence.breakDelta / divergence.secondCandle.atr, 1)))
-        table.item(row, 4).setText(str(divergence.secondIndex - divergence.firstIndex))
-        table.item(row, 5).setText(divergence.firstCandle.time[:-5])
+        table.item(row, 3).setText(str(divergence.secondIndex - divergence.firstIndex))
+        table.item(row, 4).setText(divergence.firstCandle.time[:-5])
         row += 1
 
 def __sortTabs(powerToName:list):

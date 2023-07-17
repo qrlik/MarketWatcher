@@ -40,6 +40,10 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
 
+# to do power round 2
+# to do check commision in tv
+# to do regular filter
+
 # to do atr new test
 # to do divergence test
 
