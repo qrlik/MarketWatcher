@@ -15,7 +15,8 @@ class AtrController:
         self.__size = size
 
     def getCandlesAmountForInit(self):
-        return self.__size * settingsController.getSetting('emaFactor')
+        #return self.__size * settingsController.getSetting('emaFactor')
+        return self.__size
 
     def __reset(self):
         self.__lastOpenTime = 0
@@ -36,7 +37,7 @@ class AtrController:
         lastCandle = currentCandle if self.__lastCandle is None else self.__lastCandle
         return max(currentCandle.high, lastCandle.close) - min(currentCandle.low, lastCandle.close)
 
-    def __calculateAverage(self):
+    def __calculateExpAverage(self):
         if self.__lastValue is None:
             self.__lastValue = self.__trueRanges[-1]
         else:
@@ -46,6 +47,17 @@ class AtrController:
         if len(self.__trueRanges) < self.__size:
             return None
         return self.__lastValue
+
+    def __calculateWeightAverage(self):
+        if len(self.__trueRanges) < self.__size:
+            return None
+        weight = 0
+        trAndWeightSum = 0.0
+
+        for atr in self.__trueRanges:
+            weight += 1
+            trAndWeightSum += atr * weight
+        return trAndWeightSum / sum(range(weight + 1))
 
     def process(self):
         candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
@@ -57,7 +69,8 @@ class AtrController:
         
         for candle in candles:
             self.__addTrueRange(self.__calculateTrueRange(candle))
-            atr = self.__calculateAverage()
+            #atr = self.__calculateExpAverage()
+            atr = self.__calculateWeightAverage()
             candle.atr = round(atr, self.__precision) if atr else None
             self.__updateCandles(candle)
             

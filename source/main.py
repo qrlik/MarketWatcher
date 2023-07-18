@@ -40,7 +40,6 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
 
-# to do power round 2
 # to do check commision in tv
 # to do regular filter
 
@@ -60,6 +59,7 @@ if __name__ == "__main__":
 # to do add price delta for last N filter
 
 # after stock exchange
+# to do save atr data | cleanup unused candles?
 # to do optimize loop
 
 # to do add root logs handler also for binance logs
