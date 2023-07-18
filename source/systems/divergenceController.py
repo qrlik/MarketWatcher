@@ -82,7 +82,7 @@ class DivergenceController:
     def __processVertexs(self):
         for i in range(len(self.__candles)):
             fromC = self.__candles[i]
-            if not fromC.vertex or not fromC.rsi or not fromC.atr:
+            if not fromC.vertex or not fromC.rsi:
                 continue
             
             self.__lines.setdefault(i, [])
@@ -95,7 +95,7 @@ class DivergenceController:
             
             for j in range(i + 1, len(self.__candles)):
                 toC = self.__candles[j]
-                if fromC.vertex != toC.vertex or not toC.rsi or not toC.atr:
+                if fromC.vertex != toC.vertex or not toC.rsi:
                     continue
                 newAnglePrice = math.atan((toC.close - fromC.close) / (j - i))
                 newAngleRsi = math.atan((toC.rsi - fromC.rsi) / (j - i))
@@ -126,7 +126,7 @@ class DivergenceController:
         else:
             info.breakDelta = abs(info.firstCandle.close - info.secondCandle.close)
             info.breakPercents = info.breakDelta / info.secondCandle.close * 100
-        info.power = round(info.breakDelta / info.secondCandle.atr, 2)
+        info.power = round(info.breakDelta / info.secondCandle.atr, 2) if info.secondCandle.atr is not None else -1.0
 
     def __getDivergenceLength(self, vertexStrength):
         maxLength = self.__maxLength
