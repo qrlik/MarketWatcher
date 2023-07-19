@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QFrame,QPushButton
+from PySide6.QtWidgets import QFrame,QPushButton,QHBoxLayout
 
 from models import timeframe
 from systems import configController
@@ -6,9 +6,13 @@ from utilities import guiDefines
 from widgets import watcherTable
 
 __tfFilter:QFrame = None
-__states:dict = {}
+__tfStates:dict = {}
+__trickState:dict = {}
+
 __generalButton:QPushButton = None
 __buttons:dict = {}
+__trickButtons:dict = {}
+
 __maxColumns = 3
 
 def init(parent):
@@ -16,50 +20,78 @@ def init(parent):
     __tfFilter = parent.findChild(QFrame, 'timeframesFilter')
     __initGrid()
 
-def isEnabled(tf:timeframe.Timeframe):
-    return __states.get(tf, True)
+def isTfEnabled(tf:timeframe.Timeframe):
+    return __tfStates.get(tf, True)
+
+def isDivergenceTricked(tf:timeframe.Timeframe):
+    return __trickState.get(tf, False)
 
 def __checkAll(state):
-    global __states
+    global __tfStates
     for tf, button in __buttons.items():
         button.setChecked(state)
-        __states[tf] = state
+        __tfStates[tf] = state
     watcherTable.update()
 
-def __updateChecks(_):
-    global __states,__generalButton
+def __updateChecks():
+    global __tfStates,__generalButton
     allChecked = True
     for tf, button in __buttons.items():
         state = button.isChecked()
-        __states[tf] = state
+        __tfStates[tf] = state
         allChecked &= state
     __generalButton.setChecked(allChecked)
     watcherTable.update()
 
-def __createButton(name:str, callback):
-    button = QPushButton(name)
-    button.setCheckable(True)
-    button.setChecked(True)
-    button.setStyleSheet(guiDefines.getCheckedButtonSheet())
-    button.clicked.connect(callback)
-    return button
+def __updateTricked():
+    global __trickState
+    for tf, button in __trickButtons.items():
+        state = button.isChecked()
+        __trickState[tf] = state
+    watcherTable.update()
+
+def __createButtons(name:str, tfCallback, trickCallback):
+    layout = QHBoxLayout()
+
+    tfButton = QPushButton(name)
+    tfButton.setCheckable(True)
+    tfButton.setChecked(True)
+    tfButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
+    tfButton.clicked.connect(tfCallback)
+    layout.addWidget(tfButton)
+
+    if trickCallback is not None:
+        trickButton = QPushButton('T')
+        trickButton.setCheckable(True)
+        trickButton.setChecked(False)
+        trickButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
+        trickButton.clicked.connect(trickCallback)
+        trickButton.setFixedWidth(40)
+        layout.addWidget(trickButton)
+        return (layout, tfButton, trickButton)
+
+    return (layout, tfButton)
 
 def __initGrid():
-    global __generalButton,__buttons,__states
+    global __generalButton,__buttons,__tfStates
 
     layout = __tfFilter.layout()
     row = 0
     column = 0
 
-    __generalButton = __createButton('All', __checkAll)
-    layout.addWidget(__generalButton, row, column)
+    genLayout, __generalButton = __createButtons('All', __checkAll, None)
+    layout.addLayout(genLayout, row, column)
     row += 1
 
     for tf in configController.getTimeframes():
-        button = __createButton(timeframe.getPrettyFormat(tf), __updateChecks)
-        layout.addWidget(button, row, column)
-        __buttons.setdefault(tf, button)
-        __states.setdefault(tf, True)
+        tfLayout, tfButton, trickButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks, __updateTricked)
+        layout.addLayout(tfLayout, row, column)
+
+        __buttons.setdefault(tf, tfButton)
+        __trickButtons.setdefault(tf, trickButton)
+
+        __tfStates.setdefault(tf, True)
+        __trickState.setdefault(tf, False)
 
         column += 1
         if column >= __maxColumns:

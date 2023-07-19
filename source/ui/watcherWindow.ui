@@ -222,7 +222,11 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QGridLayout" name="gridLayout"/>
+           <layout class="QGridLayout" name="gridLayout">
+            <property name="horizontalSpacing">
+             <number>15</number>
+            </property>
+           </layout>
           </widget>
          </item>
         </layout>

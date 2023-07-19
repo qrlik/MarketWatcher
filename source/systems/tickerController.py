@@ -4,7 +4,6 @@ from collections import OrderedDict
 from models import timeframe
 from systems import configController
 from systems import timeframeController
-from utilities import utils
 from widgets.filters import timeframesFilter
 
 class TickerData:
@@ -34,7 +33,7 @@ class TickerController:
     def getFilteredTimeframes(self):
         result = {}
         for tf, controller in self.__data.timeframes.items():
-            if timeframesFilter.isEnabled(tf):
+            if timeframesFilter.isTfEnabled(tf):
                 result.setdefault(tf, controller)
         return result
 

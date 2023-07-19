@@ -217,7 +217,7 @@ def __sortTabs(powerToName:list):
     indexForSelect = -1
     for sortIndex in range(len(powerToName)):
         _, name = powerToName[sortIndex]
-        if indexForSelect < 0 and timeframesFilter.isEnabled(timeframe.Timeframe[name]):
+        if indexForSelect < 0 and timeframesFilter.isTfEnabled(timeframe.Timeframe[name]):
             indexForSelect = sortIndex
         for tabIndex in range(__tabs.count()):
             if __tabs.widget(tabIndex).objectName() == name:
