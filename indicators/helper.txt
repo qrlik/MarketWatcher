@@ -4,22 +4,22 @@ indicator(title="Helper", shorttitle="Helper", overlay=true)
 lenght = 200
 order_risk_profit = input.int(title="Cash risk, $", defval=1, minval=1)
 max_tax_rate = input.float(title="Max tax, %", defval=5.0, minval=0.1)
-order_tax = input.float(title="Summary tax, %", defval=0.04, minval=0.01)
+order_tax = input.float(title="Summary tax, %", defval=0.05, minval=0.01)
 
 // show close line
 plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 
 // show atr range
 atr = ta.rma(ta.tr(true), lenght)
-plotchar(atr, title = "Atr", char="", location=location.top, color=color.fuchsia)
+plotchar(atr, title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
 
 up = line.new(bar_index + 1, close + atr, bar_index + 2, close + atr, color = color.new(color.orange, 0), width = 2)
 line.delete(up[1])
-plotchar(close + atr, title = "Up Atr", char="", location=location.top, color=color.orange)
+plotchar(close + atr, title = "Up Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
 down = line.new(bar_index + 1, close - atr, bar_index + 2, close - atr, color = color.new(color.orange, 0), width = 2)
 line.delete(down[1])
-plotchar(close - atr, title = "Down Atr", char="", location=location.top, color=color.orange)
+plotchar(close - atr, title = "Down Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
 // show future price
 is_need_future = str.endswith(syminfo.tickerid, 'USDT')
