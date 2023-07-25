@@ -40,7 +40,8 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
 
-# to do regular filter
+# to do allow atr below size
+# to do add tricket to output
 
 # to do atr new test
 # to do divergence test

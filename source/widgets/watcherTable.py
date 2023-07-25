@@ -49,13 +49,6 @@ def initList():
         __watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
         row += 1
 
-def updateViewedDivergence():
-    global __watcherTable
-    selectedItems = __watcherTable.selectedItems()
-    if len(selectedItems) == 0:
-        return
-    selectedItems[1].update()
-
 def __sortList():
     global __watcherTable,__sortColumn
     if __sortColumn == 0:
@@ -66,7 +59,7 @@ def __sortList():
 def update():
     __updateRatio()
     __updateList()
-    __updateInfoWidget(False)
+    __updateInfoWidget()
 
 def __updateRatio():
     global __bullBar,__bearBar,__emptyBar,__watcherTable
@@ -107,10 +100,10 @@ def __updateSortOrder(index):
         __sortColumn = index
         __sortList()
 
-def __updateInfoWidget(byClick=True):
+def __updateInfoWidget():
     global __watcherTable
     selectedItems = __watcherTable.selectedItems()
     if len(selectedItems) == 0:
         return
-    infoWidget.update(selectedItems[0].getTicker(), byClick)
+    infoWidget.update(selectedItems[0].getTicker())
     

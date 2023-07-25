@@ -65,7 +65,6 @@ class WatcherWindow(QMainWindow):
         filterWidget.init(self)
         watcherTable.init(self)
         infoWidget.init(self)
-        infoWidget.connectTabsChanged(watcherTable.updateViewedDivergence)
 
     def __initSizes(self):
         self.setFixedWidth(800)

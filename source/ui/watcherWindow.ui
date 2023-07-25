@@ -176,6 +176,9 @@
          <item>
           <widget class="QTabWidget" name="tabWidget"/>
          </item>
+         <item>
+          <widget class="QTableWidget" name="tableWidget"/>
+         </item>
         </layout>
        </widget>
       </item>

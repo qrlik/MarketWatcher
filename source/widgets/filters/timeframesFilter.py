@@ -13,7 +13,7 @@ __generalButton:QPushButton = None
 __buttons:dict = {}
 __trickButtons:dict = {}
 
-__maxColumns = 3
+__maxColumns = 2
 
 def init(parent):
     global __tfFilter
