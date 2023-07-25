@@ -6,20 +6,10 @@ order_risk_profit = input.int(title="Cash risk, $", defval=1, minval=1)
 max_tax_rate = input.float(title="Max tax, %", defval=5.0, minval=0.1)
 order_tax = input.float(title="Summary tax, %", defval=0.05, minval=0.01)
 
+atr = ta.rma(ta.tr(true), lenght)
+
 // show close line
 plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
-
-// show atr range
-atr = ta.rma(ta.tr(true), lenght)
-plotchar(atr, title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
-
-up = line.new(bar_index + 1, close + atr, bar_index + 2, close + atr, color = color.new(color.orange, 0), width = 2)
-line.delete(up[1])
-plotchar(close + atr, title = "Up Atr", char="", location=location.top, color=color.new(color.orange, 100))
-
-down = line.new(bar_index + 1, close - atr, bar_index + 2, close - atr, color = color.new(color.orange, 0), width = 2)
-line.delete(down[1])
-plotchar(close - atr, title = "Down Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
 // show future price
 is_need_future = str.endswith(syminfo.tickerid, 'USDT')
@@ -31,6 +21,8 @@ line.delete(future[1])
 
 // show position amount and tax rate
 atr_for_position = na(target_atr) ? atr : target_atr
+price_for_position = na(target_atr) ? close : target_price
+
 stop_percents = atr_for_position / close * 100
 order_size = math.round(order_risk_profit * 100 / stop_percents)
 cur_tax_rate_cash = order_tax * order_size / 100
@@ -41,7 +33,16 @@ label_color = (is_overheadrate) ? color.orange : color.silver
 pos_label = label.new(bar_index + 2, close + atr, text=label_text, color=label_color, style=label.style_label_lower_left)
 label.delete(pos_label[1])
 
-// show tax
+// show atr range
+plotchar(atr_for_position, title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
+
+up = line.new(bar_index + 1, price_for_position + atr_for_position, bar_index + 2, price_for_position + atr_for_position, color = color.new(color.orange, 0), width = 2)
+line.delete(up[1])
+plotchar(price_for_position + atr_for_position, title = "Up Atr", char="", location=location.top, color=color.new(color.orange, 100))
+
+down = line.new(bar_index + 1, price_for_position - atr_for_position, bar_index + 2, price_for_position - atr_for_position, color = color.new(color.orange, 0), width = 2)
+line.delete(down[1])
+plotchar(price_for_position - atr_for_position, title = "Down Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
 // mark not closed bar
 color = barstate.isrealtime ? color.new(#afafaf, 0) : na
