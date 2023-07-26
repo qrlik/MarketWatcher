@@ -7,14 +7,15 @@ from systems import timeframeController
 from widgets.filters import timeframesFilter
 
 class TickerData:
-    def __init__(self, ticker:str, pricePrecision: int):
+    def __init__(self, ticker:str, futureTicker:str, pricePrecision: int):
         self.ticker:str = ticker
+        self.futureTicker:str = futureTicker
         self.pricePrecision:int = pricePrecision
         self.timeframes:OrderedDict = OrderedDict()
 
 class TickerController:
-    def __init__(self, ticker:str, pricePrecision: int):
-        self.__data = TickerData(ticker,pricePrecision)
+    def __init__(self, ticker:str, futureTicker:str, pricePrecision: int):
+        self.__data = TickerData(ticker, futureTicker, pricePrecision)
 
     def init(self):
         self.__initTimeframes()
@@ -26,6 +27,9 @@ class TickerController:
     
     def getTicker(self):
         return self.__data.ticker
+
+    def getFutureTicker(self):
+        return self.__data.futureTicker
 
     def getTimeframes(self):
         return self.__data.timeframes

@@ -20,6 +20,7 @@ __dataButton:QPushButton = None
 __linkButton:QPushButton = None
 __divergenceRatio:QProgressBar = None
 __tickerController = None
+__url = 'https://www.tradingview.com/chart/?symbol=BINANCE:'
 
 def init(parent):
     global __widget
@@ -45,7 +46,14 @@ def __initValues():
 
 def __initButtons():
     __dataButton.clicked.connect(__onDataCopyClicked)
-    __linkButton.clicked.connect(__onOpenLinkClicked)
+
+    __linkButton.setText('Spot')
+    __linkButton.clicked.connect(__onOpenSpotLinkClicked)
+
+    layout = __widget.findChild(QHBoxLayout, 'positionLayout')
+    futureButton = QPushButton('Future')
+    layout.addWidget(futureButton)
+    futureButton.clicked.connect(__onOpenFutureLinkClicked)
 
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
@@ -124,13 +132,20 @@ def __onDataCopyClicked():
     data.setdefault('power', round(power))
     pyperclip.copy(str(json.dumps(data, indent = 4)))
 
-def __onOpenLinkClicked():
-    if not __tickerController:
-        return
-    url = 'https://www.tradingview.com/chart/?symbol=BINANCE:' + __tickerController.getTicker()
+def __openLink(link:str):
     webbrowser.register('chrome', None,
         webbrowser.BackgroundBrowser("C://Program Files//Google//Chrome//Application//chrome.exe"))
-    webbrowser.get('chrome').open(url)
+    webbrowser.get('chrome').open(link)
+
+def __onOpenSpotLinkClicked():
+    if not __tickerController:
+        return
+    __openLink(__url + __tickerController.getTicker())
+
+def __onOpenFutureLinkClicked():
+    if not __tickerController:
+        return
+    __openLink(__url + __tickerController.getFutureTicker() + '.P')
 
 def __updatePrice():
     price = None

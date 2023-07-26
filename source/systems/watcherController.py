@@ -9,11 +9,12 @@ __tickers:dict = {}
 
 def __getTickersList():
     infoFutures = api.Future.getExchangeInfo()
-    basesFutures = set()
+    basesFutures = dict()
     exceptions = settingsController.getSetting('baseAssetsExceptions')
     ignores = settingsController.getSetting('baseAssetsIgnores')
     spotIgnore = settingsController.getSetting('spotSymbolsExceptions')
     for symbol in infoFutures.get('symbols', []):
+        name = symbol.get('symbol', '')
         status = symbol.get('status', '')
         baseAsset = symbol.get('baseAsset', '')
         quoteAsset = symbol.get('quoteAsset', '')
@@ -26,7 +27,7 @@ def __getTickersList():
             baseAsset = baseAsset.replace('1000', '')
             if exceptions.get(baseAsset, None):
                 baseAsset = exceptions.get(baseAsset)
-            basesFutures.add(baseAsset)
+            basesFutures.setdefault(baseAsset, name)
 
     info = api.Spot.getExchangeInfo()
     tickers = set()
@@ -51,13 +52,13 @@ def __getTickersList():
             pricePrecision += 1
             pricePrecisionFloat *= 10
 
-        for base in basesFutures:
+        for base in basesFutures.keys():
             if baseAsset == base:
-                tickers.add((name, pricePrecision))
+                tickers.add((name, basesFutures[base], pricePrecision))
                 basesSpot.add(baseAsset)
                 break
 
-    diffs = basesFutures.symmetric_difference(basesSpot)
+    diffs = set(basesFutures.keys()).symmetric_difference(basesSpot)
     for spot in spotIgnore:
         diffs.discard(spot)
     if len(diffs) > 0:
@@ -79,7 +80,7 @@ def start():
     websocketController.start(socketList, timeframes)
 
     for ticker in tickers:
-        controller = tickerController.TickerController(ticker[0], ticker[1])
+        controller = tickerController.TickerController(ticker[0], ticker[1], ticker[2])
         __tickers.setdefault(ticker[0], controller)
         controller.init()
 
