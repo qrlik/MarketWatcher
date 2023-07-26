@@ -49,8 +49,6 @@ class AtrController:
         return self.__lastValue
 
     def __calculateWeightAverage(self):
-        if len(self.__trueRanges) < self.__size:
-            return None
         weight = 0
         trAndWeightSum = 0.0
 
