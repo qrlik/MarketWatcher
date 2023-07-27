@@ -46,7 +46,7 @@ class DivergencesPowersInfo:
 
 class DivergenceController:
     __actualLength = settingsController.getSetting('divergenceActualLength')
-    __trickedMinLength = settingsController.getSetting('divergenceTrickedMinLength')
+    __divergenceTrickedFactor = settingsController.getSetting('divergenceTrickedFactor')
     __rsiSize = settingsController.getSetting('rsiLength')
 
     def __init__(self):
@@ -192,7 +192,9 @@ class DivergenceController:
                     break
                 if divergence.signal == other.signal and divergence.type == other.type:
                     otherLength = other.secondIndex - other.firstIndex
-                    if length - otherLength > self.__trickedMinLength and length <= otherLength * 2:
+                    minLength = int(otherLength * (1 + self.__divergenceTrickedFactor))
+                    maxLength = otherLength * 2
+                    if length >= minLength and length <= maxLength:
                         divergence.tricked = True
             if divergence.tricked:
                 continue
@@ -202,7 +204,9 @@ class DivergenceController:
                     break
                 if divergence.signal == other.signal  and divergence.type == other.type:
                     otherLength = other.secondIndex - other.firstIndex
-                    if length > self.__trickedMinLength and length <= otherLength:
+                    minLength = int(otherLength * self.__divergenceTrickedFactor)
+                    maxLength = otherLength
+                    if length >= minLength and length <= maxLength:
                         divergence.tricked = True
 
     def isEmpty(self):

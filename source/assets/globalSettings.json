@@ -16,7 +16,7 @@
 		"10": 50
 	},
 	"divergenceActualLength": 0,
-	"divergenceTrickedMinLength": 3,
+	"divergenceTrickedFactor": 0.2,
 	"rsiLength": 14,
 	"spotSymbolsExceptions": [
 		"BLUR"
