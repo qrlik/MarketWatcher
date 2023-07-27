@@ -34,8 +34,9 @@ class DivergenceInfo:
         result.setdefault('lenght', self.secondIndex - self.firstIndex)
         result.setdefault('type', self.type.name)
         result.setdefault('signal', self.signal.name)
-        result.setdefault('power', round(self.power))
+        result.setdefault('power', self.power)
         result.setdefault('break', round(self.breakPercents, 2))
+        result.setdefault('tricked', self.tricked)
         return result
 
 class DivergencesPowersInfo:
