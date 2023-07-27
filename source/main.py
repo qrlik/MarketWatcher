@@ -40,14 +40,11 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
 
-# to do add tricket to output
-
 # to do atr new test
 # to do divergence test
 
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI
-# подумать о равенсве при определении дивера и при определении силы вершины
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
 

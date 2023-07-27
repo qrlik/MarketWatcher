@@ -58,6 +58,7 @@ def __initButtons():
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
     __tabs.tabBar().setExpanding(True)
+    __tabs.setFixedHeight(75)
 
     for tf in configController.getTimeframes():
         tabWidget = QWidget()

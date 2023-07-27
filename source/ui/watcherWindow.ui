@@ -98,6 +98,9 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="positionLayout">
            <item>
