@@ -50,6 +50,7 @@ class ApiRequests(Thread):
             self.__loop.call_soon_threadsafe(self.__continueLoop)
         
     def addAsyncRequest(self, callback, *args):
+        return 0 # to do
         requestId = self.__requestCounter
         self.__requestCounter += 1
         with self.__taskLock:

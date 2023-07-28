@@ -1,4 +1,5 @@
 from models import candle
+from systems import loaderController
 from systems import watcherController
 from utilities import utils
 
@@ -31,6 +32,8 @@ def getCandles(ticker, timeframe):
     return candles
 
 def saveCandles():
+    if not loaderController.isDone():
+        return
     __candles.clear()
     for ticker, tickerController in watcherController.getTickers().items():
         for tf, tfController in tickerController.getTimeframes().items():

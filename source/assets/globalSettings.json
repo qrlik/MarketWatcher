@@ -1,5 +1,5 @@
 {
-	"loopInterval": 1000,
+	"loopInterval": 33,
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,
 	"atrAverageLength": 200,

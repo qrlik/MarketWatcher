@@ -2,17 +2,15 @@ import os
 import datetime
 from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow, QWidget, QTextEdit, QApplication
+from PySide6.QtWidgets import QMainWindow, QWidget, QTextEdit, QApplication, QProgressBar
 from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
 from api import api
 from systems import cacheController
 from systems import configController
+from systems import loaderController
 from systems import settingsController
-from systems import soundNotifyController
-from systems import watcherController
-from systems import userDataController
 
 from widgets import configsWindow
 from widgets.filters import filterWidget
@@ -23,8 +21,6 @@ from utilities import utils
 class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
-        self.__watcherInited = False
-        self.__lastProgress = -1
 
         configController.load('default')#(cacheController.getLastConfigFilename())
         #self.__initConfigWindow()
@@ -38,6 +34,7 @@ class WatcherWindow(QMainWindow):
 
         self.setCentralWidget(self.__watcherWidget)
         self.__initTimer()
+        self.__initLoad()
 
     def __loadUi(self):
         loader = QUiLoader()
@@ -62,6 +59,7 @@ class WatcherWindow(QMainWindow):
     def __initValues(self):
         self.__watcherWidget:QWidget = self.findChild(QWidget, 'watcherWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
+        self.__progressBar:QProgressBar = self.__watcherWidget.findChild(QProgressBar, 'progressBar')
         filterWidget.init(self)
         watcherTable.init(self)
         infoWidget.init(self)
@@ -76,32 +74,23 @@ class WatcherWindow(QMainWindow):
         timer.timeout.connect(self.__loop)
         timer.start(settingsController.getSetting('loopInterval'))
 
+    def __initLoad(self):
+        self.log('Start load tickers')
+        loaderController.startLoad()
+
     def __loop(self):
-        if not self.__watcherInited:
-            watcherController.start()
-            userDataController.init()
-            watcherTable.initList()
-            soundNotifyController.init()
-            self.__watcherInited = True
+        self.__updateProgressBar()
 
-        progress = watcherController.loop()
-        userDataController.update()
-        self.__logProgress(progress)
-        watcherTable.update()
-        soundNotifyController.update()
+        # progress = watcherController.loop()
+        # userDataController.update()
+        # watcherTable.update()
+        # soundNotifyController.update()
 
-    def __isLoaded(self):
-        return self.__lastProgress >= 100
-
-    def __logProgress(self, progress):
-        if self.__isLoaded() or self.__lastProgress >= progress:
-            return
-        text = '...' + (str(progress) if progress < 100 else 'ALL LOADED')
-        self.__logBrowser.insertPlainText(text)
-        self.__lastProgress = progress
-        cacheController.saveCandles()
+    def __updateProgressBar(self):
+        self.__progressBar.setValue(loaderController.getProgress())
 
     def closeEvent(self, event):
+        loaderController.forceQuit()
         cacheController.save()
         cacheController.saveCandles()
         api.atExit()

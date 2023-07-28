@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
 # to do atr new test
 # to do divergence test
-
+#https://gist.github.com/dmfigol/3e7d5b84a16d076df02baa9f53271058
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI
 

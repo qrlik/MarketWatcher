@@ -1,8 +1,6 @@
 from api import api
-from systems import configController
 from systems import tickerController
 from systems import settingsController
-from systems import websocketController
 from utilities import utils
 
 __tickers:dict = {}
@@ -72,13 +70,11 @@ def getTickers():
 def getTicker(ticker:str):
     return __tickers.get(ticker)
 
-def start():
-    global __tickers
-    timeframes = configController.getTimeframes()
-    tickers = __getTickersList() #[('BTCUSDT', 2)]
-    socketList = [ticker[0] for ticker in tickers]
-    websocketController.start(socketList, timeframes)
+def requestTickers():
+    return __getTickersList()
 
+def loadTickets(tickers):
+    global __tickers
     for ticker in tickers:
         controller = tickerController.TickerController(ticker[0], ticker[1], ticker[2])
         __tickers.setdefault(ticker[0], controller)
@@ -90,3 +86,4 @@ def loop():
     for _, controller in __tickers.items():
         curProgress += controller.loop()
     return int(curProgress / allProgress * 100)
+# to do look return

@@ -66,6 +66,8 @@ def __updateRatio():
     bullTickers = 0
     bearTickers = 0
     summary = len(watcherController.getTickers())
+    if summary == 0:
+        return
     for _, tickerController in watcherController.getTickers().items():
         bullPower = 0.0
         bearPower = 0.0
