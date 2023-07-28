@@ -190,6 +190,8 @@ class DivergenceController:
             for other in self.__divergencesByFirst[divergence.firstIndex]:
                 if divergence.tricked:
                     break
+                if divergence == other:
+                    continue
                 if divergence.signal == other.signal and divergence.type == other.type:
                     otherLength = other.secondIndex - other.firstIndex
                     minLength = int(otherLength * (1 + self.__divergenceTrickedFactor))
@@ -202,6 +204,8 @@ class DivergenceController:
             for other in self.__divergencesBySecond[divergence.firstIndex]:
                 if divergence.tricked:
                     break
+                if divergence == other:
+                    continue
                 if divergence.signal == other.signal  and divergence.type == other.type:
                     otherLength = other.secondIndex - other.firstIndex
                     minLength = int(otherLength * self.__divergenceTrickedFactor)
