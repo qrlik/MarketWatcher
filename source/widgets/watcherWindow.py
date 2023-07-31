@@ -7,10 +7,14 @@ from PySide6.QtCore import QFile, QTimer
 from PySide6.QtUiTools import QUiLoader
 
 from api import api
+from api import apiRequests
 from systems import cacheController
 from systems import configController
 from systems import loaderController
 from systems import settingsController
+from systems import soundNotifyController
+from systems import userDataController
+from systems import watcherController
 
 from widgets import configsWindow
 from widgets.filters import filterWidget
@@ -81,13 +85,18 @@ class WatcherWindow(QMainWindow):
     def __loop(self):
         self.__updateProgressBar()
 
-        # progress = watcherController.loop()
-        # userDataController.update()
-        # watcherTable.update()
-        # soundNotifyController.update()
+        watcherController.loop()
+        userDataController.update()
+        watcherTable.update()
+        soundNotifyController.update()
 
     def __updateProgressBar(self):
-        self.__progressBar.setValue(loaderController.getProgress())
+        if not loaderController.isDone():
+            self.__progressBar.setValue(loaderController.getProgress())
+        elif apiRequests.requester.getProgress() < 100:
+            self.__progressBar.setValue(apiRequests.requester.getProgress())
+        else:
+            self.__progressBar.setVisible(False)
 
     def closeEvent(self, event):
         loaderController.forceQuit()

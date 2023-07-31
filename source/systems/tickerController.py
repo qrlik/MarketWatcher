@@ -55,7 +55,6 @@ class TickerController:
 
     def loop(self):
         if not self.__isAllTimeframesSync():
-            return 0
+            return
         for _, tfController in self.__data.timeframes.items():
             tfController.loop()
-        return 1

@@ -4,6 +4,7 @@ from systems import settingsController
 from utilities import utils
 
 __tickers:dict = {}
+__loading = False
 
 def __getTickersList():
     infoFutures = api.Future.getExchangeInfo()
@@ -65,6 +66,9 @@ def __getTickersList():
     return tickers
 
 def getTickers():
+    global __loading
+    if __loading:
+        return {}
     return __tickers
 
 def getTicker(ticker:str):
@@ -74,16 +78,17 @@ def requestTickers():
     return __getTickersList()
 
 def loadTickets(tickers):
-    global __tickers
+    global __tickers,__loading
+    __loading = True
     for ticker in tickers:
         controller = tickerController.TickerController(ticker[0], ticker[1], ticker[2])
         __tickers.setdefault(ticker[0], controller)
         controller.init()
+    __loading = False
 
 def loop():
-    allProgress = len(__tickers)
-    curProgress = 0
+    global __loading
+    if __loading:
+        return
     for _, controller in __tickers.items():
-        curProgress += controller.loop()
-    return int(curProgress / allProgress * 100)
-# to do look return
+        controller.loop()

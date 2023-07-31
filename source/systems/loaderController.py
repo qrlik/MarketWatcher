@@ -1,7 +1,7 @@
-from typing import Optional
 from PySide6.QtCore import QThread
 #import debugpy # Uncomment the next line to import debugpy for debugging this thread
 
+from api import apiRequests
 from systems import cacheController
 from systems import configController
 from systems import soundNotifyController
@@ -36,8 +36,7 @@ def __onLoadFinish():
 	__isDone = True
 	cacheController.saveCandles()
 	watcherTable.initList()
-	# to do start request Thread
-#WARNING:root:WebSocket connection closed: connection was closed uncleanly ("peer dropped the TCP connection without previous WebSocket closing handshake"), code: 1006, clean: False, reason: connection was closed uncleanly ("peer dropped the TCP connection without previous WebSocket closing handshake")
+	apiRequests.requester.start()
 	__thread.quit()
 
 def forceQuit():
