@@ -65,6 +65,6 @@ class ApiRequests(QThread):
         return result
     
     def getProgress(self):
-        return int(self.__responseCounter / self.__requestCounter * 100) if self.__requestCounter > 0 else 0
+        return int(self.__responseCounter / self.__requestCounter * 100) if self.__requestCounter > 0 else -1
 
 requester = ApiRequests()

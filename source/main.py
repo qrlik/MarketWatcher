@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
 # to do atr new test
 # to do divergence test
-#https://gist.github.com/dmfigol/3e7d5b84a16d076df02baa9f53271058
+
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI
 
@@ -60,23 +60,16 @@ if __name__ == "__main__":
 
 # to do add root logs handler also for binance logs
 
-# WARNING:root:WebSocket connection closed: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)"), code: 1006, clean: False, 
-# reason: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)")
 # 527ERROR:root:Lost connection to Server. Reason: [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.error.ConnectionAborted'>: Connection was aborted locally using 
 # ITCPTransport.abortConnection.
 # ]. Retrying: 1
-
-# 527WARNING:root:WebSocket connection closed: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)"), code: 1006, clean: False, reason: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)")
 
 # ERROR:root:Lost connection to Server. Reason: [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.error.ConnectionAborted'>: Connection was aborted locally using ITCPTransport.abortConnection.
 # ]. Retrying: 1
 # 527
-# WARNING:root:WebSocket connection closed: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)"), code: 1006, clean: False, 
-# reason: connection was closed uncleanly ("WebSocket opening handshake timeout (peer did not finish the opening handshake in time)")
 # 527ERROR:root:Lost connection to Server. Reason: [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.error.ConnectionAborted'>: Connection was aborted locally using 
 # ITCPTransport.abortConnection.
 # ]. Retrying: 1
-#WARNING:root:WebSocket connection closed: connection was closed uncleanly ("peer dropped the TCP connection without previous WebSocket closing handshake"), code: 1006, clean: False, reason: connection was closed uncleanly ("peer dropped the TCP connection without previous WebSocket closing handshake")
 
 # maintance
 # (403, None, 'https://api.binance.com/api/v3/klines\n{\'symbol\': \'TLMUSDT\', \'interval\': \'1h\', \'startTime\': 1685281485538, \'limit\': 44}
