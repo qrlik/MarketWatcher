@@ -27,7 +27,7 @@ class CandlesController(QObject):
             self.__initCandles(arg)
     
     def __initTest(self, filename:str):
-        candles = utils.loadJsonFile('assets/candles/' + filename)
+        candles = utils.loadJsonFile(utils.assetsFolder + 'candles/' + filename)
         self.__finishedCandles = [candle.fromJson(c, self.__timeframe.name) for c in candles]
     
     def __initCandles(self, amountForInit):

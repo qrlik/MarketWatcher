@@ -1,5 +1,6 @@
 from models import timeframe
 from utilities import utils
+from utilities import workMode
 
 __configs:dict = {}
 
@@ -8,7 +9,9 @@ def save(filename:str):
 		return
 	utils.saveJsonFile(filename, __configs)
 
-def load(filename:str):
+def load():
+	#(cacheController.getLastConfigFilename())
+	filename = workMode.getConfigFile()
 	if not filename or len(filename) == 0:
 		return
 	global __configs

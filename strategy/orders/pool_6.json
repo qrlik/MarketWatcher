@@ -1,0 +1,136 @@
+[
+    {
+        "start": 3359.92
+    },
+    {
+        "number": 1,
+        "ticker": "INJUSDT",
+        "time": "15:36 01-08-2023",
+        "type": "LONG",
+        "price": 7.645,
+        "stoploss": 7.549,
+        "takeprofits": [],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "07:00 01-08-2023",
+                    "secondCandle": "14:00 01-08-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1.23,
+                    "break": 1.18,
+                    "tricked": true
+                },
+                {
+                    "firstCandle": "11:00 01-08-2023",
+                    "secondCandle": "14:00 01-08-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0.18,
+                    "break": 0.17,
+                    "tricked": false
+                }
+            ]
+        },
+        "power": 1
+    },
+    {
+        "number": 2,
+        "ticker": "GMXUSDT",
+        "time": "13:08 02-08-2023",
+        "type": "LONG",
+        "price": 51.03,
+        "stoploss": 50.58,
+        "takeprofits": [51.79, 53.79],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "ONE_HOUR": [
+                {
+                    "firstCandle": "08:00 01-08-2023",
+                    "secondCandle": "12:00 02-08-2023",
+                    "lenght": 28,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 15.79,
+                    "break": 12.05,
+                    "tricked": true
+                },
+                {
+                    "firstCandle": "01:00 02-08-2023",
+                    "secondCandle": "12:00 02-08-2023",
+                    "lenght": 11,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 1.0,
+                    "break": 0.77,
+                    "tricked": true
+                }
+            ],
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 01-08-2023",
+                    "secondCandle": "08:00 02-08-2023",
+                    "lenght": 7,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0.95,
+                    "break": 1.71,
+                    "tricked": true
+                },
+                {
+                    "firstCandle": "20:00 01-08-2023",
+                    "secondCandle": "08:00 02-08-2023",
+                    "lenght": 3,
+                    "type": "REGULAR",
+                    "signal": "BULL",
+                    "power": 0.03,
+                    "break": 0.05,
+                    "tricked": true
+                }
+            ]
+        },
+        "power": 18,
+        "openNote": "короткое тело фигуры"
+    },
+    {
+        "number": 3,
+        "ticker": "SHIBUSDT",
+        "time": "2023-08-04 16:08:31",
+        "type": "SHORT",
+        "price": 0.008617,
+        "stoploss": 0.008696,
+        "takeprofits": [],
+        "result": "STOP_LOSS",
+        "divergences": {
+            "FOUR_HOUR": [
+                {
+                    "firstCandle": "04:00 30-07-2023",
+                    "secondCandle": "12:00 04-08-2023",
+                    "lenght": 32,
+                    "type": "REGULAR",
+                    "signal": "BEAR",
+                    "power": 2.45,
+                    "break": 4.53,
+                    "tricked": false
+                }
+            ],
+            "ONE_WEEK": [
+                {
+                    "firstCandle": "04:00 22-05-2023",
+                    "secondCandle": "04:00 24-07-2023",
+                    "lenght": 9,
+                    "type": "HIDDEN",
+                    "signal": "BEAR",
+                    "power": 0.16,
+                    "break": 6.4,
+                    "tricked": true
+                }
+            ]
+        },
+        "power": 2.61,
+        "note": "флаг на рост, вход против фигуры"
+    }
+]

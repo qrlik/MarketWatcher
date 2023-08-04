@@ -26,7 +26,6 @@ class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
 
-        configController.load('default')#(cacheController.getLastConfigFilename())
         #self.__initConfigWindow()
         self.__onStart()
         utils.addLogListener(self)
@@ -61,6 +60,7 @@ class WatcherWindow(QMainWindow):
         #self.__configsWindow = None
 
     def __initValues(self):
+        self.__loadedLogged = False
         self.__watcherWidget:QWidget = self.findChild(QWidget, 'watcherWidget')
         self.__logBrowser:QTextEdit = self.__watcherWidget.findChild(QTextEdit, 'logBrowser')
         self.__progressBar:QProgressBar = self.__watcherWidget.findChild(QProgressBar, 'progressBar')
@@ -98,9 +98,13 @@ class WatcherWindow(QMainWindow):
             if progress >= 0 and progress < 100:
                 self.__progressBar.setValue(progress)
             else:
+                if not self.__loadedLogged:
+                    self.__loadedLogged = True
+                    self.log('Ready')
                 self.__progressBar.setVisible(False)
 
     def closeEvent(self, event):
+        apiRequests.requester.quit()
         loaderController.forceQuit()
         cacheController.save()
         cacheController.saveCandles()

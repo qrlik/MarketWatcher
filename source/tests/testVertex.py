@@ -6,7 +6,7 @@ from utilities import utils
 class vertexTester:
     def __init__(self, name:str):
         self.name = name
-        self.testData = utils.loadJsonFile('assets/tests/' + self.name)
+        self.testData = utils.loadJsonFile(utils.assetsFolder + 'tests/' + self.name)
 
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
         self.candlesController.init('', self.testData['candlesFileName'])

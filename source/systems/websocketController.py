@@ -85,7 +85,7 @@ def start(tickers:list, tfs:list):
 
 def parseCandle(data):
     c = candle.Candle()
-    c.interval = timeframe.apiToTimeframe.get(data['i'])
+    c.interval = timeframe.binanceApiStrToTf.get(data['i'])
     c.openTime = data['t']
     c.closeTime = data['T']
     c.time = datetime.fromtimestamp(c.openTime / 1000).strftime('%H:%M %d-%m-%Y')

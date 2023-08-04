@@ -4,7 +4,10 @@ from PySide6.QtWidgets import QApplication,QStyleFactory
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 
+from systems import cacheController
+from systems import configController
 from utilities import utils
+from utilities import workMode
 from widgets import watcherWindow
 
 def excepthook(exc_type, exc_value, exc_tb):
@@ -21,6 +24,11 @@ def setupGui(app):
 if __name__ == "__main__":
     utils.log('====================== PROGRAMM STARTED ======================')
     utils.logError('====================== PROGRAMM STARTED ======================')
+
+    if len(sys.argv) > 1:
+        workMode.setupWorkMode(sys.argv[1])
+    cacheController.load()
+    configController.load()
     
     sys.excepthook = excepthook
     app = QApplication([])
@@ -42,6 +50,9 @@ if __name__ == "__main__":
 
 # to do atr new test
 # to do divergence test
+
+# fix 1000shib opened order
+# add power round 2
 
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI

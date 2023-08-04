@@ -35,7 +35,6 @@ class Candle:
 def toJson(candle:Candle):
     result = []
     result.append(candle.openTime)
-    result.append(candle.closeTime)
     result.append(candle.open)
     result.append(candle.high)
     result.append(candle.low)
@@ -46,10 +45,10 @@ def fromJson(data, tf:str):
     result = Candle()
     result.interval = timeframe.Timeframe[tf]
     result.openTime = data[0]
-    result.closeTime = data[1]
+    result.closeTime = result.openTime + result.interval - 1
     result.time = datetime.fromtimestamp(result.openTime / 1000).strftime('%H:%M %d-%m-%Y')
-    result.open = data[2]
-    result.high = data[3]
-    result.low = data[4]
-    result.close = data[5]
+    result.open = data[1]
+    result.high = data[2]
+    result.low = data[3]
+    result.close = data[4]
     return result

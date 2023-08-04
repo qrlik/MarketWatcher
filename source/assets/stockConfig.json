@@ -1,0 +1,15 @@
+{
+    "timeframes": {
+        "ONE_HOUR": {
+        },
+        "FOUR_HOUR": {
+        },
+        "ONE_DAY": {
+        },
+        "ONE_WEEK": {
+        }
+    },
+    "globalConfigs": {
+        "maDeltaTimeframe": "FOUR_HOUR"
+    }
+}

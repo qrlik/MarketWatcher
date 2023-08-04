@@ -130,7 +130,7 @@ def __onDataCopyClicked():
                 power += abs(divergence.power)
                 tfDivers = divers.setdefault(tf.name, [])
                 tfDivers.append(divergence.toDict())
-    data.setdefault('power', round(power))
+    data.setdefault('power', power)
     pyperclip.copy(str(json.dumps(data, indent = 4)))
 
 def __openLink(link:str):

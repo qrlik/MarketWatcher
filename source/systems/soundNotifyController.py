@@ -5,6 +5,7 @@ from playsound import playsound
 
 from models import timeframe
 from widgets import watcherWindow
+from utilities import utils
 
 __startPoint = 1685923200
 __lastSoundedInterval = -1
@@ -36,7 +37,7 @@ def update():
     soundPoint = __startPoint + intervalsSincePoint * __interval + posttime
     if int(time.time()) >= soundPoint:
         __lastSoundedInterval = intervalsSincePoint
-        playsound('assets/notification.wav')
+        playsound(utils.assetsFolder + 'notification.wav')
         
         comingPoint = __startPoint + (intervalsSincePoint + 1) * __interval
         comingTfs = ''

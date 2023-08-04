@@ -1,17 +1,22 @@
 from models import candle
 from systems import loaderController
 from systems import watcherController
+from utilities import workMode
 from utilities import utils
 
-__cache = utils.loadJsonFile(utils.cacheFolder + 'cache')
-__cache = __cache if __cache is not None else {}
+__cache:dict = None
+__candles:dict = None
 
-__candlesCacheFile = utils.cacheFolder + 'candles'
-__candles:dict = utils.loadJsonMsgspecFile(__candlesCacheFile)
-__candles = __candles if __candles is not None else {}
+def load():
+    global __cache,__candles
+    __cache = utils.loadJsonFile(workMode.getCacheFile())
+    __cache = __cache if __cache is not None else {}
+
+    __candles = utils.loadJsonMsgspecFile(workMode.getCacheCandlesFile())
+    __candles = __candles if __candles is not None else {}
 
 def save():
-    utils.saveJsonFile(utils.cacheFolder + 'cache', __cache)
+    utils.saveJsonFile(workMode.getCacheFile(), __cache)
 
 def __setField(key:str, value):
     __cache.setdefault(key, value)
@@ -38,5 +43,5 @@ def saveCandles():
     for ticker, tickerController in watcherController.getTickers().items():
         for tf, tfController in tickerController.getTimeframes().items():
             __candles.setdefault(ticker, {}).setdefault(tf.name, tfController.getCandlesController().getJsonData())
-    utils.saveJsonMsgspecFile(__candlesCacheFile, __candles)
+    utils.saveJsonMsgspecFile(workMode.getCacheCandlesFile(), __candles)
     __candles.clear()

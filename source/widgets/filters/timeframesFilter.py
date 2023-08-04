@@ -82,6 +82,7 @@ def __initGrid():
     genLayout, __generalButton = __createButtons('All', __checkAll, None)
     layout.addLayout(genLayout, row, column)
     row += 1
+    isFirstTf = True
 
     for tf in configController.getTimeframes():
         tfLayout, tfButton, trickButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks, __updateTricked)
@@ -90,7 +91,7 @@ def __initGrid():
         __buttons.setdefault(tf, tfButton)
         __trickButtons.setdefault(tf, trickButton)
 
-        __tfStates.setdefault(tf, True)
+        __tfStates.setdefault(tf, False if not isFirstTf else True)
         __trickState.setdefault(tf, False)
 
         column += 1

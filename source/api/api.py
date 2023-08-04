@@ -3,10 +3,10 @@ from api import apiLimits
 from models import candle
 from models import timeframe
 from utilities import utils
-from binance.spot import Spot as Spots
-from binance.um_futures import UMFutures as Futures
-from binance.websocket.spot.websocket_client import SpotWebsocketClient
-from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
+from api.third_party.binance.spot import Spot as Spots
+from api.third_party.binance.um_futures import UMFutures as Futures
+from api.third_party.binance.websocket.spot.websocket_client import SpotWebsocketClient
+from api.third_party.binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from datetime import datetime
 import asyncio
 import os
@@ -103,7 +103,7 @@ class __binanceClient:
         self.__socketId += 1
 
     def subscribeKlines(self, ticket, interval: timeframe.Timeframe, callback):
-        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.timeframeToApiStr[interval], callback=callback)
+        self.__websocket.kline(symbol=ticket, id=self.__socketId, interval=timeframe.tfToBinanceApiStr[interval], callback=callback)
         self.__socketId += 1
     ###
 
@@ -111,7 +111,7 @@ class __binanceClient:
         c = candle.Candle()
         c.interval = interval
         c.openTime = responceCandles[0]
-        c.closeTime = responceCandles[6]
+        c.closeTime = c.openTime + c.interval - 1
         c.time = datetime.fromtimestamp(responceCandles[0] / 1000).strftime('%H:%M %d-%m-%Y')
         c.open = float(responceCandles[1])
         c.high = float(responceCandles[2])
@@ -126,7 +126,7 @@ class __binanceClient:
 
     async def __getCandlesByTimestamp(self, symbol: str, interval: timeframe.Timeframe, amount: int, startPoint: int):
         result = []
-        intervalStr = timeframe.timeframeToApiStr[interval]
+        intervalStr = timeframe.tfToBinanceApiStr[interval]
         while amount > 0:
             amountStep = min(amount, self.__maxCandelsAmount)
             result.extend(await self.__getCandelsTimed(symbol, intervalStr, amountStep, startPoint))

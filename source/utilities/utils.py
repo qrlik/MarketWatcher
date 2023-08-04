@@ -8,6 +8,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 
 cacheFolder = 'cache/'
+assetsFolder = 'assets/'
 __listeners = set()
 
 def setupLogger(name, file, level):

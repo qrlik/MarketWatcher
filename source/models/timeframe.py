@@ -15,7 +15,17 @@ class Timeframe(IntEnum):
     ONE_DAY = 86_400_000,
     ONE_WEEK = 604_800_000
 
-timeframeToApiStr = {
+tfToYahooApiStr = {
+    Timeframe.ONE_MIN : '1m',
+    Timeframe.FIVE_MIN : '5m',
+    Timeframe.FIFTEEN_MIN : '15m',
+    Timeframe.THIRTY_MIN : '30m',
+    Timeframe.ONE_HOUR : '1h',
+    Timeframe.ONE_DAY : '1d',
+    Timeframe.ONE_WEEK : '1wk'
+}
+
+tfToBinanceApiStr = {
     Timeframe.ONE_MIN : '1m',
     Timeframe.THREE_MIN : '3m',
     Timeframe.FIVE_MIN : '5m',
@@ -30,7 +40,7 @@ timeframeToApiStr = {
     Timeframe.ONE_DAY : '1d',
     Timeframe.ONE_WEEK : '1w' }
 
-apiToTimeframe = {
+binanceApiStrToTf = {
     '1m' : Timeframe.ONE_MIN,
     '3m' : Timeframe.THREE_MIN,
     '5m' : Timeframe.FIVE_MIN,
