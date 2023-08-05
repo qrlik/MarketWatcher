@@ -1,5 +1,7 @@
 import sys
 import traceback
+import pyuac
+
 from PySide6.QtWidgets import QApplication,QStyleFactory
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
@@ -21,7 +23,7 @@ def setupGui(app):
     icon.fill(Qt.GlobalColor.transparent)
     app.setWindowIcon(icon)
 
-if __name__ == "__main__":
+def main():
     utils.log('====================== PROGRAMM STARTED ======================')
     utils.logError('====================== PROGRAMM STARTED ======================')
 
@@ -37,6 +39,12 @@ if __name__ == "__main__":
     watcherWindow.window.show()
     result = app.exec()
     sys.exit(result)
+
+if __name__ == "__main__":
+    if not pyuac.isUserAdmin():
+        pyuac.runAsAdmin()
+    else:
+        main()
 
     # import cProfile as profile
     # import pstats
