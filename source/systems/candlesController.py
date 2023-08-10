@@ -51,7 +51,7 @@ class CandlesController(QObject):
             else:
                 amountForRequest = amountFromLastOpen + 1
         if amountForRequest > 0:
-            self.__requestId = api.Spot.getCandels(self.__ticker, self.__timeframe, amountForRequest)
+            self.__requestId = api.getCandels(self.__ticker, self.__timeframe, amountForRequest)
 
     def __updateCandles(self, current, finished):
         self.__currentCandle = current

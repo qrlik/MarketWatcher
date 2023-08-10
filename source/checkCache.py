@@ -20,7 +20,7 @@ async def checkFile(ticker, tf):
     if not timestamp:
         utils.logError('checkCache: empty timestamp ' + ticker + ' ' + tf)
 
-    requestId = api.Spot.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
+    requestId = api.getCandlesByTimestamp(ticker, timeframe.Timeframe[tf], len(cachedCandles), timestamp)
     serverData = None
     while serverData is None:
         serverData = apiRequests.requester.getResponse(requestId)

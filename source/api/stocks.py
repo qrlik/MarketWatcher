@@ -1,5 +1,8 @@
 import api.third_party.yahoo as yahoo
 
+def init():
+    pass
+
 def getTickers():
     tickers = set()
     sp500 = yahoo.tickers_sp500()

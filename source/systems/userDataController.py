@@ -79,7 +79,7 @@ class TickerData:
 
 def __requestPositions():
     global __data
-    poses = api.Future.getPositions()
+    poses = api.getPositions()
     for pose in poses:
         symbol = pose.get('symbol', None)
         if symbol is not None:
@@ -101,14 +101,14 @@ def __userDataStream(data):
 def init():
     global __keyTime
     __requestPositions()
-    api.Future.subscribePositions(__userDataStream)
+    api.subscribePositions(__userDataStream)
     __keyTime = int(time.time())
 
 def update():
     global __keyTime
     curTime = int(time.time())
     if curTime - __keyTime >= 3000: #update key every 50 min
-        api.Future.getListenKey()
+        api.getListenKey()
         __keyTime = int(time.time())
 
 def getTickerUserData(ticker:str):

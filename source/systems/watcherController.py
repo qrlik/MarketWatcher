@@ -7,7 +7,7 @@ __tickers:dict = {}
 __loading = False
 
 def __getTickersList():
-    infoFutures = api.Future.getExchangeInfo()
+    infoFutures = api.getExchangeInfo(api.CryptoMode.FUTURE)
     basesFutures = dict()
     exceptions = settingsController.getSetting('baseAssetsExceptions')
     ignores = settingsController.getSetting('baseAssetsIgnores')
@@ -28,7 +28,7 @@ def __getTickersList():
                 baseAsset = exceptions.get(baseAsset)
             basesFutures.setdefault(baseAsset, name)
 
-    info = api.Spot.getExchangeInfo()
+    info = api.getExchangeInfo(api.CryptoMode.SPOT)
     tickers = set()
     basesSpot = set()
     for symbol in info.get('symbols', []):

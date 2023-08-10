@@ -81,7 +81,7 @@ def start(tickers:list, tfs:list):
         for tf in tfs:
             __tickersData.setdefault(ticker, {}).setdefault(tf, tickerData())
     for tf in tfs:
-        api.Spot.subscribeKlines(tickers, tf, onMessage)
+        api.subscribeKlines(tickers, tf, onMessage)
 
 def parseCandle(data):
     c = candle.Candle()
