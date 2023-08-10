@@ -2,6 +2,21 @@ import requests
 import pandas as pd
 import ftplib
 import io
+import time
+from enum import IntEnum
+from datetime import datetime
+
+class Weekday(IntEnum):
+    MONDAY = 1,
+    TUESDAY = 2,
+    WEDNESDAY = 3,
+    THURSDAY = 4,
+    FRIDAY = 5,
+    SATURDAY = 6,
+    SUNDAY = 7
+
+def isWeekend(day:Weekday):
+    return day == Weekday.SATURDAY or day == Weekday.SUNDAY
 
 try:
     from requests_html import HTMLSession
@@ -16,6 +31,53 @@ except Exception:
 
     
 base_url = "https://query1.finance.yahoo.com/v8/finance/chart/"
+
+__oneDay = 86400
+__postSession = 19800 # 5,5 hours
+__regularSession = 23400 # 6,5 hours
+__postSession = 14400 # 4 hours
+__tradeSession = __postSession + __regularSession + __postSession
+
+def getExpectedCloseTime(openTime, interval):
+    if interval == '1d':
+        return openTime + __regularSession
+    elif interval == '1wk':
+        dt = datetime.fromtimestamp(openTime)
+        weekday = dt.isoweekday()
+        if isWeekend(weekday):
+            return None
+        return openTime + (5 - weekday) * __oneDay + __tradeSession
+    elif interval == '1mo':
+        dt = datetime.fromtimestamp(openTime)
+        lastWorkDay = dt.day
+        day = dt.day + 1
+        while True:
+            try:
+                nextDt = dt.replace(day=day)
+                if not isWeekend(nextDt.isoweekday()):
+                    lastWorkDay = day
+                day += 1
+            except Exception:
+                return openTime + (lastWorkDay - dt.day) * __oneDay + __tradeSession
+    else:
+        return None
+
+def isValidCandle(candle, regularMarketTime, sessionStartTime):
+    if candle[0] == regularMarketTime:
+        return False
+    if candle[0] >= int(time.time()):
+        return False
+    if candle[1] == None \
+    or candle[2] == None \
+    or candle[3] == None \
+    or candle[4] == None:
+        return False
+    if not candle[5] or candle[5] >= sessionStartTime:
+        return False
+    if candle[0] % 10 > 0:
+        x = 5
+    return True
+    
 
 def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     if end_date is None:  
@@ -33,7 +95,7 @@ def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     params = {"period1": start_seconds, "period2": end_seconds, "interval": interval.lower()} #, "events": "div,splits"}
     return site, params
 
-def get_data(ticker, intervalStr, interval, start_date = None, end_date = None, ):
+def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
     '''Downloads historical stock price data into a pandas data frame.  Interval
@@ -46,8 +108,8 @@ def get_data(ticker, intervalStr, interval, start_date = None, end_date = None, 
        @param: interval = "1d"
     '''
 
-    if intervalStr not in ("1m", "5m", "15m", "30m", "1h" ,"1d", "1wk"):
-        raise AssertionError("interval must be of of '1d', '1wk', '1mo', or '1m'")
+    if intervalStr not in ("1d", "1wk", "1mo"):
+        raise AssertionError("invalid interval")
     
     # build and connect to URL
     site, params = build_url(ticker, start_date, end_date, intervalStr)
@@ -58,24 +120,40 @@ def get_data(ticker, intervalStr, interval, start_date = None, end_date = None, 
         
     # get JSON response
     data = resp.json()
-    
-    candles = data["chart"]["result"][0]["indicators"]["quote"][0]
-    candles.setdefault('timestamp', data["chart"]["result"][0]["timestamp"])
+    data = data["chart"]["result"][0]
+
+    candles = data["indicators"]["quote"][0]
+    candles.setdefault('timestamp', data["timestamp"])
+    regularMarketTime = data['meta']['regularMarketTime']
+    sessionStartTime = data['meta']['currentTradingPeriod']['pre']['start']
+
+    amount = len(candles['timestamp'])
+    if amount > 0 and candles['timestamp'][-1] == regularMarketTime:
+        amount -= 1
 
     result = []
-    for i in range(len(candles['timestamp'])):
+    for i in range(amount):
         candle = []
-        candle.append(candles['timestamp'][i] * 1000)
+        openTime = candles['timestamp'][i]
+        closeTime = getExpectedCloseTime(openTime, intervalStr)
+
+        candle.append(openTime)
         candle.append(candles['open'][i])
         candle.append(candles['high'][i])
         candle.append(candles['low'][i])
         candle.append(candles['close'][i])
-        result.append(candle)
-    if len(result) > 1:
-        result[-1][0] = result[-2][0] + interval
-    elif len(result) == 1:
-        result[-1][0] = data["chart"]["result"][0]["meta"]["firstTradeDate"]
-    
+        candle.append(closeTime)
+        if isValidCandle(candle, regularMarketTime, sessionStartTime):
+            candle[0] *= 1000
+            candle[1] = round(candle[2], 2)
+            candle[2] = round(candle[3], 2)
+            candle[3] = round(candle[4], 2)
+            candle[4] = round(candle[5], 2)
+            candle[5] *= 1000
+            result.append(candle)
+        else:
+            break
+
     return result
 
 def tickers_sp500(include_company_data = False):

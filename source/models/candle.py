@@ -45,10 +45,20 @@ def fromJson(data, tf:str):
     result = Candle()
     result.interval = timeframe.Timeframe[tf]
     result.openTime = data[0]
-    result.closeTime = result.openTime + result.interval - 1
     result.time = datetime.fromtimestamp(result.openTime / 1000).strftime('%H:%M %d-%m-%Y')
     result.open = data[1]
     result.high = data[2]
     result.low = data[3]
     result.close = data[4]
+    result.closeTime = result.openTime + result.interval - 1
+    return result
+
+def toSpotJson(candle:Candle):
+    result = toJson(candle)
+    result.append(candle.closeTime)
+    return
+
+def fromSpotJson(data, tf:str):
+    result = fromJson(data, tf)
+    result.closeTime = data[5]
     return result

@@ -13,7 +13,8 @@ class Timeframe(IntEnum):
     EIGHT_HOUR = 28_800_000,
     TWELVE_HOUR = 43_200_000,
     ONE_DAY = 86_400_000,
-    ONE_WEEK = 604_800_000
+    ONE_WEEK = 604_800_000,
+    ONE_MONTH = 2_678_400_000 # 31 day be careful
 
 tfToYahooApiStr = {
     Timeframe.ONE_MIN : '1m',
@@ -22,7 +23,8 @@ tfToYahooApiStr = {
     Timeframe.THIRTY_MIN : '30m',
     Timeframe.ONE_HOUR : '1h',
     Timeframe.ONE_DAY : '1d',
-    Timeframe.ONE_WEEK : '1wk'
+    Timeframe.ONE_WEEK : '1wk',
+    Timeframe.ONE_MONTH: '1mo'
 }
 
 tfToBinanceApiStr = {
