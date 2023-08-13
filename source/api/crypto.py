@@ -1,8 +1,3 @@
-from api import apiRequests
-from api import apiLimits
-from models import candle
-from models import timeframe
-from utilities import utils
 from api.third_party.binance.spot import Spot as Spots
 from api.third_party.binance.um_futures import UMFutures as Futures
 from api.third_party.binance.websocket.spot.websocket_client import SpotWebsocketClient
@@ -14,6 +9,72 @@ import socket
 import struct
 import win32api
 import time
+
+from api import apiRequests
+from api import apiLimits
+from models import candle
+from models import timeframe
+from utilities import utils
+from systems import settingsController
+
+def getTickersList():
+    infoFutures = Future.getExchangeInfo()
+    basesFutures = dict()
+    exceptions = settingsController.getSetting('baseAssetsExceptions')
+    ignores = settingsController.getSetting('baseAssetsIgnores')
+    spotIgnore = settingsController.getSetting('spotSymbolsExceptions')
+    for symbol in infoFutures.get('symbols', []):
+        name = symbol.get('symbol', '')
+        status = symbol.get('status', '')
+        baseAsset = symbol.get('baseAsset', '')
+        quoteAsset = symbol.get('quoteAsset', '')
+        underlyingType = symbol.get('underlyingType', '')
+        contractType = symbol.get('contractType', '')
+
+        if status == 'TRADING' and underlyingType == 'COIN' and quoteAsset == 'USDT' and contractType == 'PERPETUAL':
+            if baseAsset in ignores:
+                continue
+            baseAsset = baseAsset.replace('1000', '')
+            if exceptions.get(baseAsset, None):
+                baseAsset = exceptions.get(baseAsset)
+            basesFutures.setdefault(baseAsset, name)
+
+    info = Spot.getExchangeInfo()
+    tickers = set()
+    basesSpot = set()
+    for symbol in info.get('symbols', []):
+        name = symbol.get('symbol', None)
+        baseAsset = symbol.get('baseAsset', '')
+        quoteAsset = symbol.get('quoteAsset', '')
+        status = symbol.get('status', '')
+        pricePrecision = 0
+        pricePrecisionFloat = 1.0
+
+        if status != 'TRADING' or quoteAsset != 'USDT':
+            continue
+
+        for filter in symbol.get('filters', {}):
+            if filter.get('filterType', '') == 'PRICE_FILTER':
+                pricePrecisionFloat = float(filter.get('tickSize', 1.0))
+                break
+
+        while pricePrecisionFloat < 1.0:
+            pricePrecision += 1
+            pricePrecisionFloat *= 10
+
+        for base in basesFutures.keys():
+            if baseAsset == base:
+                tickers.add((name, basesFutures[base], pricePrecision))
+                basesSpot.add(baseAsset)
+                break
+
+    diffs = set(basesFutures.keys()).symmetric_difference(basesSpot)
+    for spot in spotIgnore:
+        diffs.discard(spot)
+    if len(diffs) > 0:
+        utils.log('watcherController::getTickersList not spot symbols - ' + str(diffs))
+
+    return tickers
 
 class __binanceClient:
     def __init__(self, isSpot:bool):

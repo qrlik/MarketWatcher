@@ -3,8 +3,11 @@ from enum import IntEnum
 
 from api import stocks
 from api import crypto
+from api.third_party import yahoo
 from models import timeframe
 from utilities import workMode
+
+import time
 
 class CryptoMode(IntEnum):
     SPOT = 0,
@@ -16,15 +19,15 @@ def init():
     else:
         stocks.init()
 
-def getExchangeInfo(mode:CryptoMode = None):
+def isExpectNewCandles(openTime, interval:timeframe.Timeframe):
+    if workMode.isStock():
+        return yahoo.isExpectNewCandles(openTime, timeframe.tfToYahooApiStr[interval])
+
+def getTickersList():
     if workMode.isCrypto():
-        assert(mode is not None)
-        if mode == CryptoMode.SPOT:
-            return crypto.Spot.getExchangeInfo()
-        else:
-            return crypto.Future.getExchangeInfo()
+        return crypto.getTickersList()
     else:
-        pass
+        return stocks.getTickersList()
 
 def getPositions():
     if workMode.isCrypto():
@@ -49,3 +52,13 @@ def getCandlesByTimestamp(symbol: str, interval: timeframe.Timeframe, amount: in
 def getCandels(symbol: str, interval: timeframe.Timeframe, amount: int):
     if workMode.isCrypto():
         return crypto.Spot.getCandels(symbol, interval, amount)
+    
+def getStockCandels(symbol: str, interval: timeframe.Timeframe, startTime: int):
+    if workMode.isStock():
+        return stocks.getStockCandels(symbol, timeframe.tfToYahooApiStr[interval], startTime)
+    
+def getExpectedStartPoint(interval: timeframe.Timeframe, amount:int):
+    if interval not in [timeframe.Timeframe.ONE_DAY, timeframe.Timeframe.ONE_WEEK, timeframe.Timeframe.ONE_MONTH]:
+        raise AssertionError('error tf')
+    curTime = int(time.time())
+    return curTime - 2 * amount * interval / 1000

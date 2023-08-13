@@ -6,7 +6,7 @@ from systems import configController
 from systems import userDataController
 from systems import watcherController
 from utilities import guiDefines
-from widgets.filters import timeframesFilter
+from utilities import workMode
 
 import pyperclip
 import json
@@ -50,10 +50,11 @@ def __initButtons():
     __linkButton.setText('Spot')
     __linkButton.clicked.connect(__onOpenSpotLinkClicked)
 
-    layout = __widget.findChild(QHBoxLayout, 'positionLayout')
-    futureButton = QPushButton('Future')
-    layout.addWidget(futureButton)
-    futureButton.clicked.connect(__onOpenFutureLinkClicked)
+    if workMode.isCrypto():
+        layout = __widget.findChild(QHBoxLayout, 'positionLayout')
+        futureButton = QPushButton('Future')
+        layout.addWidget(futureButton)
+        futureButton.clicked.connect(__onOpenFutureLinkClicked)
 
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)

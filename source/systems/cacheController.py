@@ -33,7 +33,10 @@ def setLastConfigFilename(filename:str):
 
 def getCandles(ticker, timeframe):
     data = __candles.get(ticker, {}).pop(timeframe, [])
-    candles = [candle.fromJson(c, timeframe) for c in data]
+    if workMode.isCrypto():
+        candles = [candle.fromJson(c, timeframe) for c in data]
+    else:
+        candles = [candle.fromSpotJson(c, timeframe) for c in data]
     return candles
 
 def saveCandles():

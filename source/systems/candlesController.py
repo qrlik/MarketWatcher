@@ -7,6 +7,7 @@ from systems import cacheController
 from systems import settingsController
 from systems import websocketController
 from utilities import utils
+from utilities import workMode
 
 class CandlesController(QObject):
     def __init__(self, tf: timeframe.Timeframe):
@@ -33,7 +34,7 @@ class CandlesController(QObject):
     def __initCandles(self, amountForInit):
         self.__amountForCache = amountForInit
         self.__finishedCandles = cacheController.getCandles(self.__ticker, self.__timeframe.name)
-        if len(self.__finishedCandles) > 0:
+        if len(self.__finishedCandles) > 0 and workMode.isCrypto():
             self.__currentCandle = self.__finishedCandles.pop()
         self.__requestSync()
 
@@ -41,17 +42,27 @@ class CandlesController(QObject):
         if self.__requestId >= 0:
             return
         amountForRequest = self.__amountForCache + 1
+        needToRequest = True
         if self.__currentCandle and utils.getCurrentTime() < self.__currentCandle.closeTime:
             amountForRequest = 0
         elif len(self.__finishedCandles) > 0:
-            timeFromLastOpen = utils.getCurrentTime() - self.__finishedCandles[-1].openTime
-            amountFromLastOpen = int(timeFromLastOpen / self.__timeframe)
-            if amountFromLastOpen >= self.__amountForCache:
-                self.__finishedCandles = []
+            if workMode.isCrypto():
+                timeFromLastOpen = utils.getCurrentTime() - self.__finishedCandles[-1].openTime
+                amountFromLastOpen = int(timeFromLastOpen / self.__timeframe)
+                if amountFromLastOpen >= self.__amountForCache:
+                    self.__finishedCandles = []
+                else:
+                    amountForRequest = amountFromLastOpen + 1
             else:
-                amountForRequest = amountFromLastOpen + 1
-        if amountForRequest > 0:
-            self.__requestId = api.getCandels(self.__ticker, self.__timeframe, amountForRequest)
+                needToRequest = api.isExpectNewCandles(self.__finishedCandles[-1].openTime, self.__timeframe)
+        if workMode.isCrypto():
+            if amountForRequest > 0:
+                self.__requestId = api.getCandels(self.__ticker, self.__timeframe, amountForRequest)
+        elif needToRequest:
+            startPoint = api.getExpectedStartPoint(self.__timeframe, self.__amountForCache)
+            if len(self.__finishedCandles) > 0:
+                startPoint = self.__finishedCandles[-1].openTime
+            self.__requestId = api.getStockCandels(self.__ticker, self.__timeframe, startPoint)
 
     def __updateCandles(self, current, finished):
         self.__currentCandle = current
@@ -84,9 +95,9 @@ class CandlesController(QObject):
 
         if lastOpenFound:
             self.__currentCandle = None
-            if len(self.__finishedCandles) > 0:
+            if len(self.__finishedCandles) > 0 and workMode.isCrypto():
                 self.__currentCandle = self.__finishedCandles.pop()
-
+        self.__shrink()
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
@@ -96,6 +107,8 @@ class CandlesController(QObject):
         return beforeCandle.openTime + beforeCandle.interval == afterCandle.openTime
 
     def __syncFromWebsocket(self):
+        if workMode.isStock():
+            return True
         data = websocketController.getTickerData(self.__ticker, self.__timeframe)
         currentCandle = data[0]
         finishedCandle = data[1]
@@ -143,6 +156,10 @@ class CandlesController(QObject):
                 return True
         return True
 
+    def __shrink(self):
+        if len(self.__finishedCandles) > self.__amountForCache:
+            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
+
     def sync(self):
         if self.__requestId >= 0:
             if not self.__checkSyncResponse():
@@ -154,10 +171,13 @@ class CandlesController(QObject):
         return result
 
     def getJsonData(self):
-        if len(self.__finishedCandles) > self.__amountForCache:
-            self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
-        jsonData = [candle.toJson(c) for c in self.__finishedCandles]
-        if self.__currentCandle:
+        self.__shrink()
+        jsonData = []
+        if workMode.isCrypto():
+            jsonData = [candle.toJson(c) for c in self.__finishedCandles]
+        else:
+            jsonData = [candle.toSpotJson(c) for c in self.__finishedCandles]
+        if self.__currentCandle and workMode.isCrypto():
             jsonData.append(candle.toJson(self.__currentCandle))
         return jsonData
 

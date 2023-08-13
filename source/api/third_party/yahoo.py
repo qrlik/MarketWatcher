@@ -39,16 +39,17 @@ __postSession = 14400 # 4 hours
 __tradeSession = __postSession + __regularSession + __postSession
 
 def getExpectedCloseTime(openTime, interval):
+    dt = datetime.fromtimestamp(openTime)
     if interval == '1d':
-        return openTime + __regularSession
+        if isWeekend(dt.isoweekday()):
+            return None
+        return openTime + __regularSession + __postSession
     elif interval == '1wk':
-        dt = datetime.fromtimestamp(openTime)
         weekday = dt.isoweekday()
         if isWeekend(weekday):
             return None
         return openTime + (5 - weekday) * __oneDay + __tradeSession
     elif interval == '1mo':
-        dt = datetime.fromtimestamp(openTime)
         lastWorkDay = dt.day
         day = dt.day + 1
         while True:
@@ -60,20 +61,36 @@ def getExpectedCloseTime(openTime, interval):
             except Exception:
                 return openTime + (lastWorkDay - dt.day) * __oneDay + __tradeSession
     else:
-        return None
+        raise AssertionError("invalid interval")
 
-def isValidCandle(candle, regularMarketTime, sessionStartTime):
+def isExpectNewCandles(openTime, interval):
+    if interval not in ['1d', '1wk', '1mo']:
+        raise AssertionError("invalid interval")
+    openDt = datetime.fromtimestamp(openTime)
+    lastTimestamp = openTime + 86400
+    while True:
+        dt = datetime.fromtimestamp(lastTimestamp)
+        if interval == '1d' and not isWeekend(dt.isoweekday()) \
+        or interval == '1wk' and dt.isoweekday() == Weekday.MONDAY \
+        or interval == '1mo' and dt.month != openDt.month:
+            closeTime = getExpectedCloseTime(lastTimestamp, interval)
+            return closeTime < time.time()
+        lastTimestamp = openTime + 86400
+
+def isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
+    curTime = int(time.time())
     if candle[0] == regularMarketTime:
         return False
-    if candle[0] >= int(time.time()):
+    if candle[0] >= curTime:
         return False
     if candle[1] == None \
     or candle[2] == None \
     or candle[3] == None \
     or candle[4] == None:
         return False
-    if not candle[5] or candle[5] >= sessionStartTime:
-        return False
+    if curTime <= sessionEndTime:
+        if not candle[5] or candle[5] >= sessionStartTime:
+            return False
     if candle[0] % 10 > 0:
         x = 5
     return True
@@ -122,10 +139,15 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     data = resp.json()
     data = data["chart"]["result"][0]
 
+    if data['meta']['currency'] != 'USD':
+        print(ticker + ' wrong currency')
+        return
+
     candles = data["indicators"]["quote"][0]
     candles.setdefault('timestamp', data["timestamp"])
     regularMarketTime = data['meta']['regularMarketTime']
     sessionStartTime = data['meta']['currentTradingPeriod']['pre']['start']
+    sessionEndTime = data['meta']['currentTradingPeriod']['post']['end']
 
     amount = len(candles['timestamp'])
     if amount > 0 and candles['timestamp'][-1] == regularMarketTime:
@@ -143,7 +165,7 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
         candle.append(candles['low'][i])
         candle.append(candles['close'][i])
         candle.append(closeTime)
-        if isValidCandle(candle, regularMarketTime, sessionStartTime):
+        if isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
             candle[0] *= 1000
             candle[1] = round(candle[2], 2)
             candle[2] = round(candle[3], 2)

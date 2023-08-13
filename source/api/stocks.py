@@ -3,7 +3,7 @@ import api.third_party.yahoo as yahoo
 def init():
     pass
 
-def getTickers():
+def getTickersList():
     tickers = set()
     sp500 = yahoo.tickers_sp500()
     dow = yahoo.tickers_dow()
@@ -14,4 +14,13 @@ def getTickers():
     tickers.update(dow)
     #tickers.update(nasdaq)
     #tickers.update(other)
-    return sorted(list(tickers))
+    result = []
+    sortedTickets = sorted(list(tickers))
+    for ticket in sortedTickets:
+        result.append(ticket)
+        result.append('')
+        result.append(2)
+    return result
+
+def getStockCandels(symbol: str, interval: str, startTime: int):
+    return yahoo.get_data(symbol, interval, startTime)
