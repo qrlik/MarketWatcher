@@ -12,7 +12,7 @@ def setupWorkMode(mode:str):
     if isinstance(mode, str):
         mode = mode.upper()
         try:
-            __type = setupWorkMode[mode]
+            __type = WorkMode[mode]
         except:
             pass
 

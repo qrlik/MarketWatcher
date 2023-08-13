@@ -56,7 +56,7 @@ def fromJson(data, tf:str):
 def toSpotJson(candle:Candle):
     result = toJson(candle)
     result.append(candle.closeTime)
-    return
+    return result
 
 def fromSpotJson(data, tf:str):
     result = fromJson(data, tf)

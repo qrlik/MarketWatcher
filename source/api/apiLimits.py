@@ -7,16 +7,6 @@ __interval = 60000
 __maintenanceInterval = 120000
 __limited = False
 
-def parseRateLimits(data):
-    global __limits,__interval
-    if not isinstance(data, list):
-        utils.logError('apiLimits:parseRateLimits wrong data type ' + str(data))
-    for limit in data:
-        if limit.get('rateLimitType', '') != 'REQUEST_WEIGHT':
-            continue
-        if limit.get('interval', '') != 'MINUTE':
-            utils.logError('apiLimits:parseRateLimits unknown interval - ' + limit.get('interval', ''))
-
 def getAllowedAmount():
     return max(__limits - __current, 0)
 

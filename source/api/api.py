@@ -21,7 +21,7 @@ def init():
 
 def isExpectNewCandles(openTime, interval:timeframe.Timeframe):
     if workMode.isStock():
-        return yahoo.isExpectNewCandles(openTime, timeframe.tfToYahooApiStr[interval])
+        return yahoo.isExpectNewCandles(openTime / 1000, timeframe.tfToYahooApiStr[interval])
 
 def getTickersList():
     if workMode.isCrypto():
@@ -32,6 +32,7 @@ def getTickersList():
 def getPositions():
     if workMode.isCrypto():
         return crypto.Future.getPositions()
+    return []
 
 def getListenKey():
     if workMode.isCrypto():
@@ -62,3 +63,7 @@ def getExpectedStartPoint(interval: timeframe.Timeframe, amount:int):
         raise AssertionError('error tf')
     curTime = int(time.time())
     return curTime - 2 * amount * interval / 1000
+
+def atExit():
+    if workMode.isCrypto():
+        crypto.atExit()

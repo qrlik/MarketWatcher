@@ -3,6 +3,7 @@ from PySide6.QtCore import QThread
 from threading import Lock
 #import debugpy # Uncomment the next line to import debugpy for debugging this thread
 import asyncio
+import inspect
 
 from api import apiLimits
 from widgets import watcherWindow
@@ -29,7 +30,11 @@ class ApiRequests(QThread):
         self.__loop.run_forever()
 
     async def __requestTask(self, id, callback, *args):
-        result = await callback(*args)
+        result = None
+        if inspect.iscoroutinefunction(callback):
+            result = await callback(*args)
+        else:
+            result = callback(*args)
         with self.__responceLock:
             self.__responces.setdefault(id, result)
         with self.__taskLock:

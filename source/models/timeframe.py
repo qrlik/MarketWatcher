@@ -42,6 +42,17 @@ tfToBinanceApiStr = {
     Timeframe.ONE_DAY : '1d',
     Timeframe.ONE_WEEK : '1w' }
 
+yahooApiStrToTf = {
+    '1m': Timeframe.ONE_MIN,
+    '5m': Timeframe.FIVE_MIN,
+    '15m': Timeframe.FIFTEEN_MIN,
+    '30m': Timeframe.THIRTY_MIN,
+    '1h': Timeframe.ONE_HOUR,
+    '1d': Timeframe.ONE_DAY,
+    '1wk': Timeframe.ONE_WEEK,
+    '1mo': Timeframe.ONE_MONTH
+}
+
 binanceApiStrToTf = {
     '1m' : Timeframe.ONE_MIN,
     '3m' : Timeframe.THREE_MIN,
@@ -70,7 +81,8 @@ timeframeToPrettyStr = {
     Timeframe.EIGHT_HOUR : '8h',
     Timeframe.TWELVE_HOUR : '12h',
     Timeframe.ONE_DAY : 'D',
-    Timeframe.ONE_WEEK : 'W' }
+    Timeframe.ONE_WEEK : 'W',
+    Timeframe.ONE_MONTH : 'M' }
 
 def getPrettyFormat(timeframe:Timeframe):
     return timeframeToPrettyStr.get(timeframe)

@@ -20,7 +20,7 @@ __dataButton:QPushButton = None
 __linkButton:QPushButton = None
 __divergenceRatio:QProgressBar = None
 __tickerController = None
-__url = 'https://www.tradingview.com/chart/?symbol=BINANCE:'
+__url = 'https://www.tradingview.com/chart/?symbol='
 
 def init(parent):
     global __widget
@@ -142,12 +142,14 @@ def __openLink(link:str):
 def __onOpenSpotLinkClicked():
     if not __tickerController:
         return
-    __openLink(__url + __tickerController.getTicker())
+    url = __url if workMode.isStock() else __url + 'BINANCE:'
+    __openLink(url + __tickerController.getTicker())
 
 def __onOpenFutureLinkClicked():
     if not __tickerController:
         return
-    __openLink(__url + __tickerController.getFutureTicker() + '.P')
+    url = __url if workMode.isStock() else __url + 'BINANCE:'
+    __openLink(url + __tickerController.getFutureTicker() + '.P')
 
 def __updatePrice():
     price = None

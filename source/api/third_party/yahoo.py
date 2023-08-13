@@ -6,6 +6,10 @@ import time
 from enum import IntEnum
 from datetime import datetime
 
+from models import candle
+from models import timeframe
+from utilities import utils
+
 class Weekday(IntEnum):
     MONDAY = 1,
     TUESDAY = 2,
@@ -38,7 +42,7 @@ __regularSession = 23400 # 6,5 hours
 __postSession = 14400 # 4 hours
 __tradeSession = __postSession + __regularSession + __postSession
 
-def getExpectedCloseTime(openTime, interval):
+def __getExpectedCloseTime(openTime, interval):
     dt = datetime.fromtimestamp(openTime)
     if interval == '1d':
         if isWeekend(dt.isoweekday()):
@@ -61,11 +65,13 @@ def getExpectedCloseTime(openTime, interval):
             except Exception:
                 return openTime + (lastWorkDay - dt.day) * __oneDay + __tradeSession
     else:
-        raise AssertionError("invalid interval")
+        utils.logError('yahoo __getExpectedCloseTime invalid interval')
 
 def isExpectNewCandles(openTime, interval):
     if interval not in ['1d', '1wk', '1mo']:
-        raise AssertionError("invalid interval")
+        utils.logError('yahoo isExpectNewCandles invalid interval')
+        return
+    
     openDt = datetime.fromtimestamp(openTime)
     lastTimestamp = openTime + 86400
     while True:
@@ -73,11 +79,11 @@ def isExpectNewCandles(openTime, interval):
         if interval == '1d' and not isWeekend(dt.isoweekday()) \
         or interval == '1wk' and dt.isoweekday() == Weekday.MONDAY \
         or interval == '1mo' and dt.month != openDt.month:
-            closeTime = getExpectedCloseTime(lastTimestamp, interval)
+            closeTime = __getExpectedCloseTime(lastTimestamp, interval)
             return closeTime < time.time()
         lastTimestamp = openTime + 86400
 
-def isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
+def __isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
     curTime = int(time.time())
     if candle[0] == regularMarketTime:
         return False
@@ -92,9 +98,20 @@ def isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
         if not candle[5] or candle[5] >= sessionStartTime:
             return False
     if candle[0] % 10 > 0:
-        x = 5
+        utils.logError('yahoo isValidCandle not zero tail')
     return True
     
+def __parseResponse(data, interval):
+    c = candle.Candle()
+    c.interval = timeframe.yahooApiStrToTf[interval]
+    c.openTime = data[0] * 1000
+    c.time = datetime.fromtimestamp(data[0]).strftime('%H:%M %d-%m-%Y')
+    c.open = round(data[1], 2)
+    c.high = round(data[2], 2)
+    c.low = round(data[3], 2)
+    c.close = round(data[4], 2)
+    c.closeTime = data[5] * 1000
+    return c
 
 def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     if end_date is None:  
@@ -126,21 +143,22 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     '''
 
     if intervalStr not in ("1d", "1wk", "1mo"):
-        raise AssertionError("invalid interval")
+        utils.logError('yahoo get_data invalid interval')
+        return
     
     # build and connect to URL
     site, params = build_url(ticker, start_date, end_date, intervalStr)
     resp = requests.get(site, params = params, headers = headers)
     
     if not resp.ok:
-        raise AssertionError(resp.json())
+        utils.logError('yahoo get_data fail.' + str(resp.json()))
         
     # get JSON response
     data = resp.json()
     data = data["chart"]["result"][0]
 
     if data['meta']['currency'] != 'USD':
-        print(ticker + ' wrong currency')
+        utils.logError('yahoo get_data ' + ticker + ' wrong currency')
         return
 
     candles = data["indicators"]["quote"][0]
@@ -155,24 +173,18 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
 
     result = []
     for i in range(amount):
-        candle = []
+        data = []
         openTime = candles['timestamp'][i]
-        closeTime = getExpectedCloseTime(openTime, intervalStr)
+        closeTime = __getExpectedCloseTime(openTime, intervalStr)
 
-        candle.append(openTime)
-        candle.append(candles['open'][i])
-        candle.append(candles['high'][i])
-        candle.append(candles['low'][i])
-        candle.append(candles['close'][i])
-        candle.append(closeTime)
-        if isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
-            candle[0] *= 1000
-            candle[1] = round(candle[2], 2)
-            candle[2] = round(candle[3], 2)
-            candle[3] = round(candle[4], 2)
-            candle[4] = round(candle[5], 2)
-            candle[5] *= 1000
-            result.append(candle)
+        data.append(openTime)
+        data.append(candles['open'][i])
+        data.append(candles['high'][i])
+        data.append(candles['low'][i])
+        data.append(candles['close'][i])
+        data.append(closeTime)
+        if __isValidCandle(data, regularMarketTime, sessionStartTime, sessionEndTime):
+            result.append(__parseResponse(data, intervalStr))
         else:
             break
 
