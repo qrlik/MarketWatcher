@@ -18,7 +18,7 @@ class LoadingThread(QThread):
 
 	def run(self):
 		# Uncomment the next line to enable debugging in this thread
-		#debugpy.debug_this_thread()
+		# debugpy.debug_this_thread()
 		api.init()
 		soundNotifyController.init()
 		userDataController.init()

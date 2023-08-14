@@ -14,6 +14,8 @@ __pretime = settingsController.getSetting('soundNotifyPretime')
 
 def __getIntervalsAmount():
     global __interval,__startPoint
+    if __interval == 0:
+        return
     timeSincePoint = int(time.time()) - __startPoint
     return int(timeSincePoint / __interval)
 
@@ -29,6 +31,8 @@ def init():
 
 def update():
     global __interval,__pretime,__startPoint,__lastSoundedInterval
+    if __interval == 0:
+        return
     intervalsSincePoint = __getIntervalsAmount()
     if __lastSoundedInterval >= intervalsSincePoint:
         return

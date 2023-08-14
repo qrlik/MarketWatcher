@@ -81,7 +81,7 @@ def isExpectNewCandles(openTime, interval):
         or interval == '1mo' and dt.month != openDt.month:
             closeTime = __getExpectedCloseTime(lastTimestamp, interval)
             return closeTime < time.time()
-        lastTimestamp = openTime + 86400
+        lastTimestamp += 86400
 
 def __isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
     curTime = int(time.time())
