@@ -44,26 +44,30 @@ __tradeSession = __postSession + __regularSession + __postSession
 
 def __getExpectedCloseTime(openTime, interval):
     dt = datetime.fromtimestamp(openTime)
+    
     if interval == '1d':
         if isWeekend(dt.isoweekday()):
             return None
         return openTime + __regularSession + __postSession
+    
     elif interval == '1wk':
-        weekday = dt.isoweekday()
-        if isWeekend(weekday):
+        if isWeekend(dt.isoweekday()):
             return None
-        return openTime + (5 - weekday) * __oneDay + __tradeSession
+        return openTime + (5 - dt.isoweekday()) * __oneDay + __tradeSession
+    
     elif interval == '1mo':
-        lastWorkDay = dt.day
-        day = dt.day + 1
+        lastWorkDay = openTime
+        day = openTime + __oneDay
         while True:
-            try:
-                nextDt = dt.replace(day=day)
+            nextDt = datetime.fromtimestamp(day)
+            if nextDt.month == dt.month:
                 if not isWeekend(nextDt.isoweekday()):
                     lastWorkDay = day
-                day += 1
-            except Exception:
-                return openTime + (lastWorkDay - dt.day) * __oneDay + __tradeSession
+                day += __oneDay
+            else:
+                if lastWorkDay == openTime:
+                    return None
+                return lastWorkDay + __tradeSession
     else:
         utils.logError('yahoo __getExpectedCloseTime invalid interval')
 
@@ -73,7 +77,7 @@ def isExpectNewCandles(openTime, interval):
         return
     
     openDt = datetime.fromtimestamp(openTime)
-    lastTimestamp = openTime + 86400
+    lastTimestamp = openTime + __oneDay
     while True:
         dt = datetime.fromtimestamp(lastTimestamp)
         if interval == '1d' and not isWeekend(dt.isoweekday()) \
@@ -81,7 +85,7 @@ def isExpectNewCandles(openTime, interval):
         or interval == '1mo' and dt.month != openDt.month:
             closeTime = __getExpectedCloseTime(lastTimestamp, interval)
             return closeTime < time.time()
-        lastTimestamp += 86400
+        lastTimestamp += __oneDay
 
 def __isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime):
     curTime = int(time.time())
