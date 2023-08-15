@@ -1,5 +1,5 @@
 from PySide6.QtCore import QThread
-#import debugpy # Uncomment the next line to import debugpy for debugging this thread
+import debugpy # Uncomment the next line to import debugpy for debugging this thread
 
 from api import apiRequests
 from api import api
@@ -18,7 +18,7 @@ class LoadingThread(QThread):
 
 	def run(self):
 		# Uncomment the next line to enable debugging in this thread
-		# debugpy.debug_this_thread()
+		debugpy.debug_this_thread()
 		api.init()
 		soundNotifyController.init()
 		userDataController.init()
@@ -36,7 +36,6 @@ __isDone = False
 def __onLoadFinish():
 	global __isDone
 	__isDone = True
-	cacheController.saveCandles()
 	watcherTable.initList()
 	apiRequests.requester.start()
 	__thread.quit()

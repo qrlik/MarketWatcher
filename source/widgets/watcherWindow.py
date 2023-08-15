@@ -97,10 +97,10 @@ class WatcherWindow(QMainWindow):
             progress = apiRequests.requester.getProgress()
             if progress >= 0 and progress < 100:
                 self.__progressBar.setValue(progress)
-            else:
-                if not self.__loadedLogged:
-                    self.__loadedLogged = True
-                    self.log('Ready')
+            elif not self.__loadedLogged:
+                cacheController.saveCandles()
+                self.__loadedLogged = True
+                self.log('Ready')
                 self.__progressBar.setVisible(False)
 
     def closeEvent(self, event):

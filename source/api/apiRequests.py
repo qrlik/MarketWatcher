@@ -1,7 +1,7 @@
 
 from PySide6.QtCore import QThread
 from threading import Lock
-#import debugpy # Uncomment the next line to import debugpy for debugging this thread
+import debugpy # Uncomment the next line to import debugpy for debugging this thread
 import asyncio
 import inspect
 
@@ -23,8 +23,9 @@ class ApiRequests(QThread):
         self.__loop = asyncio.new_event_loop()
 
     def run(self):
-        #debugpy.debug_this_thread()
-        watcherWindow.window.log('Start request server data')
+        debugpy.debug_this_thread()
+        if self.__requestCounter > 0:
+            watcherWindow.window.log('Start request server data')
         asyncio.set_event_loop(self.__loop)
         self.__loop.call_soon_threadsafe(self.__processTasks)
         self.__loop.run_forever()
@@ -41,14 +42,20 @@ class ApiRequests(QThread):
             self.__tasksAmount -= 1
 
     def __processTasks(self):
-        newTasksAmount = len(self.__newTasks)
         allowedAmount = apiLimits.getAllowedAmount() - self.__tasksAmount
-        if allowedAmount >= newTasksAmount:
+        if allowedAmount > 0:
             with self.__taskLock:
+                if len(self.__newTasks) == 0:
+                    self.__loop.call_soon_threadsafe(self.__processTasks)
+                    return
+                
+                newTasksAmount = min(allowedAmount, len(self.__newTasks))
                 self.__tasksAmount += newTasksAmount
-                for task in self.__newTasks:
+
+                for i in range(newTasksAmount):
+                    task = self.__newTasks[i]
                     self.__loop.create_task(self.__requestTask(task[0], task[1], *task[2]))
-                self.__newTasks.clear()
+                self.__newTasks = self.__newTasks[newTasksAmount:]
         else:
             self.__loop.call_soon_threadsafe(self.__processTasks)
         

@@ -152,10 +152,18 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     
     # build and connect to URL
     site, params = build_url(ticker, start_date, end_date, intervalStr)
-    resp = requests.get(site, params = params, headers = headers)
-    
+    try:
+        resp = requests.get(site, params = params, headers = headers)
+    except requests.exceptions.ConnectTimeout:
+        utils.logError('yahoo get_data ConnectTimeout')
+        return []
+    except requests.exceptions.RequestException:
+        utils.logError('yahoo get_data RequestException')
+        return []
+
     if not resp.ok:
-        utils.logError('yahoo get_data fail.' + str(resp.json()))
+        utils.logError('yahoo get_data fail. ' + ticker + ' ' + str(resp.json()))
+        return []
         
     # get JSON response
     data = resp.json()
