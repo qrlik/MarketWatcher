@@ -169,9 +169,9 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     data = resp.json()
     data = data["chart"]["result"][0]
 
-    if data['meta']['currency'] != 'USD':
-        utils.logError('yahoo get_data ' + ticker + ' wrong currency')
-        return
+    #if data['meta']['currency'] != 'USD':
+        #utils.logError('yahoo get_data ' + ticker + ' wrong currency')
+        #return
 
     candles = data["indicators"]["quote"][0]
     candles.setdefault('timestamp', data["timestamp"])

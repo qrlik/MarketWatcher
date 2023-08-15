@@ -1,7 +1,7 @@
 
 from PySide6.QtCore import QThread
 from threading import Lock
-import debugpy # Uncomment the next line to import debugpy for debugging this thread
+#import debugpy # Uncomment the next line to import debugpy for debugging this thread
 import asyncio
 import inspect
 
@@ -23,7 +23,7 @@ class ApiRequests(QThread):
         self.__loop = asyncio.new_event_loop()
 
     def run(self):
-        debugpy.debug_this_thread()
+        #debugpy.debug_this_thread()
         if self.__requestCounter > 0:
             watcherWindow.window.log('Start request server data')
         asyncio.set_event_loop(self.__loop)

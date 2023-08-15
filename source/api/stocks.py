@@ -16,6 +16,11 @@ def getTickersList():
     #tickers.update(nasdaq)
     #tickers.update(other)
     result = []
+
+    # tmp exception list
+    tickers.discard('BRK.B')
+    tickers.discard('BF.B')
+
     sortedTickets = sorted(list(tickers))
     for ticket in sortedTickets:
         data = []
