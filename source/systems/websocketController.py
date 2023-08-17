@@ -88,7 +88,7 @@ def parseCandle(data):
     c.interval = timeframe.binanceApiStrToTf.get(data['i'])
     c.openTime = data['t']
     c.closeTime = data['T']
-    c.time = datetime.fromtimestamp(c.openTime / 1000).strftime('%H:%M %d-%m-%Y')
+    c.time = candle.getPrettyTime(c.openTime, c.interval)
     c.open = float(data['o'])
     c.high = float(data['h'])
     c.low = float(data['l'])

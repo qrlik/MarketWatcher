@@ -109,7 +109,7 @@ def __parseResponse(data, interval):
     c = candle.Candle()
     c.interval = timeframe.yahooApiStrToTf[interval]
     c.openTime = data[0] * 1000
-    c.time = datetime.fromtimestamp(data[0]).strftime('%H:%M %d-%m-%Y')
+    c.time = candle.getPrettyTime(c.openTime, c.interval)
     c.open = round(data[1], 2)
     c.high = round(data[2], 2)
     c.low = round(data[3], 2)

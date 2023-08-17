@@ -32,6 +32,15 @@ class Candle:
         and self.low == __value.low \
         and self.close == __value.close
 
+def getPrettyTime(timestamp, interval):
+    dt = datetime.fromtimestamp(timestamp / 1000)
+    if interval == timeframe.Timeframe.ONE_MONTH \
+        or interval == timeframe.Timeframe.ONE_WEEK \
+        or interval == timeframe.Timeframe.ONE_DAY:
+        return dt.strftime('%d %b %y')
+    else:
+        return dt.strftime('%H:%M %d %b')
+
 def toJson(candle:Candle):
     result = []
     result.append(candle.openTime)
@@ -45,7 +54,7 @@ def fromJson(data, tf:str):
     result = Candle()
     result.interval = timeframe.Timeframe[tf]
     result.openTime = data[0]
-    result.time = datetime.fromtimestamp(result.openTime / 1000).strftime('%H:%M %d-%m-%Y')
+    result.time = getPrettyTime(result.openTime, result.interval)
     result.open = data[1]
     result.high = data[2]
     result.low = data[3]

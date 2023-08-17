@@ -59,13 +59,14 @@ def __initButtons():
 def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
     __tabs.tabBar().setExpanding(True)
-    __tabs.setFixedHeight(75)
+    __tabs.setFixedHeight(105)
 
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
         tabWidget.setObjectName(tf.name)
         __tabs.addTab(tabWidget, timeframe.getPrettyFormat(tf))
         tabWidget.setLayout(QVBoxLayout())
+        __initCandleTime(tabWidget)
         __initRsi(tabWidget)
         __initAtr(tabWidget)
         tabWidget.layout().addStretch()
@@ -73,6 +74,20 @@ def __initTabs():
 def __initProgressBar():
     global __divergenceRatio
     __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheet())
+
+def __initCandleTime(tab:QWidget):
+    layout = QHBoxLayout()
+    layout.setObjectName('timeLayout')
+    tab.layout().addLayout(layout)
+
+    rsiLabel = QLabel('Date')
+    rsiLabel.setObjectName('dateLabel')
+    layout.addWidget(rsiLabel)
+    layout.addStretch()
+
+    rsiValue = QLabel('-')
+    rsiValue.setObjectName('dateValue')
+    layout.addWidget(rsiValue)
 
 def __initRsi(tab:QWidget):
     layout = QHBoxLayout()
@@ -179,11 +194,14 @@ def __updateProgressBar():
         __divergenceRatio.setStyleSheet(guiDefines.getEmptyProgressBarSheet())
         __divergenceRatio.setValue(0)
 
-def __updateTabValues(tabWidget:QWidget, cndlesController):
+def __updateTabValues(tabWidget:QWidget, candlesController):
     candle = None
-    candles = cndlesController.getFinishedCandles()
+    candles = candlesController.getFinishedCandles()
     if len(candles) > 0:
         candle = candles[-1]
+
+    dateValue = tabWidget.findChild(QLabel, 'dateValue')
+    dateValue.setText(str(candle.time if candle else candle))
 
     atrValue = tabWidget.findChild(QLabel, 'atrValue')
     atrValue.setText(str(candle.atr if candle else candle))
