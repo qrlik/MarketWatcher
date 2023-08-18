@@ -136,7 +136,7 @@ def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
 def is_valid_data(ticker, data):
     # to do add check for price prec
     currency = data['meta']['currency']
-    precision = data['meta']['precision']
+    precision = data['meta']['priceHint']
     if isinstance(currency, str) and currency != 'USD':
         utils.logError('yahoo get_data ' + ticker + ' wrong currency')
         return False
