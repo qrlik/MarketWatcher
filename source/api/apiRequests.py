@@ -42,11 +42,11 @@ class ApiRequests(QThread):
             self.__tasksAmount -= 1
 
     def __processTasks(self):
+        self.__loop.call_soon_threadsafe(self.__processTasks)
         allowedAmount = apiLimits.getAllowedAmount() - self.__tasksAmount
         if allowedAmount > 0:
             with self.__taskLock:
                 if len(self.__newTasks) == 0:
-                    self.__loop.call_soon_threadsafe(self.__processTasks)
                     return
                 
                 newTasksAmount = min(allowedAmount, len(self.__newTasks))
@@ -56,16 +56,12 @@ class ApiRequests(QThread):
                     task = self.__newTasks[i]
                     self.__loop.create_task(self.__requestTask(task[0], task[1], *task[2]))
                 self.__newTasks = self.__newTasks[newTasksAmount:]
-        else:
-            self.__loop.call_soon_threadsafe(self.__processTasks)
         
     def addAsyncRequest(self, callback, *args):
         requestId = self.__requestCounter
         with self.__taskLock:
             self.__requestCounter += 1
             self.__newTasks.append((requestId, callback, args))
-        if self.__loop.is_running():
-            self.__loop.call_soon_threadsafe(self.__processTasks)
         return requestId
 
     def getResponse(self, id):
