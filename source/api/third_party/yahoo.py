@@ -133,6 +133,18 @@ def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     params = {"period1": start_seconds, "period2": end_seconds, "interval": interval.lower()} #, "events": "div,splits"}
     return site, params
 
+def is_valid_data(ticker, data):
+    # to do add check for price prec
+    currency = data['meta']['currency']
+    precision = data['meta']['precision']
+    if isinstance(currency, str) and currency != 'USD':
+        utils.logError('yahoo get_data ' + ticker + ' wrong currency')
+        return False
+    if isinstance(precision, int) and precision != 2:
+        utils.logError('yahoo get_data ' + ticker + ' wrong precision')
+        return False
+    return True
+
 def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -162,16 +174,19 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
         return []
 
     if not resp.ok:
-        utils.logError('yahoo get_data fail. ' + ticker + ' ' + str(resp.json()))
+        code = resp.status_code
+        try:
+            utils.logError('yahoo get_data fail. ' + ticker + ' ' + str(code) + '. ' + str(resp.json()))
+        except ValueError:
+            utils.logError('yahoo get_data fail. ' + ticker + ' ' + str(code) + '.empty response')
         return []
         
     # get JSON response
     data = resp.json()
     data = data["chart"]["result"][0]
 
-    #if data['meta']['currency'] != 'USD':
-        #utils.logError('yahoo get_data ' + ticker + ' wrong currency')
-        #return
+    if not is_valid_data(ticker, data):
+        return []
 
     candles = data["indicators"]["quote"][0]
     candles.setdefault('timestamp', data["timestamp"])
