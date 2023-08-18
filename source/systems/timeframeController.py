@@ -20,7 +20,7 @@ class TimeframeController:
         self.__ticker = tckController
         self.__data = TimeframeData(tf)
         self.__data.candlesController.init(self.__ticker.getTicker(), self.__getCandlesAmountForInit())
-        self.__data.atrController.init(self.__data.candlesController, self.__ticker.getPricePrecision())
+        self.__data.atrController.init(self.__data.candlesController)
         self.__data.rsiController.init(self.__data.candlesController)
         self.__data.divergenceController.init(self.__data.candlesController)
         self.__data.vertexController.init(self.__data.candlesController)

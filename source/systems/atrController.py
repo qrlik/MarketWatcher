@@ -1,15 +1,13 @@
 from systems import settingsController
-
+from models import timeframe
 class AtrController:
     def __init__(self):
         self.__candleController = None
         self.__size = settingsController.getSetting('atrAverageLength')
-        self.__precision = 0
         self.__reset()
 
-    def init(self, candleController, precision:int):
+    def init(self, candleController):
         self.__candleController = candleController
-        self.__precision = precision
 
     def setSize(self, size):
         self.__size = size
@@ -67,8 +65,7 @@ class AtrController:
         
         for candle in candles:
             self.__addTrueRange(self.__calculateTrueRange(candle))
-            #atr = self.__calculateExpAverage()
-            atr = self.__calculateWeightAverage()
-            candle.atr = round(atr, self.__precision) if atr else None
+            #atr = self.__calculateExpAverage() # check for None if uncomment
+            candle.atr = self.__calculateWeightAverage()
             self.__updateCandles(candle)
             

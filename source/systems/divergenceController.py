@@ -109,7 +109,7 @@ class DivergenceController:
 
     def __calculateRegularBreak(self, info: DivergenceInfo):
         rsiToBreak = info.firstCandle.rsi
-        rsToBreak = 100 / (100 - rsiToBreak) - 1
+        rsToBreak = 100 / (100 - rsiToBreak) - 1 if rsiToBreak < 100 else 100
         alpha = 1 / self.__rsiSize
         if info.signal == DivergenceSignalType.BEAR: #isHigh
             downMa = (1 - alpha) * info.secondCandle.lastDownMaValue
