@@ -8,17 +8,20 @@ from api.third_party import yahoo
 from models import candle
 from models import timeframe
 
+import datetime
+
 def testAll():
     testAtr.test()
     testRsi.test()
     testVertex.test()
 
 if __name__ == '__main__':
-    tickers = stocks.getTickers()
-    interval = timeframe.Timeframe.ONE_DAY
-    for ticker in tickers:
-        data = yahoo.get_data(ticker, timeframe.tfToYahooApiStr[interval], interval, start_date = '07/01/2023', )
-        candles = [candle.fromJson(c, interval.name) for c in data]
-        x = 1
-
     #testAll()
+    
+    tickers = stocks.getTickersList()
+    interval = timeframe.Timeframe.ONE_MONTH
+    for ticker in tickers:
+        data = yahoo.get_data(ticker[0], timeframe.tfToYahooApiStr[interval], start_date = '07/01/2022', )
+        x = 1
+    #https://query1.finance.yahoo.com/v8/finance/chart/A
+    #https://query1.finance.yahoo.com/v8/finance/chart/A?interval=1mo&period1=1656633600&period2=1692598401

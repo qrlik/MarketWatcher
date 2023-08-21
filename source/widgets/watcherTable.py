@@ -90,7 +90,7 @@ def __updateRatio():
 
 
 def __updateList():
-    global __watcherTable,__sortColumn
+    global __watcherTable
     for r in range(__watcherTable.rowCount()):
         for c in range(0, __watcherTable.columnCount()):
             __watcherTable.item(r, c).update()

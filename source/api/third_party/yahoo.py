@@ -194,12 +194,8 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     sessionStartTime = data['meta']['currentTradingPeriod']['pre']['start']
     sessionEndTime = data['meta']['currentTradingPeriod']['post']['end']
 
-    amount = len(candles['timestamp'])
-    if amount > 0 and candles['timestamp'][-1] == regularMarketTime:
-        amount -= 1
-
     result = []
-    for i in range(amount):
+    for i in range(len(candles['timestamp'])):
         data = []
         openTime = candles['timestamp'][i]
         closeTime = __getExpectedCloseTime(openTime, intervalStr)

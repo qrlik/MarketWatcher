@@ -3,7 +3,6 @@ from PySide6.QtCore import QThread
 
 from api import apiRequests
 from api import api
-from systems import cacheController
 from systems import configController
 from systems import soundNotifyController
 from systems import userDataController

@@ -27,6 +27,8 @@ def main():
     utils.log('====================== PROGRAMM STARTED ======================')
     utils.logError('====================== PROGRAMM STARTED ======================')
 
+    workMode.setupWorkMode('STOCK')
+
     if len(sys.argv) > 1:
         workMode.setupWorkMode(sys.argv[1])
     cacheController.load()
@@ -59,6 +61,10 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
+        # if self.__ticker == 'AAON' and self.__timeframe == timeframe.Timeframe.ONE_WEEK:
+        #     x = 5
+
+# check for expected last candle
 # fix 1000shib opened order
 # add power round 2
 

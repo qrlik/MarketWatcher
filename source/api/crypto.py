@@ -68,7 +68,7 @@ def getTickersList():
                 basesSpot.add(baseAsset)
                 break
 
-    diffs = set(basesFutures.keys()).symmetric_difference(basesSpot)
+    diffs = set(basesFutures.keys()).symmetric_difference(basesSpot) # to do check mb difference
     for spot in spotIgnore:
         diffs.discard(spot)
     if len(diffs) > 0:
