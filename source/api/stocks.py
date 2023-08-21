@@ -24,19 +24,11 @@ def getTickersList(withExcept=True):
     tickers.update(dow)
     tickers.update(nasdaq)
     #tickers.update(other)
-    result = []
 
     if withExcept:
         tickers = __exceptTickers(tickers)
 
-    sortedTickets = sorted(list(tickers))
-    for ticket in sortedTickets:
-        data = []
-        data.append(ticket)
-        data.append('')
-        data.append(2)
-        result.append(data)
-    return result
+    return sorted(list(tickers))
 
 def getStockCandels(symbol: str, interval: str, startTime: int):
     return apiRequests.requester.addAsyncRequest(yahoo.get_data, symbol, interval, startTime)

@@ -27,7 +27,14 @@ def getTickersList():
     if workMode.isCrypto():
         return crypto.getTickersList()
     else:
-        return stocks.getTickersList()
+        result = []
+        for ticket in stocks.getTickersList():
+            data = []
+            data.append(ticket)
+            data.append('')
+            data.append(2)
+            result.append(data)
+        return result
 
 def getPositions():
     if workMode.isCrypto():
