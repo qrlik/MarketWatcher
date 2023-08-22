@@ -6,6 +6,7 @@ from systems import watcherController
 from widgets import infoWidget
 from widgets.watcherTableItems import tickerNameItem
 from widgets.watcherTableItems import divergenceAccumulatePowerItem
+from utilities import workMode
 
 __watcherTable:QTableWidget = None
 __bullBar:QProgressBar = None
@@ -35,9 +36,14 @@ def __initTable():
 
 def __initRatio():
     global __bullBar,__bearBar,__emptyBar
-    __bullBar.setStyleSheet('QProgressBar::chunk { background: darkGreen }')
-    __bearBar.setStyleSheet('QProgressBar::chunk { background: darkRed }')
-    __emptyBar.setStyleSheet('QProgressBar::chunk { background: darkGray }')
+    if workMode.isStock():
+        __bullBar.deleteLater()
+        __bearBar.deleteLater()
+        __emptyBar.deleteLater()
+    else:
+        __bullBar.setStyleSheet('QProgressBar::chunk { background: darkGreen }')
+        __bearBar.setStyleSheet('QProgressBar::chunk { background: darkRed }')
+        __emptyBar.setStyleSheet('QProgressBar::chunk { background: darkGray }')
 
 def initList():
     global __watcherTable
@@ -49,19 +55,22 @@ def initList():
         __watcherTable.setItem(row, 1, divergenceAccumulatePowerItem.DivergenceAccumulatePowerItem(ticker))
         row += 1
 
-def __sortList():
+def sortList():
     global __watcherTable,__sortColumn
     if __sortColumn == 0:
         __watcherTable.sortItems(__sortColumn, order = Qt.SortOrder.AscendingOrder)
     elif __sortColumn == 1:
         __watcherTable.sortItems(__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
-def update():
+def update(withList):
     __updateRatio()
-    __updateList()
+    if withList:
+        __updateList()
     __updateInfoWidget()
 
 def __updateRatio():
+    if workMode.isStock():
+        return
     global __bullBar,__bearBar,__emptyBar,__watcherTable
     bullTickers = 0
     bearTickers = 0
@@ -94,13 +103,13 @@ def __updateList():
     for r in range(__watcherTable.rowCount()):
         for c in range(0, __watcherTable.columnCount()):
             __watcherTable.item(r, c).update()
-    __sortList()
+    sortList()
 
 def __updateSortOrder(index):
     global __sortColumn
     if index != __sortColumn and (index == 0 or index == 1):
         __sortColumn = index
-        __sortList()
+        sortList()
 
 def __updateInfoWidget():
     global __watcherTable

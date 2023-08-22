@@ -6,6 +6,7 @@ from playsound import playsound
 from models import timeframe
 from widgets import watcherWindow
 from utilities import utils
+from utilities import workMode
 
 __startPoint = 1685923200
 __lastSoundedInterval = -1
@@ -20,6 +21,8 @@ def __getIntervalsAmount():
     return int(timeSincePoint / __interval)
 
 def init():
+    if workMode.isStock():
+        return
     global __interval,__lastSoundedInterval
     __interval = int(configController.getTimeframes()[0] / 1000)
 
@@ -30,6 +33,8 @@ def init():
         __lastSoundedInterval -= 1
 
 def update():
+    if workMode.isStock():
+        return
     global __interval,__pretime,__startPoint,__lastSoundedInterval
     if __interval == 0:
         return

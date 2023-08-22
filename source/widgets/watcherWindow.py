@@ -21,6 +21,7 @@ from widgets.filters import filterWidget
 from widgets import watcherTable
 from widgets import infoWidget
 from utilities import utils
+from utilities import workMode
 
 class WatcherWindow(QMainWindow):
     def __init__(self):
@@ -87,7 +88,7 @@ class WatcherWindow(QMainWindow):
 
         watcherController.loop()
         userDataController.update()
-        watcherTable.update()
+        watcherTable.update(False if workMode.isStock() else True) # list will not be updated for crypto runtime changes from websocket
         soundNotifyController.update()
 
     def __updateProgressBar(self):
@@ -97,8 +98,11 @@ class WatcherWindow(QMainWindow):
             progress = apiRequests.requester.getProgress()
             if progress >= 0 and progress < 100:
                 self.__progressBar.setValue(progress)
-            elif not self.__loadedLogged:
+            elif not self.__loadedLogged: # -1 or 100
                 cacheController.saveCandles()
+                if workMode.isStock():
+                    watcherTable.update(True)
+
                 self.__loadedLogged = True
                 self.log('Ready')
                 self.__progressBar.setVisible(False)

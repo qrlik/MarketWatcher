@@ -5,6 +5,7 @@ import time
 from api import api
 from utilities import guiDefines
 from utilities import utils
+from utilities import workMode
 
 __data:dict = {}
 __keyTime = 0
@@ -99,12 +100,16 @@ def __userDataStream(data):
                 info.parsePositionStream(time, pos)
 
 def init():
+    if workMode.isStock():
+        return
     global __keyTime
     __requestPositions()
     api.subscribePositions(__userDataStream)
     __keyTime = int(time.time())
 
 def update():
+    if workMode.isStock():
+        return
     global __keyTime
     curTime = int(time.time())
     if curTime - __keyTime >= 3000: #update key every 50 min
