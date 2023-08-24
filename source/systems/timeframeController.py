@@ -31,14 +31,13 @@ class TimeframeController:
         amount = max(amount, self.__data.divergenceController.getCandlesAmountForInit())
         return amount
 
-    def isSync(self):
-        return self.__data.candlesController.sync()
-
     def loop(self):
-        self.__data.atrController.process()
-        self.__data.rsiController.process()
-        self.__data.vertexController.process()
-        self.__data.divergenceController.process()
+        if self.__data.candlesController.sync():
+            self.__data.atrController.process()
+            self.__data.rsiController.process()
+            self.__data.vertexController.process()
+            self.__data.divergenceController.process()
+            self.__data.candlesController.markClean()
 
     def getTimeframe(self):
         return self.__data.timeframe

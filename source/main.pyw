@@ -27,7 +27,7 @@ def main():
     utils.log('====================== PROGRAMM STARTED ======================')
     utils.logError('====================== PROGRAMM STARTED ======================')
 
-    workMode.setupWorkMode('STOCK')
+    #workMode.setupWorkMode('STOCK')
 
     if len(sys.argv) > 1:
         workMode.setupWorkMode(sys.argv[1])

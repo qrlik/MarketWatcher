@@ -185,7 +185,7 @@ def exitApp():
     
 if __name__ == '__main__':
     runApp()
-    app.checkTickersList(['CLOV'])
+    app.checkTickersList(['CLOV', 'ENERU', 'AAPL'])
     while app.isLoading():
         pass
     x = 5

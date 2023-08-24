@@ -37,9 +37,10 @@ class CandlesController(QObject):
         if len(self.__finishedCandles) > 0 and workMode.isCrypto():
             self.__currentCandle = self.__finishedCandles.pop()
         self.__requestSync()
+        self.__initDirty = True
 
     def __requestSync(self):
-        if self.__requestId >= 0:
+        if self.__isWaitResponse():
             return
         amountForRequest = self.__amountForCache + 1
         needToRequest = True
@@ -69,8 +70,12 @@ class CandlesController(QObject):
         if finished:
             self.__finishedCandles.append(finished)
 
+    def __isWaitResponse(self):
+        return self.__requestId >= 0
+
     def __checkSyncResponse(self):
-        if self.__requestId == -1:
+        # return True if last finished candle changed
+        if not self.__isWaitResponse():
             return False
         response = apiRequests.requester.getResponse(self.__requestId)
         if response is None:
@@ -78,37 +83,46 @@ class CandlesController(QObject):
         self.__requestId = -1
 
         lastOpenFound = False
+        isDirty = False
         startTimestamp = settingsController.getTickerStartTimestamp(self.__ticker)
         if startTimestamp:
             response = [c for c in response if c.closeTime >= startTimestamp]
             
         if len(self.__finishedCandles) == 0:
             lastOpenFound = True
+            isDirty = True
             self.__finishedCandles.extend(response)
         else:
             lastOpen = self.__finishedCandles[-1].openTime
             for candle in response:
                 if lastOpenFound:
+                    isDirty = True
                     self.__finishedCandles.append(candle)
                 elif lastOpen == candle.openTime:
                     lastOpenFound = True
 
-        if lastOpenFound:
+        if isDirty:
             self.__currentCandle = None
             if len(self.__finishedCandles) > 0 and workMode.isCrypto():
                 self.__currentCandle = self.__finishedCandles.pop()
+
         self.__shrink()
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
-        return True
+        return isDirty
 
     def __isCandleAfter(self, afterCandle, beforeCandle):
         return beforeCandle.openTime + beforeCandle.interval == afterCandle.openTime
 
+    def __resync(self):
+        utils.log('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
+        self.__requestSync()
+
     def __syncFromWebsocket(self):
+        # return True if last finished candle changed
         if workMode.isStock():
-            return True
+            return False
         data = websocketController.getTickerData(self.__ticker, self.__timeframe)
         currentCandle = data[0]
         finishedCandle = data[1]
@@ -116,23 +130,25 @@ class CandlesController(QObject):
             if self.__currentCandle:
                 if self.__currentCandle.openTime == currentCandle.openTime:
                     self.__updateCandles(currentCandle, None)
-                    return True
+                    return False
                 elif finishedCandle and self.__isCandleAfter(currentCandle, self.__currentCandle):
                     self.__updateCandles(currentCandle, finishedCandle)
                     return True
                 elif currentCandle.openTime > self.__currentCandle.openTime:
+                    self.__resync()
                     return False
-                return True
+                return False
             elif len(self.__finishedCandles) > 0:
                 if self.__isCandleAfter(currentCandle, self.__finishedCandles[-1]):
                     self.__updateCandles(currentCandle, None)
-                    return True
+                    return False
                 elif finishedCandle and self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
                     self.__updateCandles(currentCandle, finishedCandle)
                     return True
                 elif currentCandle.openTime > self.__finishedCandles[-1].openTime:
+                    self.__resync()
                     return False
-                return True
+                return False
             else:
                 self.__updateCandles(currentCandle, finishedCandle)
                 return True
@@ -142,33 +158,38 @@ class CandlesController(QObject):
                     self.__updateCandles(None, finishedCandle)
                     return True
                 elif finishedCandle.openTime > self.__currentCandle.openTime:
+                    self.__resync()
                     return False
-                return True
+                return False
             elif len(self.__finishedCandles) > 0:
                 if self.__isCandleAfter(finishedCandle, self.__finishedCandles[-1]):
                     self.__updateCandles(None, finishedCandle)
                     return True
                 elif finishedCandle.openTime > self.__finishedCandles[-1].openTime:
+                    self.__resync()
                     return False
-                return True
+                return False
             else:
                 self.__updateCandles(None, finishedCandle)
                 return True
-        return True
+        return False
 
     def __shrink(self):
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
 
     def sync(self):
-        if self.__requestId >= 0:
-            if not self.__checkSyncResponse():
-                return False
-        result = self.__syncFromWebsocket()
-        if not result:
-            utils.log('candlesController resync - ' + self.__ticker + ' ' + self.__timeframe.name)
-            self.__requestSync()
-        return result
+        isDirty = self.__initDirty
+        if self.__isWaitResponse():
+            isDirty |= self.__checkSyncResponse()
+            if not self.__isWaitResponse() and workMode.isStock():
+                return isDirty
+        if not self.__isWaitResponse():
+            isDirty |= self.__syncFromWebsocket()
+        return isDirty
+
+    def markClean(self):
+        self.__initDirty = False
 
     def getJsonData(self):
         self.__shrink()
