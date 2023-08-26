@@ -7,11 +7,21 @@ def init():
 
 def __exceptTickers(tickers):
     exceptions = set()
-    data = utils.loadJsonFile(utils.assetsFolder + 'stockExceptions')
-    for _, list in data.items():
+    correct = set()
+    data = utils.loadJsonFile(utils.assetsFolder + 'stockData')
+
+    for _, list in data.get('exceptions', {}).items():
         exceptions.update(list)
-    result = tickers.difference(exceptions)
-    return result
+    for ticker, _ in data.get('data', {}).items():
+        correct.add(ticker)
+
+    correctAndNew = tickers.difference(exceptions)
+    new = correctAndNew.difference(correct)
+
+    if len(new) > 0:
+        utils.log('Have new ' + str(len(new)) + ' tickers, run script')
+
+    return correctAndNew.difference(new)
 
 def getTickersList(withExcept=True):
     tickers = set()
