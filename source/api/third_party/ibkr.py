@@ -1,6 +1,7 @@
 from ibapi.client import *
-from ibapi.common import ListOfContractDescription, ListOfPriceIncrements, TickerId
+from ibapi.common import TickerId
 from ibapi.wrapper import *
+from collections import OrderedDict
 from threading import Thread
 from enum import IntEnum
 import time
@@ -12,19 +13,20 @@ class StepType(IntEnum):
     DONE = 3
 
 class CheckApp(EWrapper, EClient):
+    __correctTypes = ['COMMON', 'ADR', 'REIT', 'MLP', 'NY REG SHRS', 'ROYALTY TRST']
+    __wrongTypes = ['UNIT', 'ETN', 'ETF', 'ETP', 'CLOSED-END FUND', 'RIGHT', 'PREFERRED', 'CONVPREFERRED', 'TRACKING STK', 'LTD PART', '']
+
     def __init__(self):
         EClient.__init__(self, self)
 
         self.__reset()
         self.__step = StepType.NONE
-        #self.__startLength = 0
         self.__contractCounter = 0
         self.__lastProgress = 0
 
-        #self.__marketRuleIds = {}
-        self.__notFound = set()
-        self.__wrongTick = set()
-        self.__result = set()
+        self.__data = OrderedDict()
+        self.__exceptions = OrderedDict()
+        self.__ruleIds = set()  # to do info
 
     def checkTickersList(self, possibleTickers):
         id = 0
@@ -53,7 +55,6 @@ class CheckApp(EWrapper, EClient):
         if self.__progress < len(self.__checkDict):
             ticker = self.__checkDict[self.__progress]
             if self.__step == StepType.SEARCH:
-                #self.reqMatchingSymbols(self.__progress, self.__checkDict[self.__progress])
                 self.__contractCounter = 0
                 contract = Contract()
                 contract.symbol = ticker
@@ -68,53 +69,35 @@ class CheckApp(EWrapper, EClient):
                 self.__reset()
                 self.__step = StepType.DONE
                 
-                self.__notFound = sorted(list(self.__notFound))
-                self.__wrongTick = sorted(list(self.__wrongTick))
-                
-                #self.checkTickersList(self.__result)
+                for _, list in self.__exceptions.items():
+                    list = sorted(list)
             else:
-                self.__wrongTick = sorted(list(self.__wrongTick))
                 self.__step = StepType.DONE
+
+    def __addException(self, name, value):
+        self.__exceptions.setdefault(name, []).append(value)
 
     def error(self, reqId: TickerId, errorCode: int, errorString: str):
         if errorCode == 200 and reqId >= 0 and reqId < len(self.__checkDict) and self.__step != StepType.NONE and self.__step != StepType.DONE:
-            self.__notFound.add(self.__checkDict[reqId])
+            self.__addException('notFound', self.__checkDict[reqId])
             self.__progress += 1
             self.__logProgress()
             self.__requestNext()
         else:
             return super().error(reqId, errorCode, errorString)
 
-    # def symbolSamples(self, reqId: int, contractDescriptions: ListOfContractDescription):
-    #     found = False
-    #     wrongCurrency = True
-    #     wrongType = True
-    #     expectedSymbol = self.__checkDict[reqId]
-
-    #     for contract in contractDescriptions:
-    #         contract = contract.contract
-    #         symbol = contract.symbol
-    #         if symbol != expectedSymbol:
-    #             continue
-    #         found = True
-    #         if contract.currency == 'USD':
-    #             wrongCurrency = False
-    #         if contract.secType == 'STK':
-    #             wrongType = False
-              
-    #     if not found:
-    #         self.__notFound.add(expectedSymbol)
-    #     elif wrongCurrency:
-    #         self.__wrongCurrency.add(expectedSymbol)
-    #     elif wrongType:
-    #         self.__wrongType.add(expectedSymbol)
-    #     else:
-    #         self.__result.add(expectedSymbol)
-
-    #     self.__progress += 1
-    #     self.__logProgress()
-    #     self.__requestNext()
-    #     return super().symbolSamples(reqId, contractDescriptions)
+    def __getRuleId(self, contractDetails: ContractDetails):
+        ruleIds = contractDetails.marketRuleIds.split(',')
+        exchanges = contractDetails.validExchanges.split(',')
+        try:
+            exchangeIndex = exchanges.index('SMART')
+            ruleId = ruleIds[exchangeIndex]
+            if not ruleId.isnumeric():
+                raise Exception()
+            return int(ruleId)
+        except:
+            print('contractDetails cant parse market rule id - ' + contractDetails.contract.symbol)
+            return -1
 
     def contractDetails(self, reqId: int, contractDetails: ContractDetails):
         self.__contractCounter += 1
@@ -125,23 +108,24 @@ class CheckApp(EWrapper, EClient):
             print('contractDetails expect - ' + expectedSymbol + ' but got - ' + symbol)
             return
 
-        if contractDetails.minTick < 0.01:
-            self.__wrongTick.add(symbol)
+        stockType = contractDetails.stockType
+        if stockType in self.__correctTypes:
+            if contractDetails.minTick < 0.01:
+                self.__addException('wrongTick', symbol) # to do
+            else:
+                data = []
+                data.append(contractDetails.industry)
+                data.append(contractDetails.category)
+                ruleId = self.__getRuleId(contractDetails)
+                data.append(ruleId)
+                self.__ruleIds.add(ruleId)
+                self.__data.setdefault(symbol, data)
+        elif stockType in self.__wrongTypes:
+            self.__addException(stockType, symbol)
         else:
-            self.__result.add(symbol)
+            print('contractDetails unknown type - ' + stockType + ' for ' + symbol)
+            self.__addException('UNKNOWN', symbol)
 
-        # ruleIds = contractDetails.marketRuleIds.split(',')
-        # exchanges = contractDetails.validExchanges.split(',')
-        # try:
-        #     exchangeIndex = exchanges.index('SMART')
-        #     ruleId = ruleIds[exchangeIndex]
-        #     if not ruleId.isnumeric():
-        #         raise Exception()
-        #     self.__marketRuleIds.setdefault(symbol, int(ruleId))
-        #     self.__result.add(symbol)
-        # except:
-        #     print('contractDetails cant parse market rule id - ' + symbol)
-    
     def contractDetailsEnd(self, reqId: int):
         if self.__contractCounter > 1:
             print('contractDetailsEnd more than one - ' + self.__checkDict[reqId])
@@ -162,11 +146,11 @@ class CheckApp(EWrapper, EClient):
     def isLoading(self):
         return self.__step != StepType.DONE
     
-    def getInvalidTickers(self):
+    def getFinalData(self):
         result = {}
-        #result.setdefault('startLength', len(self.__startLength))
-        result.setdefault('notFound', self.__notFound)
-        result.setdefault('wrongTick', self.__wrongTick)
+        result.setdefault('ruleIds', sorted(list(self.__ruleIds))) # to do info
+        result.setdefault('data', self.__data)
+        result.setdefault('exceptions', self.__exceptions)
         return result
     
 def __runApp():
@@ -188,4 +172,5 @@ if __name__ == '__main__':
     app.checkTickersList(['CLOV', 'ENERU', 'AAPL'])
     while app.isLoading():
         pass
-    x = 5
+    x = app.getFinalData()
+    y = 5
