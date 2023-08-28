@@ -13,3 +13,11 @@ def __updateIbkrExceptions():
 
 if __name__ == '__main__':
     __updateIbkrExceptions()
+
+    
+		# "OTEC": [
+		# 	"COMMON",
+		# 	"Diversified",
+		# 	"Holding Companies-Divers",
+		# 	26
+		# ],

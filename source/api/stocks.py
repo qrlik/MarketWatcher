@@ -12,8 +12,11 @@ def __exceptTickers(tickers):
 
     for _, list in data.get('exceptions', {}).items():
         exceptions.update(list)
-    for ticker, _ in data.get('data', {}).items():
-        correct.add(ticker)
+    for ticker, tickerData in data.get('data', {}).items():
+        if tickerData[1] == "Diversified" and tickerData[2] == "Holding Companies-Divers":
+            exceptions.add(ticker) # to do tmp
+        else:
+            correct.add(ticker)
 
     correctAndNew = tickers.difference(exceptions)
     new = correctAndNew.difference(correct)
