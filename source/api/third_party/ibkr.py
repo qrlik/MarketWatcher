@@ -114,6 +114,7 @@ class CheckApp(EWrapper, EClient):
                 self.__addException('wrongTick', symbol) # to do
             else:
                 data = []
+                data.append(stockType)
                 data.append(contractDetails.industry)
                 data.append(contractDetails.category)
                 ruleId = self.__getRuleId(contractDetails)
@@ -124,7 +125,7 @@ class CheckApp(EWrapper, EClient):
             self.__addException(stockType, symbol)
         else:
             print('contractDetails unknown type - ' + stockType + ' for ' + symbol)
-            self.__addException('UNKNOWN', symbol)
+            self.__addException(stockType, symbol)
 
     def contractDetailsEnd(self, reqId: int):
         if self.__contractCounter > 1:
