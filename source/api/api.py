@@ -63,7 +63,7 @@ def getCandels(symbol: str, interval: timeframe.Timeframe, amount: int):
     
 def getStockCandels(symbol: str, interval: timeframe.Timeframe, startTime: int):
     if workMode.isStock():
-        return stocks.getStockCandels(symbol, timeframe.tfToYahooApiStr[interval], startTime)
+        return stocks.getStockCandels(symbol, timeframe.tfToYahooApiStr[interval], startTime / 1000)
     
 def getExpectedStartPoint(interval: timeframe.Timeframe, amount:int):
     if interval not in [timeframe.Timeframe.ONE_DAY, timeframe.Timeframe.ONE_WEEK, timeframe.Timeframe.ONE_MONTH]:

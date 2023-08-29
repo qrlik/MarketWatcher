@@ -119,14 +119,14 @@ def __parseResponse(data, interval):
 
 def build_url(ticker, start_date = None, end_date = None, interval = "1d"):
     if end_date is None:  
-        end_seconds = int(pd.Timestamp("now").timestamp())
+        end_seconds = int(int(time.time()))
     else:
-        end_seconds = int(pd.Timestamp(end_date).timestamp())
+        end_seconds = int(end_date)
         
     if start_date is None:
         start_seconds = 7223400  
     else:
-        start_seconds = int(pd.Timestamp(start_date).timestamp())
+        start_seconds = int(start_date)
     
     site = base_url + ticker
     
