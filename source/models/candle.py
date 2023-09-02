@@ -37,7 +37,7 @@ def getPrettyTime(timestamp, interval):
     if interval == timeframe.Timeframe.ONE_MONTH \
         or interval == timeframe.Timeframe.ONE_WEEK \
         or interval == timeframe.Timeframe.ONE_DAY:
-        return dt.strftime('%d %b %y')
+        return dt.strftime('%d %B %y')
     else:
         return dt.strftime('%H:%M %d %b')
 

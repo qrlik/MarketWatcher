@@ -15492,6 +15492,16 @@
 		]
 	},
 	"exceptions": {
+		"wrongLastDates": [
+			"TLSI",
+			"JTAI",
+			"TYGO"
+		],
+		"splits": [
+			"IDEX",
+			"BIOL",
+			"CLVR"
+		],
 		"wrongTick": [
 			"AACG",
 			"AAME",

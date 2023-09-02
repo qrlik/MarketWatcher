@@ -49,7 +49,7 @@ cur_tax_rate = cur_tax_rate_cash / order_risk_profit * 100
 is_overheadrate = cur_tax_rate > max_tax_rate
 label_text = str.tostring(math.round(order_size)) + '$ ' + str.tostring(math.round(cur_tax_rate, 1)) + '%'
 label_color = (is_overheadrate) ? color.orange : color.silver
-pos_label = label.new(bar_index + 6, close + atr, text=label_text, color=label_color, style=label.style_label_lower_left)
+pos_label = label.new(bar_index + 2, close + 5 * atr, text=label_text, color=label_color, style=label.style_label_lower_left)
 label.delete(pos_label[1])
 
 

@@ -24,6 +24,8 @@ class CheckApp(EWrapper, EClient):
         self.__contractCounter = 0
         self.__lastProgress = 0
 
+        self.__backetInfo = OrderedDict()
+
         self.__data = OrderedDict()
         self.__exceptions = OrderedDict()
         self.__ruleIds = set()  # to do info
@@ -109,6 +111,7 @@ class CheckApp(EWrapper, EClient):
             return
 
         stockType = contractDetails.stockType
+        self.__backetInfo.setdefault(stockType, {}).setdefault(contractDetails.industry, {}).setdefault(contractDetails.category, []).append(symbol)
         if stockType in self.__correctTypes:
             if contractDetails.minTick < 0.01:
                 self.__addException('wrongTick', symbol) # to do
@@ -152,6 +155,7 @@ class CheckApp(EWrapper, EClient):
         result.setdefault('ruleIds', sorted(list(self.__ruleIds))) # to do info
         result.setdefault('data', self.__data)
         result.setdefault('exceptions', self.__exceptions)
+        result.setdefault('backets', self.__backetInfo)
         return result
     
 def __runApp():

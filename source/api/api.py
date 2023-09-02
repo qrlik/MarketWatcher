@@ -68,8 +68,8 @@ def getStockCandels(symbol: str, interval: timeframe.Timeframe, startTime: int):
 def getExpectedStartPoint(interval: timeframe.Timeframe, amount:int):
     if interval not in [timeframe.Timeframe.ONE_DAY, timeframe.Timeframe.ONE_WEEK, timeframe.Timeframe.ONE_MONTH]:
         raise AssertionError('error tf')
-    curTime = int(time.time())
-    return curTime - 2 * amount * interval / 1000
+    curTime = int(time.time() * 1000)
+    return curTime - 2 * amount * interval
 
 def atExit():
     if workMode.isCrypto():
