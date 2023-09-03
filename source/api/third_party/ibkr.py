@@ -5,6 +5,7 @@ from collections import OrderedDict
 from threading import Thread
 from enum import IntEnum
 import time
+import json
 
 class StepType(IntEnum):
     NONE = 0,
@@ -13,12 +14,13 @@ class StepType(IntEnum):
     DONE = 3
 
 class CheckApp(EWrapper, EClient):
-    __correctTypes = ['COMMON', 'ADR', 'REIT', 'MLP', 'NY REG SHRS', 'ROYALTY TRST']
-    __wrongTypes = ['UNIT', 'ETN', 'ETF', 'ETP', 'CLOSED-END FUND', 'RIGHT', 'PREFERRED', 'CONVPREFERRED', 'TRACKING STK', 'LTD PART', '']
+    __correctRules = []
+    __wrongRules = []
 
     def __init__(self):
         EClient.__init__(self, self)
 
+        self.__loadData()
         self.__reset()
         self.__step = StepType.NONE
         self.__contractCounter = 0
@@ -29,6 +31,35 @@ class CheckApp(EWrapper, EClient):
         self.__data = OrderedDict()
         self.__exceptions = OrderedDict()
         self.__ruleIds = set()  # to do info
+
+    def __loadData(self):
+        try:
+            with open('assets/ibkrExceptions.json') as infile:
+                data =  json.load(infile)
+                self.__correctRules = data.get('correctRules', [])
+                self.__wrongRules = data.get('wrongRules', [])
+        except Exception as e:
+            return
+
+    def __checkTicker(self, contractDetails: ContractDetails):
+        for wrongRule in self.__wrongRules:
+            stockType = wrongRule.get('stockType', contractDetails.stockType)
+            industry = wrongRule.get('industry', contractDetails.industry)
+            category = wrongRule.get('category', contractDetails.category)
+            if contractDetails.stockType == stockType \
+                and contractDetails.industry == industry \
+                and contractDetails.category == category:
+                return False
+        for correctRule in self.__correctRules:
+            stockType = correctRule.get('stockType', contractDetails.stockType)
+            industry = correctRule.get('industry', contractDetails.industry)
+            category = correctRule.get('category', contractDetails.category)
+            if contractDetails.stockType == stockType \
+                and contractDetails.industry == industry \
+                and contractDetails.category == category:
+                return True
+        print('contractDetails unknown type - ' + contractDetails.stockType + ' for ' + contractDetails.contract.symbol)
+        return False
 
     def checkTickersList(self, possibleTickers):
         id = 0
@@ -112,11 +143,12 @@ class CheckApp(EWrapper, EClient):
 
         stockType = contractDetails.stockType
         self.__backetInfo.setdefault(stockType, {}).setdefault(contractDetails.industry, {}).setdefault(contractDetails.category, []).append(symbol)
-        if stockType in self.__correctTypes:
+        if self.__checkTicker(contractDetails):
             if contractDetails.minTick < 0.01:
                 self.__addException('wrongTick', symbol) # to do
             else:
                 data = []
+                data.append(contractDetails.longName)
                 data.append(stockType)
                 data.append(contractDetails.industry)
                 data.append(contractDetails.category)
@@ -124,10 +156,7 @@ class CheckApp(EWrapper, EClient):
                 data.append(ruleId)
                 self.__ruleIds.add(ruleId)
                 self.__data.setdefault(symbol, data)
-        elif stockType in self.__wrongTypes:
-            self.__addException(stockType, symbol)
         else:
-            print('contractDetails unknown type - ' + stockType + ' for ' + symbol)
             self.__addException(stockType, symbol)
 
     def contractDetailsEnd(self, reqId: int):

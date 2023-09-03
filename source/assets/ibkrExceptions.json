@@ -1,0 +1,62 @@
+{
+	"correctRules": [
+		{
+			"stockType": "COMMON"
+		},
+		{
+			"stockType": "ADR"
+		},
+		{
+			"stockType": "REIT"
+		},
+		{
+			"stockType": "MLP"
+		},
+		{
+			"stockType": "NY REG SHRS"
+		},
+		{
+			"stockType": "ROYALTY TRST"
+		}
+	],
+	"wrongRules": [
+		{
+			"stockType": "COMMON",
+			"industry": "Diversified",
+			"category": "Holding Companies-Divers"
+		},
+		{
+			"stockType": "UNIT"
+		},
+		{
+			"stockType": "ETF"
+		},
+		{
+			"stockType": "ETP"
+		},
+		{
+			"stockType": "ETN"
+		},
+		{
+			"stockType": "RIGHT"
+		},
+		{
+			"stockType": "PREFERRED"
+		},
+		{
+			"stockType": "CONVPREFERRED"
+		},
+		{
+			"stockType": "CLOSED-END FUND"
+		},
+		{
+			"stockType": "TRACKING STK"
+		},
+		{
+			"stockType": "LTD PART"
+		},
+		{
+			"stockType": ""
+		}
+	]
+}
