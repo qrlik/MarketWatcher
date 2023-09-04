@@ -1,7 +1,6 @@
 from ibapi.client import *
 from ibapi.common import TickerId
 from ibapi.wrapper import *
-from collections import OrderedDict
 from threading import Thread
 from enum import IntEnum
 import time
@@ -10,7 +9,7 @@ import json
 class StepType(IntEnum):
     NONE = 0,
     SEARCH = 1,
-    TICK = 2,
+    MARKET_RULE = 2,
     DONE = 3
 
 class CheckApp(EWrapper, EClient):
@@ -26,11 +25,12 @@ class CheckApp(EWrapper, EClient):
         self.__contractCounter = 0
         self.__lastProgress = 0
 
-        self.__backetInfo = OrderedDict()
+        self.__backetInfo = {}
 
-        self.__data = OrderedDict()
-        self.__exceptions = OrderedDict()
-        self.__ruleIds = set()  # to do info
+        self.__data = {}
+        self.__exceptions = {}
+        self.__ruleIdsData = {}
+        self.__ruleIds = set()
 
     def __loadData(self):
         try:
@@ -38,7 +38,7 @@ class CheckApp(EWrapper, EClient):
                 data =  json.load(infile)
                 self.__correctRules = data.get('correctRules', [])
                 self.__wrongRules = data.get('wrongRules', [])
-        except Exception as e:
+        except:
             return
 
     def __checkTicker(self, contractDetails: ContractDetails):
@@ -85,25 +85,28 @@ class CheckApp(EWrapper, EClient):
         if self.__step == StepType.NONE:
             self.__step = StepType.SEARCH
 
-        if self.__progress < len(self.__checkDict):
-            ticker = self.__checkDict[self.__progress]
+        progress = len(self.__ruleIds) if self.__step == StepType.MARKET_RULE else len(self.__checkDict)
+        if self.__progress < progress:
             if self.__step == StepType.SEARCH:
                 self.__contractCounter = 0
                 contract = Contract()
-                contract.symbol = ticker
+                contract.symbol = self.__checkDict[self.__progress]
                 contract.secType = 'STK'
                 contract.currency = 'USD'
                 contract.exchange = 'SMART'
                 self.reqContractDetails(self.__progress, contract)
-            # elif self.__step == StepType.TICK:
-            #     self.reqMarketRule(self.__marketRuleIds[ticker])
+            elif self.__step == StepType.MARKET_RULE:
+                self.reqMarketRule(self.__ruleIds[self.__progress])
         else:
             if self.__step == StepType.SEARCH:
                 self.__reset()
-                self.__step = StepType.DONE
+                self.__step = StepType.MARKET_RULE
+                self.__finalProgress = len(self.__ruleIds)
                 
-                for _, list in self.__exceptions.items():
-                    list = sorted(list)
+                for _, arr in self.__exceptions.items():
+                    arr = sorted(arr)
+                self.__ruleIds = sorted(list(self.__ruleIds))
+                self.__requestNext()
             else:
                 self.__step = StepType.DONE
 
@@ -144,18 +147,16 @@ class CheckApp(EWrapper, EClient):
         stockType = contractDetails.stockType
         self.__backetInfo.setdefault(stockType, {}).setdefault(contractDetails.industry, {}).setdefault(contractDetails.category, []).append(symbol)
         if self.__checkTicker(contractDetails):
-            if contractDetails.minTick < 0.01:
-                self.__addException('wrongTick', symbol) # to do
-            else:
-                data = []
-                data.append(contractDetails.longName)
-                data.append(stockType)
-                data.append(contractDetails.industry)
-                data.append(contractDetails.category)
-                ruleId = self.__getRuleId(contractDetails)
-                data.append(ruleId)
-                self.__ruleIds.add(ruleId)
-                self.__data.setdefault(symbol, data)
+            data = []
+            data.append(contractDetails.longName)
+            data.append(stockType)
+            data.append(contractDetails.industry)
+            data.append(contractDetails.category)
+            ruleId = self.__getRuleId(contractDetails)
+            data.append(ruleId)
+            self.__ruleIds.add(ruleId)
+            self.__ruleIdsData.setdefault(ruleId, {})
+            self.__data.setdefault(symbol, data)
         else:
             self.__addException(stockType, symbol)
 
@@ -168,23 +169,27 @@ class CheckApp(EWrapper, EClient):
         self.__requestNext()
         return super().contractDetailsEnd(reqId)
     
-    # def marketRule(self, marketRuleId: int, priceIncrements: ListOfPriceIncrements):
-    #     x = 5
+    def marketRule(self, marketRuleId: int, priceIncrements: ListOfPriceIncrements):
+        rules = {}
+        for increment in priceIncrements:
+            rules.setdefault(increment.lowEdge, increment.increment)
+        rules = dict(sorted(rules.items(), reverse=True))
 
-    #     self.__progress += 1
-    #     self.__logProgress()
-    #     self.__requestNext()
-    #     return super().marketRule(marketRuleId, priceIncrements)
+        self.__ruleIdsData[marketRuleId] = rules
+        self.__progress += 1
+        self.__logProgress()
+        self.__requestNext()
+        return super().marketRule(marketRuleId, priceIncrements)
 
     def isLoading(self):
         return self.__step != StepType.DONE
     
     def getFinalData(self):
         result = {}
-        result.setdefault('ruleIds', sorted(list(self.__ruleIds))) # to do info
-        result.setdefault('data', self.__data)
-        result.setdefault('exceptions', self.__exceptions)
-        result.setdefault('backets', self.__backetInfo)
+        result.setdefault('ruleIds', dict(sorted(self.__ruleIdsData.items())))
+        result.setdefault('data', dict(sorted(self.__data.items())))
+        result.setdefault('exceptions', dict(sorted(self.__exceptions.items())))
+        result.setdefault('backets', dict(sorted(self.__backetInfo.items())))
         return result
     
 def __runApp():
@@ -207,4 +212,9 @@ if __name__ == '__main__':
     while app.isLoading():
         pass
     x = app.getFinalData()
-    y = 5
+
+    try:
+        with open('test.json', 'w') as outfile:
+            json.dump(x, outfile)
+    except:
+        pass

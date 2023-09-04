@@ -1,8 +1,6 @@
 from enum import Enum
 from systems import settingsController
 
-from collections import OrderedDict
-
 class VertexType(Enum):
     HIGH = 0,
     LOW = 1
