@@ -21,7 +21,7 @@ def init(parent):
     __initGrid()
 
 def isTfEnabled(tf:timeframe.Timeframe):
-    return __tfStates.get(tf, True)
+    return __tfStates.get(tf, False)
 
 def isDivergenceTricked(tf:timeframe.Timeframe):
     return __trickState.get(tf, False)
@@ -55,7 +55,7 @@ def __createButtons(name:str, tfCallback, trickCallback):
 
     tfButton = QPushButton(name)
     tfButton.setCheckable(True)
-    tfButton.setChecked(True)
+    tfButton.setChecked(False)
     tfButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
     tfButton.clicked.connect(tfCallback)
     layout.addWidget(tfButton)
@@ -82,7 +82,6 @@ def __initGrid():
     genLayout, __generalButton = __createButtons('All', __checkAll, None)
     layout.addLayout(genLayout, row, column)
     row += 1
-    isFirstTf = True
 
     for tf in configController.getTimeframes():
         tfLayout, tfButton, trickButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks, __updateTricked)
@@ -91,7 +90,7 @@ def __initGrid():
         __buttons.setdefault(tf, tfButton)
         __trickButtons.setdefault(tf, trickButton)
 
-        __tfStates.setdefault(tf, False if not isFirstTf else True)
+        __tfStates.setdefault(tf, False)
         __trickState.setdefault(tf, False)
 
         column += 1
