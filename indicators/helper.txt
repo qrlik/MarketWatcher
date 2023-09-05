@@ -7,8 +7,8 @@ smoothing = input.string(title="ATR Smoothing", defval="RMA", options=["RMA", "S
 order_risk_profit = input.int(title="Cash risk, $", defval=1, minval=1)
 profit_factor = input.int(title="Profit Factor", defval=3, minval=1)
 
-max_tax_rate = input.float(title="Max tax, %", defval=5.0, minval=0.1)
-order_tax = input.float(title="Summary tax, %", defval=0.05, minval=0.01)
+//max_tax_rate = input.float(title="Max tax, %", defval=5.0, minval=0.1)
+//order_tax = input.float(title="Summary tax, %", defval=0.05, minval=0.01)
 
 ma_function(source, length) =>
 	switch smoothing
@@ -26,30 +26,28 @@ plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 
 
 
-
 // show future price
-is_need_future = str.endswith(syminfo.tickerid, 'USDT')
-target_ticker = is_need_future ? syminfo.tickerid + ".P" : syminfo.tickerid
-[target_price, target_atr] = request.security(target_ticker, timeframe.period, [close, ma_function(ta.tr(true), length)], ignore_invalid_symbol = true)
-alpha = is_need_future ? 0 : 100
-future = line.new(bar_index + 1, target_price, bar_index + 2, target_price, color = color.new(color.fuchsia, alpha), width = 2)
-line.delete(future[1])
-
+//is_need_future = str.endswith(syminfo.tickerid, 'USDT')
+//target_ticker = is_need_future ? syminfo.tickerid + ".P" : syminfo.tickerid
+//[target_price, target_atr] = request.security(target_ticker, timeframe.period, [close, ma_function(ta.tr(true), length)], ignore_invalid_symbol = true)
+//alpha = is_need_future ? 0 : 100
+//future = line.new(bar_index + 1, target_price, bar_index + 2, target_price, color = color.new(color.fuchsia, alpha), width = 2)
+//line.delete(future[1])
 
 
 
 // show position amount and tax rate
-atr_for_position = na(target_atr) ? atr : target_atr
-price_for_position = na(target_atr) ? close : target_price
+atr_for_position = atr //na(target_atr) ? atr : target_atr
+price_for_position = close //na(target_atr) ? close : target_price
 
 stop_percents = atr_for_position / close * 100
 order_size = order_risk_profit * 100 / stop_percents
-cur_tax_rate_cash = order_tax * order_size / 100
-cur_tax_rate = cur_tax_rate_cash / order_risk_profit * 100
-is_overheadrate = cur_tax_rate > max_tax_rate
-label_text = str.tostring(math.round(order_size)) + '$ ' + str.tostring(math.round(cur_tax_rate, 1)) + '%'
-label_color = (is_overheadrate) ? color.orange : color.silver
-pos_label = label.new(bar_index + 2, close + 5 * atr, text=label_text, color=label_color, style=label.style_label_lower_left)
+//cur_tax_rate_cash = order_tax * order_size / 100
+//cur_tax_rate = cur_tax_rate_cash / order_risk_profit * 100
+//is_overheadrate = cur_tax_rate > max_tax_rate
+label_text = str.tostring(math.round(order_size)) + '$ ' // + str.tostring(math.round(cur_tax_rate, 1)) + '%'
+label_color = color.silver // (is_overheadrate) ? color.orange : color.silver
+pos_label = label.new(bar_index + 2, close + 5 * atr_for_position, text=label_text, color=label_color, style=label.style_label_lower_left)
 label.delete(pos_label[1])
 
 
