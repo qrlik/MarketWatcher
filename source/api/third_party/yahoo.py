@@ -22,6 +22,11 @@ class Weekday(IntEnum):
 def isWeekend(day:Weekday):
     return day == Weekday.SATURDAY or day == Weekday.SUNDAY
 
+def getPricePrecision(price):
+    if price >= 1.0:
+        return 2
+    return 4
+
 try:
     from requests_html import HTMLSession
 except Exception:
@@ -110,10 +115,10 @@ def __parseResponse(data, interval):
     c.interval = timeframe.yahooApiStrToTf[interval]
     c.openTime = data[0] * 1000
     c.time = candle.getPrettyTime(c.openTime, c.interval)
-    c.open = round(data[1], 2)
-    c.high = round(data[2], 2)
-    c.low = round(data[3], 2)
-    c.close = round(data[4], 2)
+    c.open = round(data[1], getPricePrecision(data[1]))
+    c.high = round(data[2], getPricePrecision(data[2]))
+    c.low = round(data[3], getPricePrecision(data[3]))
+    c.close = round(data[4], getPricePrecision(data[4]))
     c.closeTime = data[5] * 1000
     return c
 
@@ -169,8 +174,8 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     except requests.exceptions.ConnectTimeout:
         utils.logError('yahoo get_data ConnectTimeout')
         return []
-    except requests.exceptions.RequestException:
-        utils.logError('yahoo get_data RequestException')
+    except requests.exceptions.RequestException as e:
+        utils.logError('yahoo get_data RequestException ' + ticker + ' ' + e.strerror)
         return []
 
     if not resp.ok:

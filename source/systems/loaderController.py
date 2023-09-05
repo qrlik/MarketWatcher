@@ -22,7 +22,7 @@ class LoadingThread(QThread):
 		soundNotifyController.init()
 		userDataController.init()
 
-		tickers = watcherController.requestTickers()  #[('BTCUSDT', 'BTCUSDT', 2)]
+		tickers = watcherController.requestTickers()
 		socketList = [ticker[0] for ticker in tickers]
 		websocketController.start(socketList, configController.getTimeframes())
 

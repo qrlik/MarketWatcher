@@ -64,6 +64,11 @@ if __name__ == "__main__":
 #add check for last candle date
 # PWM GRWG CTNT
 
+# TimeframeController: BWMX ONE_WEEK sync lastOpen not found - 
+# yahoo get_data RequestException
+# TimeframeController: NYAX ONE_DAY sync lastOpen not found - 
+# TimeframeController: PRTC ONE_DAY sync lastOpen not found - 
+
 # check for expected last candle
 # fix 1000shib opened order
 # add power round 2

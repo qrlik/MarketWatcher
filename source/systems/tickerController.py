@@ -1,21 +1,35 @@
-import os
 from collections import OrderedDict
 
 from models import timeframe
 from systems import configController
 from systems import timeframeController
 from widgets.filters import timeframesFilter
+from utilities import workMode
+from utilities import utils
 
-class TickerData:
-    def __init__(self, ticker:str, futureTicker:str, pricePrecision: int):
-        self.ticker:str = ticker
-        self.futureTicker:str = futureTicker
-        self.pricePrecision:int = pricePrecision
-        self.timeframes:OrderedDict = OrderedDict()
+class TickerInfo:
+    def __init__(self):
+        self.name:str = ''
+        self.industry:str = ''
+        self.category:str = ''
+        self.futureTicker:str = ''
+
+        self.pricePrecision:int = -1
+
+def parseTickerInfo(info):
+    result = TickerInfo()
+    result.name = info.get('name', '')
+    result.industry = info.get('industry', '')
+    result.category = info.get('category', '')
+    result.futureTicker = info.get('futureTicker', '')
+    result.pricePrecision = info.get('pricePrecision', -1)
+    return result
 
 class TickerController:
-    def __init__(self, ticker:str, futureTicker:str, pricePrecision: int):
-        self.__data = TickerData(ticker, futureTicker, pricePrecision)
+    def __init__(self, ticker:str, info):
+        self.__ticker = ticker
+        self.__info = parseTickerInfo(info)
+        self.__timeframes:OrderedDict = OrderedDict()
 
     def init(self):
         self.__initTimeframes()
@@ -23,30 +37,34 @@ class TickerController:
     def __initTimeframes(self):
         for tf in configController.getTimeframes():
             tfController = timeframeController.TimeframeController(tf, self)
-            self.__data.timeframes.setdefault(tf, tfController)
+            self.__timeframes.setdefault(tf, tfController)
     
     def getTicker(self):
-        return self.__data.ticker
+        return self.__ticker
 
     def getFutureTicker(self):
-        return self.__data.futureTicker
+        return self.__info.futureTicker
 
     def getTimeframes(self):
-        return self.__data.timeframes
+        return self.__timeframes
     
     def getFilteredTimeframes(self):
         result = {}
-        for tf, controller in self.__data.timeframes.items():
+        for tf, controller in self.__timeframes.items():
             if timeframesFilter.isTfEnabled(tf):
                 result.setdefault(tf, controller)
         return result
 
     def getTimeframe(self, tf:timeframe.Timeframe):
-        return self.__data.timeframes.get(tf)
+        return self.__timeframes.get(tf)
 
     def getPricePrecision(self):
-        return self.__data.pricePrecision
-    
+        if workMode.isCrypto():
+            if self.__info.pricePrecision < 0:
+                utils.logError('getPricePrecision wrong precision ' + self.__ticker)
+                return 0
+        return self.__info.pricePrecision
+
     def loop(self):
-        for _, tfController in self.__data.timeframes.items():
+        for _, tfController in self.__timeframes.items():
             tfController.loop()

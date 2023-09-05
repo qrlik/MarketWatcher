@@ -1,5 +1,5 @@
 from systems import settingsController
-from models import timeframe
+
 class AtrController:
     def __init__(self):
         self.__candleController = None
@@ -66,6 +66,7 @@ class AtrController:
         for candle in candles:
             self.__addTrueRange(self.__calculateTrueRange(candle))
             #atr = self.__calculateExpAverage() # check for None if uncomment
-            candle.atr = self.__calculateWeightAverage()
+            atr = self.__calculateWeightAverage()
+            candle.atr = round(atr, self.__candleController.getPricePrecision(candle.close)) if atr else None
             self.__updateCandles(candle)
             

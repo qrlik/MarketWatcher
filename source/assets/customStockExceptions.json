@@ -7,6 +7,12 @@
 	"splits": [
 		"IDEX",
 		"BIOL",
-		"CLVR"
+		"CLVR",
+		"SNAX",
+		"XXII"
+	],
+	"chart": [
+		"BETR",
+		"FLJ"
 	]
 }

@@ -19,9 +19,9 @@ def requestTickers():
 def loadTickets(tickers):
     global __tickers,__loading
     __loading = True
-    for ticker in tickers:
-        controller = tickerController.TickerController(ticker[0], ticker[1], ticker[2])
-        __tickers.setdefault(ticker[0], controller)
+    for ticker, info in tickers:
+        controller = tickerController.TickerController(ticker, info)
+        __tickers.setdefault(ticker, controller)
         controller.init()
     __loading = False
 

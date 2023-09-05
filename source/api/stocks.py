@@ -5,28 +5,41 @@ from utilities import utils
 def init():
     pass
 
-def __exceptTickers(tickers):
+def getPricePrecision(price):
+    return yahoo.getPricePrecision(price)
+
+def __updateTickersInfo(tickers):
     exceptions = set()
     correct = set()
+    infos = dict()
     data = utils.loadJsonFile(utils.assetsFolder + 'stockData')
+    customExceptions = utils.loadJsonFile(utils.assetsFolder + 'customStockExceptions')
 
-    for _, list in data.get('exceptions', {}).items():
-        exceptions.update(list)
-    for ticker, tickerData in data.get('data', {}).items():
-        if tickerData[1] == "Diversified" and tickerData[2] == "Holding Companies-Divers":
-            exceptions.add(ticker) # to do tmp
-        else:
-            correct.add(ticker)
+    for _, arr in data.get('exceptions', {}).items():
+        exceptions.update(arr)
+    for _, arr in customExceptions.items():
+        exceptions.update(arr)
+
+    for ticker, info in data.get('data', {}).items():
+        correct.add(ticker)
+        tickerInfo = {}
+        tickerInfo.setdefault('name', info[0])
+        tickerInfo.setdefault('industry', info[2])
+        tickerInfo.setdefault('category', info[3])
+        infos.setdefault(ticker, tickerInfo)
 
     correctAndNew = tickers.difference(exceptions)
     new = correctAndNew.difference(correct)
-
     if len(new) > 0:
         utils.log('Have new ' + str(len(new)) + ' tickers, run script')
+        
+    result = sorted(list(correctAndNew.difference(new)))
+    resultWithInfo = []
+    for ticker in result:
+        resultWithInfo.append((ticker, infos[ticker]))
+    return resultWithInfo
 
-    return correctAndNew.difference(new)
-
-def getTickersList(withExcept=True):
+def getTickersList(withInfo=True):
     tickers = set()
     sp500 = yahoo.tickers_sp500()
     dow = yahoo.tickers_dow()
@@ -38,8 +51,8 @@ def getTickersList(withExcept=True):
     tickers.update(nasdaq)
     #tickers.update(other)
 
-    if withExcept:
-        tickers = __exceptTickers(tickers)
+    if withInfo:
+        return __updateTickersInfo(tickers)
 
     return sorted(list(tickers))
 

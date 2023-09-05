@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject
 from api import api
 from api import apiRequests
+from api import stocks
 from models import timeframe
 from models import candle
 from systems import cacheController
@@ -20,8 +21,9 @@ class CandlesController(QObject):
         self.__requestId = -1
         self.__ticker = ''
 
-    def init(self, ticker, arg):
+    def init(self, ticker, arg, precision:int):
         self.__ticker = ticker
+        self.__precision = precision
         if isinstance(arg, str):
             self.__initTest(arg)
         else:
@@ -228,6 +230,12 @@ class CandlesController(QObject):
     
     def getCurrentCandle(self):
         return self.__currentCandle
+
+    def getPricePrecision(self, price):
+        if workMode.isCrypto():
+            return self.__precision
+        else:
+            return stocks.getPricePrecision(price)
 
     def getLastCandle(self):
         if self.__currentCandle:

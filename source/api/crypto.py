@@ -64,7 +64,10 @@ def getTickersList():
 
         for base in basesFutures.keys():
             if baseAsset == base:
-                tickers.add((name, basesFutures[base], pricePrecision))
+                tickerInfo = {}
+                tickerInfo.setdefault('futureTicker', basesFutures[base])
+                tickerInfo.setdefault('pricePrecision', pricePrecision)
+                tickers.add((name, tickerInfo))
                 basesSpot.add(baseAsset)
                 break
 

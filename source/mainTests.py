@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     tickers = stocks.getTickersList()
     interval = timeframe.Timeframe.ONE_MONTH
-    for ticker in tickers:
+    for ticker, info in tickers:
         data = yahoo.get_data(ticker[0], timeframe.tfToYahooApiStr[interval], start_date = '07/01/2022', )
         x = 1
     #https://query1.finance.yahoo.com/v8/finance/chart/A
