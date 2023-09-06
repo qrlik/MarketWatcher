@@ -4,6 +4,7 @@ from systems import vertexController
 
 from collections import OrderedDict
 from enum import Enum
+from systems import cacheController
 import math
 
 class DivergenceType(Enum):
@@ -26,6 +27,7 @@ class DivergenceInfo:
         self.breakDelta = None
         self.power = None
         self.tricked = False
+        self.viewed = False
 
     def toDict(self):
         result = {}
@@ -43,6 +45,8 @@ class DivergencesPowersInfo:
     def __init__(self):
         self.bullPower = 0.0
         self.bearPower = 0.0
+        self.newBullPower = 0.0
+        self.newBearPower = 0.0
 
 class DivergenceController:
     __actualLength = settingsController.getSetting('divergenceActualLength')
@@ -224,8 +228,12 @@ class DivergenceController:
         for divergence in self.__actuals:
             if divergence.signal == DivergenceSignalType.BULL:
                 powers.bullPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBullPower += divergence.power
             else:
                 powers.bearPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBearPower += divergence.power
         return powers
     
     def getRegularPowers(self):
@@ -238,8 +246,12 @@ class DivergenceController:
                 continue
             if divergence.signal == DivergenceSignalType.BULL:
                 powers.bullPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBullPower += divergence.power
             else:
                 powers.bearPower += divergence.power
+                if not divergence.viewed:
+                    powers.newBearPower += divergence.power
         return powers
 
     def process(self):
@@ -259,4 +271,5 @@ class DivergenceController:
         self.__processDivergences()
         self.__processActualsByPowerAndLength()
         self.__processTricked()
+        cacheController.updateViewedDivergences(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__actuals)
         

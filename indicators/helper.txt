@@ -7,6 +7,8 @@ smoothing = input.string(title="ATR Smoothing", defval="RMA", options=["RMA", "S
 order_risk_profit = input.int(title="Cash risk, $", defval=1, minval=1)
 profit_factor = input.int(title="Profit Factor", defval=3, minval=1)
 
+atr_factor = input.float(title="Atr Factor", defval=1.0, minval=0.1)
+
 //max_tax_rate = input.float(title="Max tax, %", defval=5.0, minval=0.1)
 //order_tax = input.float(title="Summary tax, %", defval=0.05, minval=0.01)
 
@@ -37,7 +39,7 @@ plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 
 
 // show position amount and tax rate
-atr_for_position = atr //na(target_atr) ? atr : target_atr
+atr_for_position = atr * atr_factor //na(target_atr) ? atr : target_atr
 price_for_position = close //na(target_atr) ? close : target_price
 
 stop_percents = atr_for_position / close * 100

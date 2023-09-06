@@ -28,7 +28,7 @@ def __initTable():
     global __watcherTable,__headers
     __watcherTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     __watcherTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-    __watcherTable.itemSelectionChanged.connect(__updateInfoWidget)
+    __watcherTable.itemSelectionChanged.connect(__onItemClicked)
     __watcherTable.setColumnCount(len(__headers))
     __watcherTable.setHorizontalHeaderLabels(__headers)
     __watcherTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
@@ -66,7 +66,8 @@ def update(withList):
     __updateRatio()
     if withList:
         __updateList()
-    __updateInfoWidget()
+    if workMode.isCrypto():
+        __updateInfoWidget(False)
 
 def __updateRatio():
     if workMode.isStock():
@@ -111,10 +112,19 @@ def __updateSortOrder(index):
         __sortColumn = index
         sortList()
 
-def __updateInfoWidget():
+def __onItemClicked():
     global __watcherTable
     selectedItems = __watcherTable.selectedItems()
     if len(selectedItems) == 0:
         return
-    infoWidget.update(selectedItems[0].getTicker())
+    __updateInfoWidget(True)
+    selectedItems[1].update()
+
+
+def __updateInfoWidget(byClick):
+    global __watcherTable
+    selectedItems = __watcherTable.selectedItems()
+    if len(selectedItems) == 0:
+        return
+    infoWidget.update(selectedItems[0].getTicker(), byClick)
     

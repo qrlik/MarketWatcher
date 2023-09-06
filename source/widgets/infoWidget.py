@@ -1,7 +1,9 @@
 from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 
 from models import timeframe
+from systems import cacheController
 from systems import configController
 from systems import userDataController
 from systems import watcherController
@@ -60,6 +62,7 @@ def __initTabs():
     __tabs.tabBar().setDocumentMode(True)
     __tabs.tabBar().setExpanding(True)
     __tabs.setFixedHeight(105)
+    __tabs.tabBarClicked.connect(__onTabClicked)
 
     for tf in configController.getTimeframes():
         tabWidget = QWidget()
@@ -127,6 +130,17 @@ def __initDivergenceTable():
     for i in range(len(heads)):
         __table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
     __table.setHorizontalHeaderLabels(heads)
+
+def __onTabClicked():
+    if __tickerController is None:
+        return
+    
+    for _, tfController in __tickerController.getTimeframes().items():
+        for divergence in tfController.getDivergenceController().getActuals():
+            time1 = divergence.firstCandle.time
+            time2 = divergence.secondCandle.time
+            cacheController.setDivergenceViewed(__tickerController.getTicker(), tfController.getTimeframe().name, time1, time2, True)
+            divergence.viewed = True
 
 def __onDataCopyClicked():
     ticker = __tickerController.getTicker() if __tickerController else ''
@@ -236,6 +250,7 @@ def __updateDivergenceTable():
         __table.item(row, 0).setForeground(color)
         __table.item(row, 0).setBackground(trickedColor)
         __table.item(row, 1).setText(str(divergence.power))
+        __table.item(row, 1).setForeground(guiDefines.defaultFontColor if divergence.viewed else guiDefines.notViewedColor)
         __table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
         __table.item(row, 3).setText(str(divergence.secondIndex - divergence.firstIndex))
         __table.item(row, 4).setText(divergence.firstCandle.time[:-5])
@@ -245,7 +260,7 @@ def __updateDivergenceTable():
     __table.setVerticalHeaderLabels(headers)
 
 
-def update(ticker:str):
+def update(ticker:str, byClick):
     global __tickerController
     __tickerController = watcherController.getTicker(ticker)
 
@@ -257,4 +272,7 @@ def update(ticker:str):
         tfController = __tickerController.getTimeframe(tf)
 
         __updateTabValues(tabWidget, tfController.getCandlesController())
+
     __updateDivergenceTable()
+    if byClick:
+        __onTabClicked()
