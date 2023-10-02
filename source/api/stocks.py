@@ -13,7 +13,7 @@ def __updateTickersInfo(tickers):
     correct = set()
     infos = dict()
     data = utils.loadJsonFile(utils.assetsFolder + 'stockData')
-    customExceptions = utils.loadJsonFile(utils.assetsFolder + 'customStockExceptions')
+    customExceptions = {} #utils.loadJsonFile(utils.assetsFolder + 'customStockExceptions')
 
     for _, arr in data.get('exceptions', {}).items():
         exceptions.update(arr)
@@ -43,7 +43,7 @@ def getTickersList(withInfo=True):
     tickers = set()
     sp500 = yahoo.tickers_sp500()
     dow = yahoo.tickers_dow()
-    nasdaq = yahoo.tickers_nasdaq()
+    nasdaq = yahoo.tickers_nasdaq(yahoo.NasdaqTier.GLOBAL_SELECT)
     #other = si.tickers_other()
 
     tickers.update(sp500)

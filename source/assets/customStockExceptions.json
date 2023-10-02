@@ -9,10 +9,21 @@
 		"BIOL",
 		"CLVR",
 		"SNAX",
-		"XXII"
+		"XXII",
+		"RETO",
+		"PSTV",
+		"EDBL",
+		"CETX",
+		"WHLR",
+		"GLMD",
+		"LFLY",
+		"METX"
 	],
 	"chart": [
 		"BETR",
 		"FLJ"
+	],
+	"unknown": [
+		"JUPW"
 	]
 }

@@ -61,21 +61,77 @@ if __name__ == "__main__":
 # to do atr new test
 # to do divergence test
 
+
+
+#   File "d:\stockExchange\MarketWatcher\source\systems\loaderController.py", line 38, in __onLoadFinish
+#     watcherTable.initList()
+#   File "d:\stockExchange\MarketWatcher\source\widgets\watcherTable.py", line 51, in initList
+#     __watcherTable.setRowCount(len(tickers))
+#   File "d:\stockExchange\MarketWatcher\source\systems\loaderController.py", line 25, in run
+#     tickers = watcherController.requestTickers()
+#               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "d:\stockExchange\MarketWatcher\source\systems\watcherController.py", line 17, in requestTickers
+#     return api.getTickersList()
+#            ^^^^^^^^^^^^^^^^^^^^
+#   File "d:\stockExchange\MarketWatcher\source\api\api.py", line 30, in getTickersList
+#     return stocks.getTickersList()
+#            ^^^^^^^^^^^^^^^^^^^^^^^
+#   File "d:\stockExchange\MarketWatcher\source\api\stocks.py", line 46, in getTickersList
+#     nasdaq = yahoo.tickers_nasdaq()
+#              ^^^^^^^^^^^^^^^^^^^^^^
+#   File "d:\stockExchange\MarketWatcher\source\api\third_party\yahoo.py", line 238, in tickers_nasdaq
+#     ftp = ftplib.FTP("ftp.nasdaqtrader.com")
+#           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "D:\dev\python\Lib\ftplib.py", line 121, in __init__
+#     self.connect(host)
+#   File "D:\dev\python\Lib\ftplib.py", line 158, in connect
+#     self.sock = socket.create_connection((self.host, self.port), self.timeout,
+#                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "D:\dev\python\Lib\socket.py", line 851, in create_connection
+#     raise exceptions[0]
+#   File "D:\dev\python\Lib\socket.py", line 836, in create_connection
+#     sock.connect(sa)
+# ConnectionRefusedError: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение
+#     Note: This exception was delayed.
+
+
+# add stock full name display
+
+# TimeframeController: ADV ONE_WEEK sync lastOpen not found - 
+# TimeframeController: APYX ONE_WEEK sync lastOpen not found - 
+# TimeframeController: MNTS ONE_WEEK sync lastOpen not found - 
+
+# TimeframeController: ABLV ONE_WEEK sync lastOpen not found - 
+# TimeframeController: ADV ONE_WEEK sync lastOpen not found - 
+# TimeframeController: APYX ONE_WEEK sync lastOpen not found - 
+# TimeframeController: BWMX ONE_WEEK sync lastOpen not found - 
+# TimeframeController: ICCT ONE_WEEK sync lastOpen not found - 
+# TimeframeController: IVP ONE_WEEK sync lastOpen not found - 
+# TimeframeController: MNTS ONE_WEEK sync lastOpen not found - 
+# TimeframeController: SXTC ONE_WEEK sync lastOpen not found - 
 #add check for last candle date
 # PWM GRWG CTNT
-
+#ftp.nasdaqtrader.com
 # AAME AUBN
+
+
 # TimeframeController: BWMX ONE_WEEK sync lastOpen not found - 
 # yahoo get_data RequestException
 # TimeframeController: NYAX ONE_DAY sync lastOpen not found - 
 # TimeframeController: PRTC ONE_DAY sync lastOpen not found - 
 
+# графики с непонятными расхождениями между интервалами, проверить список торгуемых бирж
+# ICCH, SLN, GWRS
+
 # check for expected last candle
 # fix 1000shib opened order
 # add power round 2
 
+# to do volume * close price indicator
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI
+
+
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
 

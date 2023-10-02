@@ -231,7 +231,13 @@ def tickers_sp500(include_company_data = False):
     
     return sp_tickers
 
-def tickers_nasdaq(include_company_data = False):
+class NasdaqTier(IntEnum):
+    GLOBAL_SELECT = 0,
+    GLOBAL = 1,
+    CAPITAL = 2,
+    ANY = 3
+
+def tickers_nasdaq(tier, include_company_data = False):
     
     '''Downloads list of tickers currently listed in the NASDAQ'''
     
@@ -248,13 +254,24 @@ def tickers_nasdaq(include_company_data = False):
         return data
     
     info = r.getvalue().decode()
-    splits = info.split("|")
+    lines = info.splitlines()
+    datas = [line.split("|") for line in lines[1:]]
+    tickers = []
     
-    
-    tickers = [x for x in splits if "\r\n" in x]
-    tickers = [x.split("\r\n")[1] for x in tickers if "NASDAQ" not in x != "\r\n"]
-    tickers = [ticker for ticker in tickers if "File" not in ticker]    
-    
+    for data in datas:
+        tickerTier = data[2]
+        if tier == NasdaqTier.GLOBAL_SELECT:
+            if tickerTier == 'Q':
+                tickers.append(data[0])
+        elif tier == NasdaqTier.GLOBAL:
+            if tickerTier == 'G':
+                tickers.append(data[0])
+        elif tier == NasdaqTier.CAPITAL:
+            if tickerTier == 'S':
+                tickers.append(data[0])
+        else:
+            tickers.append(data[0])
+
     ftp.close()    
 
     return tickers
