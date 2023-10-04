@@ -28,6 +28,9 @@ def getCacheFile():
 def getCacheCandlesFile():
     return utils.cacheFolder + __type.name.lower() + 'Candles'
 
+def getCacheLastOpenCheckFile():
+    return utils.cacheFolder + __type.name.lower() + 'LastOpenCheck'
+
 def getConfigFile():
     return utils.assetsFolder + __type.name.lower() + 'Config'
 

@@ -177,6 +177,9 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
     except requests.exceptions.RequestException as e:
         utils.logError('yahoo get_data RequestException ' + ticker + ' ' + e.strerror)
         return []
+    except Exception as e:
+        utils.logError('yahoo get_data Unknow Exception ' + ticker + ' ' + e.strerror)
+        return []
 
     if not resp.ok:
         code = resp.status_code

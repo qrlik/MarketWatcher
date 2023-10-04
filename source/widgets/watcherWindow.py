@@ -100,6 +100,7 @@ class WatcherWindow(QMainWindow):
                 self.__progressBar.setValue(progress)
             elif not self.__loadedLogged: # -1 or 100
                 cacheController.saveCandles()
+                cacheController.saveLastCandlesCheck()
                 if workMode.isStock():
                     watcherTable.update(True)
 

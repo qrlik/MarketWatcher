@@ -6,6 +6,7 @@ from utilities import utils
 
 __cache:dict = None
 __candles:dict = None
+__lastCandlesCheck = {}
 
 def load():
     global __cache,__candles
@@ -79,3 +80,28 @@ def updateViewedDivergences(ticker:str, timeframe:str, divers):
     
     for remove in forRemove1:
         times1.pop(remove, None)
+ 
+def updateLastCandlesCheck(lastTime, timeframe, ticker):
+    global __lastCandlesCheck
+    lastTimestamps = __lastCandlesCheck.setdefault(timeframe.name, [])
+    founded = False
+    for time, tickers in lastTimestamps:
+        if time == lastTime:
+            founded = True
+            tickers.append(ticker)
+    if not founded:
+        lastTimestamps.append((lastTime, [ticker]))
+
+def saveLastCandlesCheck():
+    global __lastCandlesCheck
+    for timeframe, timestamps in __lastCandlesCheck.items():
+        if len(timestamps) == 0:
+            utils.log('Last open check - ' + timeframe + ' empty')
+        elif len(timestamps) == 1:
+            utils.log('Last open check - ' + timeframe + ' ' + timestamps[0][0])
+        else:
+            timestamps.sort(key = lambda tuple: len(tuple[1]), reversed=True)
+            utils.log('Last open check - ' + timeframe + ' ' + timestamps[0][0] + ', FAILED')
+    utils.saveJsonFile(workMode.getCacheLastOpenCheckFile(), __lastCandlesCheck)
+
+    

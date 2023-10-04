@@ -13,7 +13,7 @@ def __updateTickersInfo(tickers):
     correct = set()
     infos = dict()
     data = utils.loadJsonFile(utils.assetsFolder + 'stockData')
-    customExceptions = {} #utils.loadJsonFile(utils.assetsFolder + 'customStockExceptions')
+    customExceptions = utils.loadJsonFile(utils.assetsFolder + 'customStockExceptions')
 
     for _, arr in data.get('exceptions', {}).items():
         exceptions.update(arr)

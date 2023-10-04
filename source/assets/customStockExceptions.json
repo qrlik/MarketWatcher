@@ -1,29 +1,11 @@
 {
 	"wrongLastDates": [
-		"TLSI",
-		"JTAI",
-		"TYGO"
-	],
-	"splits": [
-		"IDEX",
-		"BIOL",
-		"CLVR",
-		"SNAX",
-		"XXII",
-		"RETO",
-		"PSTV",
-		"EDBL",
-		"CETX",
-		"WHLR",
-		"GLMD",
-		"LFLY",
-		"METX"
-	],
-	"chart": [
-		"BETR",
-		"FLJ"
-	],
-	"unknown": [
-		"JUPW"
+		"ELVN",
+		"FORTY",
+		"KELYB",
+		"UTSI",
+		"APYX",
+		"ADV",
+		"MNTS"
 	]
 }

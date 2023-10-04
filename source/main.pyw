@@ -97,41 +97,9 @@ if __name__ == "__main__":
 
 # add stock full name display
 
-# TimeframeController: ADV ONE_WEEK sync lastOpen not found - 
-# TimeframeController: APYX ONE_WEEK sync lastOpen not found - 
-# TimeframeController: MNTS ONE_WEEK sync lastOpen not found - 
-
-# TimeframeController: ABLV ONE_WEEK sync lastOpen not found - 
-# TimeframeController: ADV ONE_WEEK sync lastOpen not found - 
-# TimeframeController: APYX ONE_WEEK sync lastOpen not found - 
-# TimeframeController: BWMX ONE_WEEK sync lastOpen not found - 
-# TimeframeController: ICCT ONE_WEEK sync lastOpen not found - 
-# TimeframeController: IVP ONE_WEEK sync lastOpen not found - 
-# TimeframeController: MNTS ONE_WEEK sync lastOpen not found - 
-# TimeframeController: SXTC ONE_WEEK sync lastOpen not found - 
-#add check for last candle date
-# PWM GRWG CTNT
-#ftp.nasdaqtrader.com
-# AAME AUBN
-
-
-# TimeframeController: BWMX ONE_WEEK sync lastOpen not found - 
-# yahoo get_data RequestException
-# TimeframeController: NYAX ONE_DAY sync lastOpen not found - 
-# TimeframeController: PRTC ONE_DAY sync lastOpen not found - 
-
-# графики с непонятными расхождениями между интервалами, проверить список торгуемых бирж
-# ICCH, SLN, GWRS
-
-# check for expected last candle
-# fix 1000shib opened order
-# add power round 2
-
 # to do volume * close price indicator
 # сделать индикатор на диверы
 # индикатор на трендовые на RSI
-
-
 
 # сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
 

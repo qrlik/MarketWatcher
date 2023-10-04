@@ -66,6 +66,12 @@ class CandlesController(QObject):
             if len(self.__finishedCandles) > 0:
                 startPoint = self.__finishedCandles[-1].openTime
             self.__requestId = api.getStockCandels(self.__ticker, self.__timeframe, startPoint)
+        else:
+            self.__updateLastCandlesCheck()
+
+    def __updateLastCandlesCheck(self):
+        if len(self.__finishedCandles) > 0:
+            cacheController.updateLastCandlesCheck(self.__finishedCandles[-1].time, self.__timeframe, self.__ticker)
 
     def __updateCandles(self, current, finished):
         self.__currentCandle = current
@@ -109,6 +115,7 @@ class CandlesController(QObject):
                 self.__currentCandle = self.__finishedCandles.pop()
 
         self.__shrink()
+        self.__updateLastCandlesCheck()
         if not lastOpenFound:
             utils.logError('TimeframeController: ' + self.__ticker + ' ' + self.__timeframe.name + \
             ' sync lastOpen not found - ')
