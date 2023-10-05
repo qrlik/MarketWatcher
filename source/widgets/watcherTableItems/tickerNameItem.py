@@ -17,13 +17,18 @@ class TickerNameItem(QTableWidgetItem):
         return self.__ticker
 
     def update(self):
+        tickerController = watcherController.getTicker(self.__ticker)
+        if not tickerController.isValid():
+            super().setForeground(guiDefines.invalidColor)
+            return
+
         positionColor = userDataController.getTickerUserData(self.__ticker).getPositionColor()
         super().setForeground(positionColor)
         if positionColor != guiDefines.defaultFontColor:
             return
         
         allPower = 0.0
-        for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
+        for _, controller in tickerController.getFilteredTimeframes().items():
             powers = controller.getDivergenceController().getRegularPowers()
             if powers.bullPower == 0.0 and powers.bearPower == 0.0:
                 allPower = 0.0

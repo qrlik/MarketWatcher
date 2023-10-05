@@ -30,6 +30,7 @@ class TickerController:
         self.__ticker = ticker
         self.__info = parseTickerInfo(info)
         self.__timeframes:OrderedDict = OrderedDict()
+        self.__valid = True
 
     def init(self):
         self.__initTimeframes()
@@ -39,8 +40,23 @@ class TickerController:
             tfController = timeframeController.TimeframeController(tf, self)
             self.__timeframes.setdefault(tf, tfController)
     
+    def setInvalid(self):
+        self.__valid = False
+
+    def isValid(self):
+        return self.__valid
+
     def getTicker(self):
         return self.__ticker
+
+    def getName(self):
+        return self.__info.name
+
+    def getIndustry(self):
+        return self.__info.industry
+
+    def getCategory(self):
+        return self.__info.category
 
     def getFutureTicker(self):
         return self.__info.futureTicker

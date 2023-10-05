@@ -100,8 +100,9 @@ def saveLastCandlesCheck():
         elif len(timestamps) == 1:
             utils.log('Last open check - ' + timeframe + ' ' + timestamps[0][0])
         else:
-            timestamps.sort(key = lambda tuple: len(tuple[1]), reversed=True)
+            timestamps.sort(key = lambda tuple: len(tuple[1]),reverse=True)
+            for _, tickers in timestamps[1:]:
+                for ticker in tickers:
+                    watcherController.getTicker(ticker).setInvalid()
             utils.log('Last open check - ' + timeframe + ' ' + timestamps[0][0] + ', FAILED')
     utils.saveJsonFile(workMode.getCacheLastOpenCheckFile(), __lastCandlesCheck)
-
-    

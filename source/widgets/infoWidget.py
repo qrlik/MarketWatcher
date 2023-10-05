@@ -15,6 +15,8 @@ import json
 import webbrowser
 
 __widget:QFrame = None
+__nameValue:QLabel = None
+__categoryValue:QLabel = None
 __priceValue:QLabel = None
 __tabs:QTabWidget = None
 __table:QTableWidget = None
@@ -38,7 +40,9 @@ def __init():
     __initDivergenceTable()
 
 def __initValues():
-    global __widget, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table
+    global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table
+    __nameValue = __widget.findChild(QLabel, 'nameValue')
+    __categoryValue = __widget.findChild(QLabel, 'categoryValue')
     __priceValue = __widget.findChild(QLabel, 'priceValue')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
     __table = __widget.findChild(QTableWidget, 'tableWidget')
@@ -180,6 +184,14 @@ def __onOpenFutureLinkClicked():
     url = __url if workMode.isStock() else __url + 'BINANCE:'
     __openLink(url + __tickerController.getFutureTicker() + '.P')
 
+def __updateName():
+    if __tickerController:
+        __nameValue.setText(__tickerController.getName())
+
+def __updateCategory():
+    if __tickerController:
+        __categoryValue.setText(__tickerController.getIndustry() + '-' + __tickerController.getCategory())
+
 def __updatePrice():
     price = None
     if __tickerController:
@@ -188,6 +200,11 @@ def __updatePrice():
             price = lastCandle.close if lastCandle else None
             break
     __priceValue.setText(str(price))
+
+def __updateInfo():
+    __updatePrice()
+    __updateName()
+    __updateCategory()
 
 def __updateProgressBar():
     if __tickerController is None:
@@ -265,7 +282,7 @@ def update(ticker:str, byClick):
     __tickerController = watcherController.getTicker(ticker)
 
     __updateProgressBar()
-    __updatePrice()
+    __updateInfo()
     for tabIndex in range(__tabs.count()):
         tabWidget = __tabs.widget(tabIndex)
         tf = timeframe.Timeframe[tabWidget.objectName()]
