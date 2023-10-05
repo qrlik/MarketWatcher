@@ -240,23 +240,29 @@ class NasdaqTier(IntEnum):
     CAPITAL = 2,
     ANY = 3
 
-def tickers_nasdaq(tier, include_company_data = False):
+def getFtpNasdaqData(file):
+    try:
+        ftp = ftplib.FTP("ftp.nasdaqtrader.com")
+        ftp.login()
+        ftp.cwd("SymbolDirectory")
+        
+        r = io.BytesIO()
+        ftp.retrbinary(file, r.write)
+        
+        info = r.getvalue().decode()
+        ftp.close()
+        return info
+    except:
+        utils.logError('NASDAQ FTP FAILED')
+        return None
+    
+def tickers_nasdaq(tier):
     
     '''Downloads list of tickers currently listed in the NASDAQ'''
+    info = getFtpNasdaqData('RETR nasdaqlisted.txt')
+    if not info:
+        return []
     
-    ftp = ftplib.FTP("ftp.nasdaqtrader.com")
-    ftp.login()
-    ftp.cwd("SymbolDirectory")
-    
-    r = io.BytesIO()
-    ftp.retrbinary('RETR nasdaqlisted.txt', r.write)
-    
-    if include_company_data:
-        r.seek(0)
-        data = pd.read_csv(r, sep = "|")
-        return data
-    
-    info = r.getvalue().decode()
     lines = info.splitlines()
     datas = [line.split("|") for line in lines[1:]]
     tickers = []
@@ -275,34 +281,21 @@ def tickers_nasdaq(tier, include_company_data = False):
         else:
             tickers.append(data[0])
 
-    ftp.close()    
-
     return tickers
    
-def tickers_other(include_company_data = False):
+def tickers_other():
     '''Downloads list of tickers currently listed in the "otherlisted.txt"
        file on "ftp.nasdaqtrader.com" '''
-    ftp = ftplib.FTP("ftp.nasdaqtrader.com")
-    ftp.login()
-    ftp.cwd("SymbolDirectory")
-    
-    r = io.BytesIO()
-    ftp.retrbinary('RETR otherlisted.txt', r.write)
-    
-    if include_company_data:
-        r.seek(0)
-        data = pd.read_csv(r, sep = "|")
-        return data
-    
-    info = r.getvalue().decode()
+    info = getFtpNasdaqData('RETR otherlisted.txt')
+    if not info:
+        return []
+
     splits = info.split("|")    
     
     tickers = [x for x in splits if "\r\n" in x]
     tickers = [x.split("\r\n")[1] for x in tickers]
     tickers = [ticker for ticker in tickers if "File" not in ticker]        
     
-    ftp.close()    
-
     return tickers
     
 def tickers_dow(include_company_data = False):
