@@ -91,6 +91,7 @@ class TickerController:
         for _, tfController in self.__timeframes.items():
             tfController.loop()
 
+            # to do refactor, move feeController inside tfController
             if isFirst:
                 lastCandle = tfController.getCandlesController().getLastCandle()
                 if lastCandle:
