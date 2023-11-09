@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from models import timeframe
 from systems import configController
+from systems import feeController
 from systems import timeframeController
 from widgets.filters import timeframesFilter
 from utilities import workMode
@@ -30,7 +31,8 @@ class TickerController:
         self.__ticker = ticker
         self.__info = parseTickerInfo(info)
         self.__timeframes:OrderedDict = OrderedDict()
-        self.__valid = True
+        self.__validLastCandle = True
+        self.__feeAcceptable = True
 
     def init(self):
         self.__initTimeframes()
@@ -40,11 +42,14 @@ class TickerController:
             tfController = timeframeController.TimeframeController(tf, self)
             self.__timeframes.setdefault(tf, tfController)
     
-    def setInvalid(self):
-        self.__valid = False
+    def setInvalidLastCandle(self):
+        self.__validLastCandle = False
 
-    def isValid(self):
-        return self.__valid
+    def isValidLastCandle(self):
+        return self.__validLastCandle
+
+    def isFeeAcceptable(self):
+        return self.__feeAcceptable
 
     def getTicker(self):
         return self.__ticker
@@ -82,5 +87,12 @@ class TickerController:
         return self.__info.pricePrecision
 
     def loop(self):
+        isFirst = True
         for _, tfController in self.__timeframes.items():
             tfController.loop()
+
+            if isFirst:
+                lastCandle = tfController.getCandlesController().getLastCandle()
+                if lastCandle:
+                    self.__feeAcceptable = feeController.isFeeAcceptable(lastCandle.atr)
+            isFirst = False

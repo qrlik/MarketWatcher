@@ -6,7 +6,8 @@ bearColor:QColor = Qt.GlobalColor.darkRed
 trickedColor:QColor = Qt.GlobalColor.gray
 notViewedColor:QColor = QColor(255,127,80)
 zeroColor:QColor = Qt.GlobalColor.darkGray
-invalidColor:QColor = Qt.GlobalColor.blue
+invalidLastCandleColor:QColor = Qt.GlobalColor.blue
+unacceptableFeeColor:QColor = Qt.GlobalColor.darkBlue
 defaultBgColor:QColor = QColor(45, 45, 45)
 defaultFontColor:QColor = Qt.GlobalColor.white
 

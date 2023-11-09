@@ -84,12 +84,12 @@ class WatcherWindow(QMainWindow):
         loaderController.startLoad()
 
     def __loop(self):
-        self.__updateProgressBar()
-
         watcherController.loop()
         userDataController.update()
         watcherTable.update(False if workMode.isStock() else True) # list will not be updated for crypto runtime changes from websocket
         soundNotifyController.update()
+
+        self.__updateProgressBar()
 
     def __updateProgressBar(self):
         if not loaderController.isDone():

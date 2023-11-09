@@ -1,4 +1,6 @@
 {
+	"acceptableFeePercent": 0.5,
+	"feePerShare": 0.0035,
 	"loopInterval": 33,
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,

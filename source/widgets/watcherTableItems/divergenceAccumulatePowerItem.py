@@ -26,6 +26,15 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         return self.__ticker
 
     def update(self):
+        self.__power = -1.0
+        super().setText('')
+
+        tickerController = watcherController.getTicker(self.__ticker)
+        if not tickerController.isValidLastCandle():
+            return
+        if not tickerController.isFeeAcceptable():
+            return
+    
         allPower = 0.0
         allNewPower = 0.0
         for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
