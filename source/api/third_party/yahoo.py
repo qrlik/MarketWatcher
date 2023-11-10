@@ -42,10 +42,10 @@ except Exception:
 base_url = "https://query1.finance.yahoo.com/v8/finance/chart/"
 
 __oneDay = 86400
-__postSession = 19800 # 5,5 hours
+__preSession = 19800 # 5,5 hours
 __regularSession = 23400 # 6,5 hours
-__postSession = 14400 # 4 hours
-__tradeSession = __postSession + __regularSession + __postSession
+__postSession = 2 * 14400 # 4 hours
+__tradeSession = __preSession + __regularSession + __postSession
 
 def __getExpectedCloseTime(openTime, interval):
     dt = datetime.fromtimestamp(openTime)
@@ -79,7 +79,7 @@ def __getExpectedCloseTime(openTime, interval):
 def isExpectNewCandles(openTime, interval):
     if interval not in ['1d', '1wk', '1mo']:
         utils.logError('yahoo isExpectNewCandles invalid interval')
-        return
+        return False
     
     openDt = datetime.fromtimestamp(openTime)
     lastTimestamp = openTime + __oneDay
