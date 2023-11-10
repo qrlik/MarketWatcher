@@ -1,3 +1,4 @@
+from enum import Enum
 from models import candle
 from systems import loaderController
 from systems import watcherController
@@ -53,6 +54,9 @@ def saveCandles():
 def __getViewedDivergences():
     return __cache.setdefault("viewedDivergences", {})
 
+def __getDatestamp(type):
+    return __cache.setdefault(type.name, {})
+
 def setDivergenceViewed(ticker:str, timeframe:str, time1:str, time2:str, value):
     state = __getViewedDivergences().setdefault(ticker, {}).setdefault(timeframe, {}).setdefault(time1, {})
     state.setdefault(time2, value)
@@ -106,3 +110,18 @@ def saveLastCandlesCheck():
                     watcherController.getTicker(ticker).setInvalid()
             utils.log('Last open check - ' + timeframe + ' ' + timestamps[0][0] + ', FAILED')
     utils.saveJsonFile(workMode.getCacheLastOpenCheckFile(), __lastCandlesCheck)
+
+class DateStamp(Enum):
+    VIEWED = 0,
+    BORED = 1
+
+def setDatestamp(ticker, type, timestamp):
+    if timestamp:
+        typeDict = __getDatestamp(type)
+        typeDict.setdefault(ticker, timestamp)
+        typeDict[ticker] = timestamp
+    else:
+        __getDatestamp(type).pop(ticker, None)
+
+def getDatestamp(ticker, type):
+    return __getDatestamp(type).setdefault(ticker, None)

@@ -33,6 +33,9 @@ __errorLogger = setupLogger('errorLogger', cacheFolder + 'errorLogs.txt', loggin
 def getCurrentTime() -> int:
     return round(time.time() * 1000)
 
+def getCurrentTimeSeconds() -> int:
+    return round(time.time())
+
 def loadJsonFile(filename):
     try:
         with open(filename + '.json') as infile:

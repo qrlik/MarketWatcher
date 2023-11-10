@@ -71,7 +71,7 @@ class WatcherWindow(QMainWindow):
 
     def __initSizes(self):
         self.setFixedWidth(800)
-        self.setFixedHeight(600)
+        self.setFixedHeight(700)
         self.__logBrowser.setFixedHeight(150)
 
     def __initTimer(self):

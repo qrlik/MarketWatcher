@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QFrame,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
+from PySide6.QtWidgets import QFrame,QCheckBox,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor
 
+from models import candle
 from models import timeframe
 from systems import cacheController
 from systems import configController
@@ -9,7 +9,9 @@ from systems import userDataController
 from systems import watcherController
 from utilities import guiDefines
 from utilities import workMode
+from utilities import utils
 
+from datetime import date
 import pyperclip
 import json
 import webbrowser
@@ -18,6 +20,11 @@ __widget:QFrame = None
 __nameValue:QLabel = None
 __categoryValue:QLabel = None
 __priceValue:QLabel = None
+__viewedAgo:QLabel = None
+__viewedDate:QLabel = None
+__boredBox:QCheckBox = None
+__boredAgo:QLabel = None
+__boredDate:QLabel = None
 __tabs:QTabWidget = None
 __table:QTableWidget = None
 __dataButton:QPushButton = None
@@ -40,10 +47,17 @@ def __init():
     __initDivergenceTable()
 
 def __initValues():
-    global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table
+    global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table, \
+    __viewedAgo, __viewedDate, __boredBox, __boredAgo, __boredDate
+
     __nameValue = __widget.findChild(QLabel, 'nameValue')
     __categoryValue = __widget.findChild(QLabel, 'categoryValue')
     __priceValue = __widget.findChild(QLabel, 'priceValue')
+    __viewedAgo = __widget.findChild(QLabel, 'viewedAgoLabel')
+    __viewedDate = __widget.findChild(QLabel, 'viewedDateLabel')
+    __boredBox = __widget.findChild(QCheckBox, 'boredBox')
+    __boredAgo = __widget.findChild(QLabel, 'boredDateLabel')
+    __boredDate = __widget.findChild(QLabel, 'priceValue')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
     __table = __widget.findChild(QTableWidget, 'tableWidget')
     __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
@@ -176,13 +190,19 @@ def __onOpenSpotLinkClicked():
     if not __tickerController:
         return
     url = __url if workMode.isStock() else __url + 'BINANCE:'
-    __openLink(url + __tickerController.getTicker())
+    ticker = __tickerController.getTicker()
+    cacheController.setDatestamp(ticker, cacheController.DateStamp.VIEWED, utils.getCurrentTimeSeconds())
+    __updateViewed(ticker)
+    __openLink(url + ticker)
 
 def __onOpenFutureLinkClicked():
     if not __tickerController:
         return
     url = __url if workMode.isStock() else __url + 'BINANCE:'
-    __openLink(url + __tickerController.getFutureTicker() + '.P')
+    ticker = __tickerController.getTicker()
+    cacheController.setDatestamp(ticker, cacheController.DateStamp.VIEWED, utils.getCurrentTimeSeconds())
+    __updateViewed(ticker)
+    __openLink(url + ticker + '.P')
 
 def __updateName():
     if __tickerController:
@@ -240,6 +260,27 @@ def __updateTabValues(tabWidget:QWidget, candlesController):
     rsiValue = tabWidget.findChild(QLabel, 'rsiValue')
     rsiValue.setText(str(candle.rsi if candle else candle))
 
+def __updateViewed(ticker):
+    global __viewedAgo, __viewedDate
+    ago = '-'
+    time = '-'
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.VIEWED)
+    if timestamp:
+        now = date.fromtimestamp(utils.getCurrentTimeSeconds())
+        stamp = date.fromtimestamp(timestamp)
+        diff = now - stamp
+        ago = str(diff.days) + 'd '
+        time = candle.getPrettyTime(timestamp * 1000, timeframe.Timeframe.ONE_DAY)
+    __viewedAgo.setText(ago)
+    __viewedDate.setText(time)
+
+def __updateBored(ticker):
+    pass
+
+def __updateDatestamps(ticker):
+    __updateViewed(ticker)
+    __updateBored(ticker)
+
 def __updateDivergenceTable():
     global __table,__tickerController
     divergences = []
@@ -289,6 +330,7 @@ def update(ticker:str, byClick):
         tfController = __tickerController.getTimeframe(tf)
 
         __updateTabValues(tabWidget, tfController.getCandlesController())
+        __updateDatestamps(ticker)
 
     __updateDivergenceTable()
     if byClick:
