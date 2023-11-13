@@ -8,6 +8,7 @@ notViewedColor:QColor = QColor(255,127,80)
 zeroColor:QColor = Qt.GlobalColor.darkGray
 invalidLastCandleColor:QColor = Qt.GlobalColor.blue
 unacceptableFeeColor:QColor = Qt.GlobalColor.darkBlue
+boredColor:QColor = Qt.GlobalColor.darkYellow
 defaultBgColor:QColor = QColor(45, 45, 45)
 defaultFontColor:QColor = Qt.GlobalColor.white
 
@@ -19,3 +20,6 @@ def getEmptyProgressBarSheet():
 
 def getCheckedButtonSheet():
     return 'QPushButton::checked { background: lightGray; color: black }'
+
+def getCheckBoxSheet():
+    return 'QCheckBox { background: lightGray; color: #FF7F50 }'

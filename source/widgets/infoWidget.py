@@ -45,6 +45,7 @@ def __init():
     __initProgressBar()
     __initTabs()
     __initDivergenceTable()
+    __initBoredBox()
 
 def __initValues():
     global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table, \
@@ -56,8 +57,8 @@ def __initValues():
     __viewedAgo = __widget.findChild(QLabel, 'viewedAgoLabel')
     __viewedDate = __widget.findChild(QLabel, 'viewedDateLabel')
     __boredBox = __widget.findChild(QCheckBox, 'boredBox')
-    __boredAgo = __widget.findChild(QLabel, 'boredDateLabel')
-    __boredDate = __widget.findChild(QLabel, 'priceValue')
+    __boredAgo = __widget.findChild(QLabel, 'boredAgoLabel')
+    __boredDate = __widget.findChild(QLabel, 'boredDateLabel')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
     __table = __widget.findChild(QTableWidget, 'tableWidget')
     __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
@@ -149,6 +150,11 @@ def __initDivergenceTable():
         __table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
     __table.setHorizontalHeaderLabels(heads)
 
+def __initBoredBox():
+    global __boredBox
+    __boredBox.clicked.connect(__onBoredClicked)
+    __boredBox.setStyleSheet(guiDefines.getCheckBoxSheet())
+
 def __onTabClicked():
     if __tickerController is None:
         return
@@ -203,6 +209,13 @@ def __onOpenFutureLinkClicked():
     cacheController.setDatestamp(ticker, cacheController.DateStamp.VIEWED, utils.getCurrentTimeSeconds())
     __updateViewed(ticker)
     __openLink(url + ticker + '.P')
+
+def __onBoredClicked(state):
+    if __tickerController is None:
+        return
+    time = utils.getCurrentTimeSeconds() if state else None
+    cacheController.setDatestamp(__tickerController.getTicker(), cacheController.DateStamp.BORED, time)
+    __updateBored(__tickerController.getTicker())
 
 def __updateName():
     if __tickerController:
@@ -275,7 +288,19 @@ def __updateViewed(ticker):
     __viewedDate.setText(time)
 
 def __updateBored(ticker):
-    pass
+    global __boredAgo, __boredDate
+    ago = '-'
+    time = '-'
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.BORED)
+    if timestamp:
+        now = date.fromtimestamp(utils.getCurrentTimeSeconds())
+        stamp = date.fromtimestamp(timestamp)
+        diff = now - stamp
+        ago = str(diff.days) + 'd '
+        time = candle.getPrettyTime(timestamp * 1000, timeframe.Timeframe.ONE_DAY)
+    __boredAgo.setText(ago)
+    __boredDate.setText(time)
+    __boredBox.setChecked(bool(timestamp))
 
 def __updateDatestamps(ticker):
     __updateViewed(ticker)

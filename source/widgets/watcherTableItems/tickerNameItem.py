@@ -43,3 +43,5 @@ class TickerNameItem(QTableWidgetItem):
 
         if allPower == 0.0:
             super().setForeground(guiDefines.zeroColor)
+        if tickerController.isBored():
+            super().setForeground(guiDefines.boredColor)

@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from models import timeframe
+from systems import cacheController
 from systems import configController
 from systems import feeController
 from systems import timeframeController
@@ -50,6 +51,9 @@ class TickerController:
 
     def isFeeAcceptable(self):
         return self.__feeAcceptable
+
+    def isBored(self):
+        return cacheController.getDatestamp(self.__ticker, cacheController.DateStamp.BORED) is not None
 
     def getTicker(self):
         return self.__ticker
