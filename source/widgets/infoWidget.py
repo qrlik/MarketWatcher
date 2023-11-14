@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QFrame,QCheckBox,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
+from PySide6.QtWidgets import QFrame,QSlider,QCheckBox,QLabel,QVBoxLayout,QHBoxLayout,QTabWidget,QWidget,QAbstractItemView,QTableWidget,QTableWidgetItem,QHeaderView,QPushButton,QProgressBar
 from PySide6.QtCore import Qt
 
 from models import candle
@@ -25,6 +25,8 @@ __viewedDate:QLabel = None
 __boredBox:QCheckBox = None
 __boredAgo:QLabel = None
 __boredDate:QLabel = None
+__boredCounter:QLabel = None
+__boredSlider:QSlider = None
 __tabs:QTabWidget = None
 __table:QTableWidget = None
 __dataButton:QPushButton = None
@@ -45,11 +47,11 @@ def __init():
     __initProgressBar()
     __initTabs()
     __initDivergenceTable()
-    __initBoredBox()
+    __initBored()
 
 def __initValues():
     global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table, \
-    __viewedAgo, __viewedDate, __boredBox, __boredAgo, __boredDate
+    __viewedAgo, __viewedDate, __boredBox, __boredAgo, __boredDate, __boredCounter, __boredSlider
 
     __nameValue = __widget.findChild(QLabel, 'nameValue')
     __categoryValue = __widget.findChild(QLabel, 'categoryValue')
@@ -59,6 +61,8 @@ def __initValues():
     __boredBox = __widget.findChild(QCheckBox, 'boredBox')
     __boredAgo = __widget.findChild(QLabel, 'boredAgoLabel')
     __boredDate = __widget.findChild(QLabel, 'boredDateLabel')
+    __boredCounter = __widget.findChild(QLabel, 'boredCountLabel')
+    __boredSlider = __widget.findChild(QSlider, 'boredSlider')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
     __table = __widget.findChild(QTableWidget, 'tableWidget')
     __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
@@ -150,10 +154,21 @@ def __initDivergenceTable():
         __table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
     __table.setHorizontalHeaderLabels(heads)
 
-def __initBoredBox():
-    global __boredBox
+def __initBored():
+    global __boredBox,__boredSlider,__boredCounter
     __boredBox.clicked.connect(__onBoredClicked)
     __boredBox.setStyleSheet(guiDefines.getCheckBoxSheet())
+    __boredSlider.valueChanged.connect(__updateBoredCount)
+
+def __updateBoredCount(count):
+    global __boredCounter,__boredSlider
+    if __tickerController is None:
+        return
+    if count is None:
+        __boredSlider.setValue(cacheController.getBoredCount(__tickerController.getTicker()))
+    else:
+        __boredCounter.setText(str(count) + ' ')
+        cacheController.setBoredCount(__tickerController.getTicker(), count)
 
 def __onTabClicked():
     if __tickerController is None:
@@ -198,7 +213,6 @@ def __onOpenSpotLinkClicked():
     url = __url if workMode.isStock() else __url + 'BINANCE:'
     ticker = __tickerController.getTicker()
     cacheController.setDatestamp(ticker, cacheController.DateStamp.VIEWED, utils.getCurrentTimeSeconds())
-    __updateViewed(ticker)
     __openLink(url + ticker)
 
 def __onOpenFutureLinkClicked():
@@ -207,7 +221,6 @@ def __onOpenFutureLinkClicked():
     url = __url if workMode.isStock() else __url + 'BINANCE:'
     ticker = __tickerController.getTicker()
     cacheController.setDatestamp(ticker, cacheController.DateStamp.VIEWED, utils.getCurrentTimeSeconds())
-    __updateViewed(ticker)
     __openLink(url + ticker + '.P')
 
 def __onBoredClicked(state):
@@ -296,7 +309,7 @@ def __updateBored(ticker):
         now = date.fromtimestamp(utils.getCurrentTimeSeconds())
         stamp = date.fromtimestamp(timestamp)
         diff = now - stamp
-        ago = str(diff.days) + 'd '
+        ago = str(diff.days)
         time = candle.getPrettyTime(timestamp * 1000, timeframe.Timeframe.ONE_DAY)
     __boredAgo.setText(ago)
     __boredDate.setText(time)
@@ -305,6 +318,7 @@ def __updateBored(ticker):
 def __updateDatestamps(ticker):
     __updateViewed(ticker)
     __updateBored(ticker)
+    __updateBoredCount(None)
 
 def __updateDivergenceTable():
     global __table,__tickerController

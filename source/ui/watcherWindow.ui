@@ -293,22 +293,49 @@
             </widget>
            </item>
            <item>
-            <spacer name="boredSpacer">
+            <widget class="QSlider" name="boredSlider">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>50</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="tickPosition">
+              <enum>QSlider::NoTicks</enum>
              </property>
-            </spacer>
+             <property name="tickInterval">
+              <number>1</number>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="boredAgoLabel">
              <property name="text">
               <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="slashLabel">
+             <property name="text">
+              <string>/</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="boredCountLabel">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="boredLine">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
             </widget>
            </item>

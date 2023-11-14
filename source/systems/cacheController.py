@@ -125,3 +125,13 @@ def setDatestamp(ticker, type, timestamp):
 
 def getDatestamp(ticker, type):
     return __getDatestamp(type).setdefault(ticker, None)
+
+def getBoredCount(ticker):
+    dict = __cache.setdefault("boredAmount", {})
+    amount = dict.setdefault(ticker, 0)
+    return dict[ticker]
+
+def setBoredCount(ticker, amount):
+    dict = __cache.setdefault("boredAmount", {})
+    dict.setdefault(ticker, amount)
+    dict[ticker] = amount
