@@ -23,7 +23,7 @@ plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
 
 
 // show position amount
-atr_for_position = atr * atr_factor
+atr_for_position = math.round(atr * atr_factor, 2)
 price_for_position = close
 
 stop_percents = atr_for_position / price_for_position * 100
@@ -51,6 +51,7 @@ draw_goal(false, color.green, 2)
 
 // show atr range
 plotchar(atr_for_position, title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
+plotchar(atr_factor, title = "Atr Factor", char="", location=location.top, color=color.new(color.lime, 100))
 
 up = line.new(bar_index + 1, price_for_position + atr_for_position, bar_index + 2, price_for_position + atr_for_position, color = color.new(color.orange, 0), width = 2)
 line.delete(up[1])
