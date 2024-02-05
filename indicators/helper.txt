@@ -50,7 +50,7 @@ draw_goal(false, color.green, 2)
 
 
 // show atr range
-plotchar(atr_for_position, title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
+plotchar(math.round(atr, 2), title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
 plotchar(atr_factor, title = "Atr Factor", char="", location=location.top, color=color.new(color.lime, 100))
 
 up = line.new(bar_index + 1, price_for_position + atr_for_position, bar_index + 2, price_for_position + atr_for_position, color = color.new(color.orange, 0), width = 2)
@@ -62,6 +62,8 @@ line.delete(down[1])
 plotchar(price_for_position - atr_for_position, title = "Down Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
 
+// show bar index
+plotchar(bar_index, title = "Bar", char="", location=location.top, color=color.new(color.white, 100))
 
 
 // mark not closed bar
