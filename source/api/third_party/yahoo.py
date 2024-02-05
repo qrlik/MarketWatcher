@@ -229,7 +229,13 @@ def tickers_sp500(include_company_data = False):
     if include_company_data:
         return sp500
 
-    sp_tickers = sp500.Symbol.tolist()
+    #sp_tickers = sp500.Symbol.tolist()
+
+    sp_tickers = []
+    for row in sp500.values:
+        if len(row) > 0 and row[0] != 'Symbol':
+            sp_tickers.append(row[0])
+
     sp_tickers = sorted(sp_tickers)
     
     return sp_tickers
