@@ -1,0 +1,46 @@
+[
+	{
+		"symbol": "AMRK",
+		"type": "LONG",
+		"openTime": "2023-09-20 14:03:04",
+		"openPrice": 31.16,
+		"atr": 1.24,
+		"maxProfits": {
+			"0.5": 31.16,
+			"1.0": 31.16
+		}
+	},
+	{
+		"symbol": "EW",
+		"type": "LONG",
+		"openTime": "2023-09-13 09:15:41",
+		"openPrice": 72.20,
+		"atr": 1.6,
+		"maxProfits": {
+			"0.5": 72.20,
+			"1.0": 72.20
+		}
+	},
+	{
+		"symbol": "SMPL",
+		"type": "LONG",
+		"openTime": "2023-09-07 09:41:03",
+		"openPrice": 33.0,
+		"atr": 0.92,
+		"maxProfits": {
+			"0.5": 33.0,
+			"1.0": 35.61
+		}
+	},
+	{
+		"symbol": "SNDX",
+		"type": "LONG",
+		"openTime": "2023-09-11 09:31:39",
+		"openPrice": 17.41,
+		"atr": 0.79,
+		"maxProfits": {
+			"0.5": 17.41,
+			"1.0": 17.41
+		}
+	}
+]

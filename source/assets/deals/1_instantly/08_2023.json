@@ -1,0 +1,36 @@
+[
+	{
+		"symbol": "GOOGL",
+		"type": "SHORT",
+		"openTime": "2023-08-31 15:10:13",
+		"openPrice": 136.96,
+		"atr": 3.17,
+		"maxProfits": {
+			"0.5": 132.95,
+			"1.0": 127.22
+		}
+	},
+	{
+		"symbol": "HAS",
+		"type": "SHORT",
+		"openTime": "2023-08-25",
+		"openPrice": 69.45,
+		"atr": 1.57,
+		"maxProfits": {
+			"0.5": 69.45,
+			"1.0": 69.45
+		}
+	},
+	{
+		"note": "2 точки без уровня",
+		"symbol": "UFPI",
+		"type": "SHORT",
+		"openTime": "2023-08-31 09:41:30", // 1 sep
+		"openPrice": 106.16,
+		"atr": 2.21,
+		"maxProfits": {
+			"0.5": 106.16,
+			"1.0": 90.62
+		}
+	}
+]

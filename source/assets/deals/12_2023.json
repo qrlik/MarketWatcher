@@ -1,0 +1,47 @@
+[
+	{
+		"symbol": "CPRT",
+		"type": "SHORT",
+		"openTime": "2023-11-29 09:38:25",
+		"openPrice": 50.67,
+		"atrH": 0.25,
+		"atrD": 0.98,
+		"brackets": [
+			{
+				"worst": 50.72,
+				"best": 47.07
+			}
+		],
+		"cleared": false
+	},
+	{
+		"symbol": "ANET",
+		"type": "SHORT",
+		"openTime": "2023-11-30 10:46:32",
+		"openPrice": 217.74,
+		"atrH": 1.58,
+		"atrD": 6.47,
+		"brackets": [
+			{
+				"worst": 219.96,
+				"best": 210.69
+			}
+		],
+		"cleared": true
+	},
+	{
+		"symbol": "DKNG",
+		"type": "SHORT",
+		"openTime": "2023-11-30 13:32:14",
+		"openPrice": 37.95,
+		"atrH": 0.4,
+		"atrD": 1.45,
+		"brackets": [
+			{
+				"worst": 39.05,
+				"best": 34.14
+			}
+		],
+		"cleared": false
+	}
+]
