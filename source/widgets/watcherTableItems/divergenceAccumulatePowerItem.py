@@ -35,19 +35,30 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         if not tickerController.isFeeAcceptable():
             return
     
+        maxPower = 0.0
         allPower = 0.0
         allNewPower = 0.0
         for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
             powers = controller.getDivergenceController().getRegularPowers()
-            if powers.bullPower == 0.0 and powers.bearPower == 0.0:
+
+            if powers.bullPower <= 0.0 and powers.bearPower <= 0.0: # tf filter && logic
                 allPower = 0.0
                 break
             
-            allPower += powers.bullPower
             allNewPower += powers.newBullPower
-            allPower += abs(powers.bearPower)
             allNewPower += abs(powers.newBearPower)
 
-        self.__power = allPower
+            allPower += powers.bullPower
+            allPower += abs(powers.bearPower)
+
+            maxPower = max(maxPower, powers.maxPower)
+
+        self.__power = maxPower
+        
+        if self.__power > 0.0:
+            text = str(round(self.__power, 2)) + ' (' + str(round(allPower, 2)) + ')'
+            super().setText(text)
+        else:
+            super().setText('')
+
         super().setForeground(guiDefines.defaultFontColor if allNewPower == 0.0 else guiDefines.notViewedColor)
-        super().setText(str(round(self.__power, 2)) if self.__power > 0.0 else '')

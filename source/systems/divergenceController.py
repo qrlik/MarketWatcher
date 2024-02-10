@@ -43,6 +43,7 @@ class DivergenceInfo:
 
 class DivergencesPowersInfo:
     def __init__(self):
+        self.maxPower = 0.0
         self.bullPower = 0.0
         self.bearPower = 0.0
         self.newBullPower = 0.0
@@ -227,10 +228,12 @@ class DivergenceController:
         powers = DivergencesPowersInfo()
         for divergence in self.__actuals:
             if divergence.signal == DivergenceSignalType.BULL:
+                powers.maxPower = max(powers.maxPower, divergence.power)
                 powers.bullPower += divergence.power
                 if not divergence.viewed:
                     powers.newBullPower += divergence.power
             else:
+                powers.maxPower = max(powers.maxPower, abs(divergence.power))
                 powers.bearPower += divergence.power
                 if not divergence.viewed:
                     powers.newBearPower += divergence.power
@@ -245,10 +248,12 @@ class DivergenceController:
             if tricked and not divergence.tricked:
                 continue
             if divergence.signal == DivergenceSignalType.BULL:
+                powers.maxPower = max(powers.maxPower, divergence.power)
                 powers.bullPower += divergence.power
                 if not divergence.viewed:
                     powers.newBullPower += divergence.power
             else:
+                powers.maxPower = max(powers.maxPower, abs(divergence.power))
                 powers.bearPower += divergence.power
                 if not divergence.viewed:
                     powers.newBearPower += divergence.power
