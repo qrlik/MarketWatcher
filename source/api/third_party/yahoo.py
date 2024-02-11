@@ -253,7 +253,7 @@ def getFtpNasdaqData(file):
         ftp.cwd("SymbolDirectory")
         
         r = io.BytesIO()
-        ftp.retrbinary(file, r.write)
+        ftp.retrbinary(file, r.write) # TODO? freeze here sometimes
         
         info = r.getvalue().decode()
         ftp.close()
