@@ -279,10 +279,7 @@ def tickers_nasdaq(tier):
             if tickerTier == 'Q':
                 tickers.append(data[0])
         elif tier == NasdaqTier.GLOBAL:
-            if tickerTier == 'G':
-                tickers.append(data[0])
-        elif tier == NasdaqTier.CAPITAL:
-            if tickerTier == 'S':
+            if tickerTier == 'G' or tickerTier == 'Q':
                 tickers.append(data[0])
         else:
             tickers.append(data[0])
