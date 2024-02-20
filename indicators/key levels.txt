@@ -22,8 +22,6 @@ srcTip          =   "Source input for pivots. Default tracks the highest and low
 bullPivotTip    =   "Color of bullish Key Levels\n(border, background)"            
 bearPivotTip    =   "Color of bearish Key Levels\n(border, background)"            
 
-stratTip        =   "TSI speed control presets. Both speeds correlate to the Bjorgum TSI indicator"
-
 // ================================== //
 // ---------> User Input <----------- //
 // ================================== //
@@ -43,8 +41,6 @@ bullBgCol       =   input.color     (color.new  (#64b5f6, 95), "", inline= "0"  
 bearBorder      =   input.color     (color.new  (#ffeb3b, 60), "", inline= "1"  ,   group= "Pivot Color"                                        )   
 bearBgCol       =   input.color     (color.new  (#ffeb3b, 95), "", inline= "1"  ,   group= "Pivot Color"          , tooltip= bearPivotTip       )
 
-strat           =   input.string    ("Fast" ,   "Select a Speed"                ,   group= "TSI Speed Control"    , tooltip= stratTip           ,   options= ["Fast", "Slow"])
-    
 longf           =   input.int       (25     ,   "Long Length"                   ,   group= "TSI Fast Settings"                                  )
 shortf          =   input.int       (5      ,   "Short Length"                  ,   group= "TSI Fast Settings"                                  )
 signalf         =   input.int       (14     ,   "Signal Length"                 ,   group= "TSI Fast Settings"                                  )
@@ -70,8 +66,6 @@ var boxes       =   array.new_box   ()
 
 haSrc           =   src    ==       "HA"    
 hiLoSrc         =   src    ==       "High/Low"
-tsifast         =   strat  ==       "Fast"
-tsislow         =   strat  ==       "Slow"
 
 // ================================== //
 // ---> Functional Declarations <---- //
@@ -231,13 +225,6 @@ _level(_x, _y)          =>
 // ----> Variable Calculations <----- //
 // ================================== //
 
-shortvar        =   tsifast ?           shortf  :       shorts   
-longvar         =   tsifast ?           longf   :       longs    
-signalvar       =   tsifast ?           signalf :       signals 
-
-tsi             =   ta.tsi              (close,         shortvar,   longvar)
-tsl             =   ta.ema              (tsi,           signalvar)
-
 highest         =   close ==            ta.highest      (close,     right)
 lowest          =   close ==            ta.lowest       (close,     right)
 
@@ -314,9 +301,6 @@ bear            =   (fh or fl) and not  (hb or lb)
 
 bullCheck       =   not resBreak  and   not resBreak[1] and (fh or fl) and  close > open and     (hb or lb)
 bearCheck       =   not supBreak  and   not supBreak[1] and (fh or fl) and  close < open and not (hb or lb)
-
-data            =   tsi > tsi[1]  and   tsi < tsl 
-dtat            =   tsi < tsi[1]  and   tsi > tsl 
 
 hMatch          =   close > open
 sMatch          =   close < open
