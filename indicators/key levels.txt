@@ -41,14 +41,6 @@ bullBgCol       =   input.color     (color.new  (#64b5f6, 95), "", inline= "0"  
 bearBorder      =   input.color     (color.new  (#ffeb3b, 60), "", inline= "1"  ,   group= "Pivot Color"                                        )   
 bearBgCol       =   input.color     (color.new  (#ffeb3b, 95), "", inline= "1"  ,   group= "Pivot Color"          , tooltip= bearPivotTip       )
 
-longf           =   input.int       (25     ,   "Long Length"                   ,   group= "TSI Fast Settings"                                  )
-shortf          =   input.int       (5      ,   "Short Length"                  ,   group= "TSI Fast Settings"                                  )
-signalf         =   input.int       (14     ,   "Signal Length"                 ,   group= "TSI Fast Settings"                                  )
-
-longs           =   input.int       (25     ,   "Long Length"                   ,   group= "TSI Slow Settings"                                  )
-shorts          =   input.int       (13     ,   "Short Length"                  ,   group= "TSI Slow Settings"                                  )
-signals         =   input.int       (13     ,   "Signal Length"                 ,   group= "TSI Slow Settings"                                  )
-
 // ================================== //
 // -----> Immutable Constants <------ //
 // ================================== //    
