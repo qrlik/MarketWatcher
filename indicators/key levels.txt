@@ -18,19 +18,7 @@ perTip          =   "Max zone size as a percent of price. Some assets can be too
 maxTip          =   "Number of boxes for candlestick patterns to track historically. Note: the higher the number the less pivot zones will be tracked when looking back in time due to the limitation on the number of box elements allowed at once"
 futTip          =   "Number of bars to offset labels for price levels"
 srcTip          =   "Source input for pivots. Default tracks the highest and lowest bodies of HA candles to average price action, which can result in a level that sits in the overlap of support and resistance"     
-
-dhighsTip       =   "Disabling will prevent highs from being tracked"          
-dlowsTip        =   "Disabling will prevent lows from being tracked"         
-detectBOTip     =   "Show points that price action breaks above all pivots. An arrow from below is displayed"        
-detectBDTip     =   "Show points that price action breaks below all pivots. An arrow from above is displayed"         
-breakUpTip      =   "Show points that price action breaks above resistance. An arrow from below is displayed"         
-breakDnTip      =   "Show points that price action breaks below support. An arrow from above is displayed"          
-falseBullTip    =   "Show points that price action initially breaks below support before reversing. False moves can lead to fast moves in the opposite direction (bear trap). A large arrow from below is displayed"          
-falseBearTip    =   "Show points that price action initially breaks above resistance before reversing. False moves can lead to fast moves in the opposite direction (bull trap). A large arrow from above is displayed"           
-supPushTip      =   "Show up candles that are detected within a support zone. Can show points support is being respected. A triangle from below is displayed"          
-resPushTip      =   "Show down candles that are detected within a resistance zone. Can show points resistance is being respected. A triangle from above is displayed"           
-curlTip         =   "Show Bjorgum TSI 'curl' when candles are detected in the range of a key zone. Can show momentum shift at Key Levels. (Correlates to Bjorgum TSI indicator)" 
-
+       
 repaintTip      =   "Wait for candles end before detecting patterns. False will show potential patterns forming before they are confirmed."
 labelsTip       =   "Show a label for detected candle patterns"
 sBoxTip         =   "Show a box around detected candle patterns"
@@ -85,18 +73,6 @@ max             =   input.float     (10     ,   "Max Boxes for Patterns"        
 fut             =   input.int       (30     ,   "Offset For Labels"             ,   group= "Zones"                , tooltip= futTip             )
 src             =   input.string    ("HA"   ,   "Source For Pivots"             ,   group= "Zones"                , tooltip= srcTip             ,   options= ["HA", "High/Low Body", "High/Low"])
 
-dhighs          =   input.bool      (true   ,   "Detect Pivot Highs"            ,   group= "Detection"            , tooltip= dhighsTip          )
-dlows           =   input.bool      (true   ,   "Detect Pivot Lows"             ,   group= "Detection"            , tooltip= dlowsTip           )
-detectBO        =   input.bool      (false  ,   "Detect Breakout"               ,   group= "Detection"            , tooltip= detectBOTip        )
-detectBD        =   input.bool      (false  ,   "Detect Breakdown"              ,   group= "Detection"            , tooltip= detectBDTip        )
-breakUp         =   input.bool      (false  ,   "Detect Resistance Break"       ,   group= "Detection"            , tooltip= breakUpTip         )
-breakDn         =   input.bool      (false  ,   "Detect Support Break"          ,   group= "Detection"            , tooltip= breakDnTip         ) 
-falseBull       =   input.bool      (false  ,   "Detect False Breakdown"        ,   group= "Detection"            , tooltip= falseBullTip       )
-falseBear       =   input.bool      (false  ,   "Detect False Breakup"          ,   group= "Detection"            , tooltip= falseBearTip       ) 
-supPush         =   input.bool      (false  ,   "Detect Moves Off Support"      ,   group= "Detection"            , tooltip= supPushTip         )
-resPush         =   input.bool      (false  ,   "Detect Moves Off Resistance"   ,   group= "Detection"            , tooltip= resPushTip         ) 
-curl            =   input.bool      (false  ,   "Detect TSI Curl"               ,   group= "Detection"            , tooltip= curlTip            ) 
-
 repaint         =   input.bool      (true   ,   "Wait For Confirmed Bar"        ,   group= "Candle Patterns"      , tooltip= repaintTip         )
 labels          =   input.bool      (false  ,   "Show Label"                    ,   group= "Candle Patterns"      , tooltip= labelsTip          )
 sBox            =   input.bool      (false  ,   "Show Boxes Around Patterns"    ,   group= "Candle Patterns"      , tooltip= sBoxTip            )
@@ -148,7 +124,7 @@ moveBullCol     =   input.color     (color.new  (#64b5f6, 25), "", inline= "5"  
 moveBearCol     =   input.color     (color.new  (#ffeb3b, 25), "", inline= "5"  ,   group= "Moves From S&R Color" , tooltip= moveTip            ) 
 
 curlBullCol     =   input.color     (color.new  (#17ff00, 40), "", inline= "6"  ,   group= "Momentum Curl Color"                                )
-curlBearCol     =   input.color     (color.new  (#f3ff00, 40), "", inline= "6"  ,   group= "Momentum Curl Color"  , tooltip= curlTip            ) 
+curlBearCol     =   input.color     (color.new  (#f3ff00, 40), "", inline= "6"  ,   group= "Momentum Curl Color"              ) 
 
 patBullBg       =   input.color     (color.new  (#17ff00, 90), "", inline= "7"  ,   group= "Pattern Box Color"                                  )
 patNeutBg       =   input.color     (color.new  (#b2b5be, 90), "", inline= "7"  ,   group= "Pattern Box Color"                                  )
@@ -412,11 +388,11 @@ coDiff          =   close -             open
 // --------> Logical Order <--------- //
 // ================================== //
 
-if pivot_high and   dhighs and  confirmed
+if pivot_high and   confirmed
     _arrayLoad      (highBull , nPiv,   false)      
     _arrayBox       (pivotHigh, nPiv,   _box(sync[right], HH, sync, HL, bearBorder, bearBgCol, extend.none))
 
-if pivot_low  and   dlows and   confirmed
+if pivot_low  and   confirmed
     _arrayLoad      (lowsBull , nPiv,   true)      
     _arrayBox       (pivotLows, nPiv,   _box(sync[right], LH, sync, LL, bullBorder, bullBgCol, extend.none))
 
@@ -518,39 +494,6 @@ lu              =   isBear1 and rp and ls_ and atrMaxSize and bj.lus            
 // ------> Graphical Display <------- //
 // ================================== //
 
-plotFalseDn     =   falseBull     and   falseBreakBull
-plotFalseUp     =   falseBear     and   falseBreakBear
-
-falseUpCol      =   plotFalseUp     ?   upCol       :   na
-falseDnCol      =   plotFalseDn     ?   dnCol       :   na
-
-plotBreakOut    =   breakOut      and   detectBO    and not     plotFalseDn
-plotBreakDn     =   breakDwn      and   detectBD    and not     plotFalseUp
-
-plotResBreak    =   resBreak      and   breakUp     and not     (plotBreakOut or plotFalseDn)
-plotSupBreak    =   supBreak      and   breakDn     and not     (plotBreakDn  or plotFalseUp)
-
-plotBullCheck   =   bullCheck     and   supPush
-plotBearCheck   =   bearCheck     and   resPush
-
-plotCurlBull    =   curl and data and   bull
-plotCurlBear    =   curl and dtat and   bear
-
-plotarrow           (plotFalseUp    ?   coDiff      :   na      ,   colorup  = fBull          ,     colordown=      fBear ,         maxheight=      arrowMax)
-plotarrow           (plotFalseDn    ?   coDiff      :   na      ,   colorup  = fBull          ,     colordown=      fBear ,         maxheight=      arrowMax)
-
-plotshape           (plotBreakOut   ,   style=shape.arrowup     ,   location=location.belowbar,     color=          upCol ,         size=           size.small)
-plotshape           (plotBreakDn    ,   style=shape.arrowdown   ,   location=location.abovebar,     color=          dnCol ,         size=           size.small)
-
-plotshape           (plotResBreak   ,   style=shape.arrowup     ,   location=location.belowbar,     color=          supCol,         size=           size.small)
-plotshape           (plotSupBreak   ,   style=shape.arrowdown   ,   location=location.abovebar,     color=          resCol,         size=           size.small)
-
-plotshape           (plotBullCheck  ,   style=shape.triangleup  ,   location=location.belowbar,     color=          moveBullCol)
-plotshape           (plotBearCheck  ,   style=shape.triangledown,   location=location.abovebar,     color=          moveBearCol)
-
-plotshape           (plotCurlBull   ,   style=shape.triangleup  ,   location=location.belowbar,     color=          curlBullCol)
-plotshape           (plotCurlBear   ,   style=shape.triangledown,   location=location.abovebar,     color=          curlBearCol)
-
 bj.dLab             (dw  and labels, labNeutCol, textNeutCol), _wrap (dw  and sBox, boxes, 1, patNeutBo, patNeutBg)
 bj.bewLab           (bew and labels, labBullCol, textBullCol), _wrap (bew and sBox, boxes, 2, patBullBo, patBullBg)
 bj.hLab             (h   and labels, labBullCol, textBullCol), _wrap (h   and sBox, boxes, 1, patBullBo, patBullBg)
@@ -586,15 +529,6 @@ alertcondition      (falseBreakBull ,   'False break down'                      
 alertcondition      (falseBreakBear ,   'False break up'                        ,   'False Break Up on {{interval}} chart. Price is {{close}}'                      )
 alertcondition      (breakOut       ,   'Breakout'                              ,   'Breakout on {{interval}} chart. Price is {{close}}'                            )
 alertcondition      (breakDwn       ,   'Breakdown'                             ,   'Breakdown on {{interval}} chart. Price is {{close}}'                           )
-
-_alert              (plotResBreak   ,   'Resistance broke on '                  )
-_alert              (plotSupBreak   ,   'Support break '                        )
-_alert              (plotBullCheck  ,   'Pushing off key level support on '     )
-_alert              (plotBearCheck  ,   'Pushing off key level resistance on '  )
-_alert              (plotFalseDn    ,   'False break down on '                  )
-_alert              (plotFalseUp    ,   'False break up on '                    )
-_alert              (plotBreakOut   ,   'Breakout on '                          )
-_alert              (plotBreakDn    ,   'Breakdown on '                         )
 
 _alert              (dw             ,   'Doji at support on '                   )
 _alert              (db             ,   'Doji at resistance on '                )
