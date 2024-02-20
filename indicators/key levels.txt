@@ -18,18 +18,6 @@ perTip          =   "Max zone size as a percent of price. Some assets can be too
 maxTip          =   "Number of boxes for candlestick patterns to track historically. Note: the higher the number the less pivot zones will be tracked when looking back in time due to the limitation on the number of box elements allowed at once"
 futTip          =   "Number of bars to offset labels for price levels"
 srcTip          =   "Source input for pivots. Default tracks the highest and lowest bodies of HA candles to average price action, which can result in a level that sits in the overlap of support and resistance"     
-       
-ecWickTip       =   "Determines if engulfing candles must engulf the wick or just the body of the preceding candle"     
-colorMatchTip   =   "Determines if hammers must be up candles and shooting stars must be down candles"     
-closeHalfTip    =   "Determines if Tweezer patterns must close beyond the half way point of the preceding candle"     
-atrMaxTip       =   "Maximum size of setup candles (as a multiplier of the current ATR)"     
-rejectWickTip   =   "The maximum wick size as a percentage of body size allowable for a rejection wick on the resolution candle of the pattern. 0 disables the filter"
-hammerFibTip    =   "The relationship of body to candle size for hammers and stars. (ie. body is 33% of total candle size)."     
-hsShadowPercTip =   "The maximum allowable opposing wick size as a percent of body size (ex. top wick for a hammer pattern etc.)"     
-hammerSizeTip   =   "The minimum size of hammers, stars, or long shadows as a multiplier of ATR. (To filter out tiny setups)"     
-dojiSizeTip     =   "The relationship of body to candle size (ie. body is 5% of total candle size)."     
-dojiWickSizeTip =   "Maximum wick size comparative to the opposite wick. (eg. 2 = bottom wick must be less than or equal to 2x the top wick)."     
-luRatioTip      =   "A relationship of the upper wick to the overall candle size expressed as a percent."     
 
 lookbackTip     =   "Number of candles that can be included in a false break signal"        
 swingTip        =   "Swing detection is used to filter signals on breakout type signals. A higher number will mean more significant points, but less of them"        
@@ -59,20 +47,6 @@ per             =   input.float     (5      ,   "Max Zone Percent"              
 max             =   input.float     (10     ,   "Max Boxes for Patterns"        ,   group= "Zones"                , tooltip= maxTip             )
 fut             =   input.int       (30     ,   "Offset For Labels"             ,   group= "Zones"                , tooltip= futTip             )
 src             =   input.string    ("HA"   ,   "Source For Pivots"             ,   group= "Zones"                , tooltip= srcTip             ,   options= ["HA", "High/Low Body", "High/Low"])
-
-alertMode       =   input.string    (alert.freq_once_per_bar_close              ,   "Alerts Mode"                 , group  = "Alert Frequency"  ,   options= [alert.freq_once_per_bar, alert.freq_once_per_bar_close]) 
-
-ecWick          =   input.bool      (false  ,   "Engulfing Must Engulf Wick"    ,   group= "Candle Filters"       , tooltip= ecWickTip          )
-colorMatch      =   input.bool      (false  ,   "H&S Must Match Color"          ,   group= "Candle Filters"       , tooltip= colorMatchTip      )
-closeHalf       =   input.bool      (false  ,   "Tweezer Close Over Half"       ,   group= "Candle Filters"       , tooltip= closeHalfTip       )
-atrMax          =   input.float     (0.0    ,   "Max Candle Size (× ATR)"       ,   group= "Candle Filters"       , tooltip= atrMaxTip          ,   step= 0.1 )
-rejectWickMax   =   input.float     (0.0    ,   "[EC] Max Reject Wick Size"     ,   group= "Candle Filters"       , tooltip= rejectWickTip      ,   step= 1   )  
-hammerFib       =   input.float     (33     ,   "[HS] H&S Ratio (%)"            ,   group= "Candle Filters"       , tooltip= hammerFibTip       ,   step= 1   ) 
-hsShadowPerc    =   input.float     (5      ,   "[HS] H&S Opposing Shadow (%)"  ,   group= "Candle Filters"       , tooltip= hsShadowPercTip    ,   step= 1   ) 
-hammerSize      =   input.float     (0.1    ,   "[HS] H&S Min Size (× ATR)"     ,   group= "Candle Filters"       , tooltip= hammerSizeTip      ,   step= 0.1 ) 
-dojiSize        =   input.float     (5      ,   "[DJ] Doji Size (%)"            ,   group= "Candle Filters"       , tooltip= dojiSizeTip        ,   step= 1   )
-dojiWickSize    =   input.float     (2      ,   "[DJ] Max Doji Wick Size"       ,   group= "Candle Filters"       , tooltip= dojiWickSizeTip    ,   step= 1   )
-luRatio         =   input.float     (75     ,   "[LS] Long Shadow (%)"          ,   group= "Candle Filters"       , tooltip= luRatioTip         ,   step= 1   ) 
 
 lookback        =   input.int       (2      ,   "Lookback For Breaks"           ,   group= "Lookback"             , tooltip= lookbackTip        )
 swing           =   input.int       (5      ,   "swing High/Low"                ,   group= "Lookback"             , tooltip= swingTip           )
@@ -307,11 +281,7 @@ _label(_x, _y, y, _s, _col1, _col2) =>
 _level(_x, _y)          =>
     var label [] lab    =      array.new_label  (nPiv)
     var line  [] lines  =      array.new_line   (nPiv)
-
-_alert(_x, _y) =>
-    if _x
-        alert   (_y + timeframe.period + ' chart. Price is ' + str.tostring(close), alertMode)
-        
+  
 // ================================== //
 // ----> Variable Calculations <----- //
 // ================================== //
@@ -433,11 +403,8 @@ isBear2         =   (sigHigh       or   sigHigh[1]) and         (bear or bear[1]
 data            =   tsi > tsi[1]  and   tsi < tsl 
 dtat            =   tsi < tsi[1]  and   tsi > tsl 
 
-hMatch          =   not colorMatch or   close > open
-sMatch          =   not colorMatch or   close < open
-
-hsFilter        =   bj.barRange()  >=   hammerSize * atr
-atrMaxSize      =   bj.barRange()  <=   atrMax     * atr or     atrMax == 0.0
+hMatch          =   close > open
+sMatch          =   close < open
 
 // ================================== //
 // ------> Graphical Display <------- //
