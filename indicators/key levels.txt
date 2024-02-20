@@ -19,19 +19,6 @@ maxTip          =   "Number of boxes for candlestick patterns to track historica
 futTip          =   "Number of bars to offset labels for price levels"
 srcTip          =   "Source input for pivots. Default tracks the highest and lowest bodies of HA candles to average price action, which can result in a level that sits in the overlap of support and resistance"     
        
-repaintTip      =   "Wait for candles end before detecting patterns. False will show potential patterns forming before they are confirmed."
-labelsTip       =   "Show a label for detected candle patterns"
-sBoxTip         =   "Show a box around detected candle patterns"
-dTip            =   "Detect Doji candle patterns"      
-beTip           =   "Detect Engulfing patterns"     
-hsTip           =   "Detect Hammers and Shooting Star patterns"     
-dgTip           =   "Detect Dragonfly Doji and Gravestone Doji patterns"     
-twTip           =   "Detect Tweezer Top and Tweezer Bottom patterns"     
-stTip           =   "Detect Spinning Top patterns"     
-pcTip           =   "Detect Piercing and Dark Cloud Cover patterns"     
-bhTip           =   "Detect Harami candle patterns"     
-lsTip           =   "Detect Long Upper Shadow and Long Lower Shadow patterns"     
-
 ecWickTip       =   "Determines if engulfing candles must engulf the wick or just the body of the preceding candle"     
 colorMatchTip   =   "Determines if hammers must be up candles and shooting stars must be down candles"     
 closeHalfTip    =   "Determines if Tweezer patterns must close beyond the half way point of the preceding candle"     
@@ -72,19 +59,6 @@ per             =   input.float     (5      ,   "Max Zone Percent"              
 max             =   input.float     (10     ,   "Max Boxes for Patterns"        ,   group= "Zones"                , tooltip= maxTip             )
 fut             =   input.int       (30     ,   "Offset For Labels"             ,   group= "Zones"                , tooltip= futTip             )
 src             =   input.string    ("HA"   ,   "Source For Pivots"             ,   group= "Zones"                , tooltip= srcTip             ,   options= ["HA", "High/Low Body", "High/Low"])
-
-repaint         =   input.bool      (true   ,   "Wait For Confirmed Bar"        ,   group= "Candle Patterns"      , tooltip= repaintTip         )
-labels          =   input.bool      (false  ,   "Show Label"                    ,   group= "Candle Patterns"      , tooltip= labelsTip          )
-sBox            =   input.bool      (false  ,   "Show Boxes Around Patterns"    ,   group= "Candle Patterns"      , tooltip= sBoxTip            )
-d_              =   input.bool      (false  ,   "Detect Doji"                   ,   group= "Candle Patterns"      , tooltip= dTip               )
-be_             =   input.bool      (false  ,   "Detect Engulfing"              ,   group= "Candle Patterns"      , tooltip= beTip              )
-hs_             =   input.bool      (false  ,   "Detect Hammers and Stars"      ,   group= "Candle Patterns"      , tooltip= hsTip              )
-dg_             =   input.bool      (false  ,   "Detect Dragons and Graves"     ,   group= "Candle Patterns"      , tooltip= dgTip              )
-tw_             =   input.bool      (false  ,   "Detect Tweezers"               ,   group= "Candle Patterns"      , tooltip= twTip              )
-st_             =   input.bool      (false  ,   "Detect Spinning Top"           ,   group= "Candle Patterns"      , tooltip= stTip              )
-pc_             =   input.bool      (false  ,   "Detect Piercing and Clouds"    ,   group= "Candle Patterns"      , tooltip= pcTip              )
-bh_             =   input.bool      (false  ,   "Detect Harami"                 ,   group= "Candle Patterns"      , tooltip= bhTip              )
-ls_             =   input.bool      (false  ,   "Detect Long Shadows"           ,   group= "Candle Patterns"      , tooltip= lsTip              )
 
 alertMode       =   input.string    (alert.freq_once_per_bar_close              ,   "Alerts Mode"                 , group  = "Alert Frequency"  ,   options= [alert.freq_once_per_bar, alert.freq_once_per_bar_close]) 
 
@@ -465,54 +439,9 @@ sMatch          =   not colorMatch or   close < open
 hsFilter        =   bj.barRange()  >=   hammerSize * atr
 atrMaxSize      =   bj.barRange()  <=   atrMax     * atr or     atrMax == 0.0
 
-rp              =   confirmed  or not   repaint
-
-// ================================== //
-// -----> Pattern Recognition <------ //
-// ================================== //
-
-dw              =   isBull1 and rp and d_  and atrMaxSize and bj.doji              (dojiSize           = dojiSize,         dojiWickSize    = dojiWickSize)
-db              =   isBear1 and rp and d_  and atrMaxSize and bj.doji              (dojiSize           = dojiSize,         dojiWickSize    = dojiWickSize)
-bew             =   isBull2 and rp and be_ and atrMaxSize and bj.bullEngulf        (maxRejectWick      = rejectWickMax,    mustEngulfWick  = ecWick) 
-beb             =   isBear2 and rp and be_ and atrMaxSize and bj.bearEngulf        (maxRejectWick      = rejectWickMax,    mustEngulfWick  = ecWick)
-h               =   isBull1 and rp and hs_ and atrMaxSize and bj.hammer            (ratio              = hammerFib,        shadowPercent   = hsShadowPerc) and hsFilter and hMatch
-ss              =   isBear1 and rp and hs_ and atrMaxSize and bj.star              (ratio              = hammerFib,        shadowPercent   = hsShadowPerc) and hsFilter and sMatch
-dd              =   isBull1 and rp and dg_ and atrMaxSize and bj.dragonflyDoji     ()
-gd              =   isBear1 and rp and dg_ and atrMaxSize and bj.gravestoneDoji    ()
-tb              =   isBull2 and rp and tw_ and atrMaxSize and bj.tweezerBottom     (closeUpperHalf     = closeHalf)
-tt              =   isBear2 and rp and tw_ and atrMaxSize and bj.tweezerTop        (closeLowerHalf     = closeHalf)
-stw             =   isBull1 and rp and st_ and atrMaxSize and bj.spinningTop       ()
-stb             =   isBear1 and rp and st_ and atrMaxSize and bj.spinningTop       ()
-p               =   isBull1 and rp and pc_ and atrMaxSize and bj.piercing          ()
-dcc             =   isBear1 and rp and pc_ and atrMaxSize and bj.darkCloudCover    ()
-bhw             =   isBull1 and rp and bh_ and atrMaxSize and bj.haramiBull        ()  
-bhb             =   isBear1 and rp and bh_ and atrMaxSize and bj.haramiBear        ()
-ll              =   isBull1 and rp and ls_ and atrMaxSize and bj.lls               (ratio              = luRatio)          and hsFilter
-lu              =   isBear1 and rp and ls_ and atrMaxSize and bj.lus               (ratio              = luRatio)          and hsFilter
-
 // ================================== //
 // ------> Graphical Display <------- //
 // ================================== //
-
-bj.dLab             (dw  and labels, labNeutCol, textNeutCol), _wrap (dw  and sBox, boxes, 1, patNeutBo, patNeutBg)
-bj.bewLab           (bew and labels, labBullCol, textBullCol), _wrap (bew and sBox, boxes, 2, patBullBo, patBullBg)
-bj.hLab             (h   and labels, labBullCol, textBullCol), _wrap (h   and sBox, boxes, 1, patBullBo, patBullBg)
-bj.ddLab            (dd  and labels, labBullCol, textBullCol), _wrap (dd  and sBox, boxes, 1, patBullBo, patBullBg)
-bj.tbLab            (tb  and labels, labBullCol, textBullCol), _wrap (tb  and sBox, boxes, 2, patBullBo, patBullBg)
-bj.stwLab           (stw and labels, labNeutCol, textNeutCol), _wrap (stw and sBox, boxes, 1, patBullBo, patNeutBg)
-bj.pLab             (p   and labels, labBullCol, textBullCol), _wrap (p   and sBox, boxes, 2, patBullBo, patBullBg)
-bj.hwLab            (bhw and labels, labBullCol, textBullCol), _wrap (bhw and sBox, boxes, 2, patBullBo, patBullBg)
-bj.llsLab           (ll  and labels, labBullCol, textBullCol), _wrap (ll  and sBox, boxes, 1, patBullBo, patBullBg)
-
-bj.dLab             (db  and labels, labNeutCol, textNeutCol), _wrap (db  and sBox, boxes, 1, patNeutBo, patNeutBg)
-bj.bebLab           (beb and labels, labBearCol, textBearCol), _wrap (beb and sBox, boxes, 2, patBearBo, patBearBg)
-bj.ssLab            (ss  and labels, labBearCol, textBearCol), _wrap (ss  and sBox, boxes, 1, patBearBo, patBearBg)
-bj.gdLab            (gd  and labels, labBearCol, textBearCol), _wrap (gd  and sBox, boxes, 1, patBearBo, patBearBg)
-bj.ttLab            (tt  and labels, labBearCol, textBearCol), _wrap (tt  and sBox, boxes, 2, patBearBo, patBearBg)
-bj.stbLab           (stb and labels, labNeutCol, textNeutCol), _wrap (stb and sBox, boxes, 1, patBearBo, patBearBg)
-bj.dccLab           (dcc and labels, labBearCol, textBearCol), _wrap (dcc and sBox, boxes, 2, patBearBo, patBearBg)
-bj.hbLab            (bhb and labels, labBearCol, textBearCol), _wrap (bhb and sBox, boxes, 2, patBearBo, patBearBg)
-bj.lusLab           (lu  and labels, labBearCol, textBearCol), _wrap (lu  and sBox, boxes, 1, patBearBo, patBearBg)
 
 _level              (pivotHigh, highBull)
 _level              (pivotLows, lowsBull)
@@ -529,25 +458,6 @@ alertcondition      (falseBreakBull ,   'False break down'                      
 alertcondition      (falseBreakBear ,   'False break up'                        ,   'False Break Up on {{interval}} chart. Price is {{close}}'                      )
 alertcondition      (breakOut       ,   'Breakout'                              ,   'Breakout on {{interval}} chart. Price is {{close}}'                            )
 alertcondition      (breakDwn       ,   'Breakdown'                             ,   'Breakdown on {{interval}} chart. Price is {{close}}'                           )
-
-_alert              (dw             ,   'Doji at support on '                   )
-_alert              (db             ,   'Doji at resistance on '                )
-_alert              (bew            ,   'Bullish Engulfing on '                 )
-_alert              (beb            ,   'Bearish Engulfing on '                 )
-_alert              (h              ,   'Hammer candle on '                     )
-_alert              (ss             ,   'Shooting star on '                     )
-_alert              (dd             ,   'Dragonfly Doji on '                    )
-_alert              (gd             ,   'Gravestone Doji on '                   )
-_alert              (tb             ,   'Tweezer Bottom on '                    )
-_alert              (tt             ,   'Tweezer Top on '                       )
-_alert              (stw            ,   'White Spinning Top on '                )
-_alert              (stb            ,   'Black Spinning Top on '                )
-_alert              (p              ,   'Piercing on '                          )
-_alert              (dcc            ,   'Dark Cloud Cover on '                  )
-_alert              (bhw            ,   'Bullish Harami on '                    )
-_alert              (bhb            ,   'Bearish Harami on '                    )
-_alert              (ll             ,   'Long Lower Shadow on '                 )
-_alert              (lu             ,   'Long Upper Shadow on '                 )
 
 //  ____  __ _  ____ 
 // (  __)(  ( \(    \
