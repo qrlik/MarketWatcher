@@ -19,11 +19,6 @@ maxTip          =   "Number of boxes for candlestick patterns to track historica
 futTip          =   "Number of bars to offset labels for price levels"
 srcTip          =   "Source input for pivots. Default tracks the highest and lowest bodies of HA candles to average price action, which can result in a level that sits in the overlap of support and resistance"     
 
-lookbackTip     =   "Number of candles that can be included in a false break signal"        
-swingTip        =   "Swing detection is used to filter signals on breakout type signals. A higher number will mean more significant points, but less of them"        
-reflectTip      =   "Filter to ensure a setup is a significant swing point. Look back this far"
-offsetTip       =   "Candle pattern high/low distance from absolute swing high/low. Example: 0 would filter patterns that are only the highest/lowest, 1 filters second highest over the significant length, etc."
-
 bullPivotTip    =   "Color of bullish Key Levels\n(border, background)"            
 bearPivotTip    =   "Color of bearish Key Levels\n(border, background)"            
 breakoutTip     =   "Color of breakout arrows\n(bull, bear,)"           
@@ -47,11 +42,6 @@ per             =   input.float     (5      ,   "Max Zone Percent"              
 max             =   input.float     (10     ,   "Max Boxes for Patterns"        ,   group= "Zones"                , tooltip= maxTip             )
 fut             =   input.int       (30     ,   "Offset For Labels"             ,   group= "Zones"                , tooltip= futTip             )
 src             =   input.string    ("HA"   ,   "Source For Pivots"             ,   group= "Zones"                , tooltip= srcTip             ,   options= ["HA", "High/Low Body", "High/Low"])
-
-lookback        =   input.int       (2      ,   "Lookback For Breaks"           ,   group= "Lookback"             , tooltip= lookbackTip        )
-swing           =   input.int       (5      ,   "swing High/Low"                ,   group= "Lookback"             , tooltip= swingTip           )
-reflect         =   input.int       (10     ,   "Significant High/Low"          ,   group= "Lookback"             , tooltip= reflectTip         )
-offset          =   input.int       (1      ,   "Consider Bar From High/Low"    ,   group= "Lookback"             , tooltip= offsetTip          )
 
 bullBorder      =   input.color     (color.new  (#64b5f6, 60), "", inline= "0"  ,   group= "Pivot Color"                                        )
 bullBgCol       =   input.color     (color.new  (#64b5f6, 95), "", inline= "0"  ,   group= "Pivot Color"          , tooltip= bullPivotTip       )
@@ -227,16 +217,6 @@ _detect(_x,_y)      =>
         _i          +=         1
     [_found, _isBull]
 
-_falseBreak(_l)     =>       
-    bool _d         = false
-    bool _u         = false
-    for i = 1 to lookback
-        if _l[i] < _l and _l[i+1] >= _l and _l[1] < _l 
-            _d      := true
-        if _l[i] > _l and _l[i+1] <= _l and _l[1] > _l 
-            _u      := true
-    [_d, _u]
-
 _numLevel(_x,_y)    =>
     int _above      = 0
     int _fill       = 0
@@ -296,12 +276,6 @@ tsl             =   ta.ema              (tsi,           signalvar)
 highest         =   close ==            ta.highest      (close,     right)
 lowest          =   close ==            ta.lowest       (close,     right)
 
-closeLows       =   ta.lowest           (close,         swing)
-closeHigh       =   ta.highest          (close,         swing)
-
-numLows         =   _count              (low,           reflect)
-numHigh         =   _count              (high,          reflect)
-
 [open_, close_] =   _haBody             ()
 
 hiHaBod         =   math.max            (close_,        open_)
@@ -356,12 +330,6 @@ trackLows       =   _color              (pivotLows,     lowsBull)
 // ----> Conditional Parameters <---- //
 // ================================== //
 
-isLows          =   closeLows      ==   close
-isHigh          =   closeHigh      ==   close
-
-wasLows         =   _check              (isLows,        lookback)
-wasHigh         =   _check              (isHigh,        lookback)
-
 [above, total]  =   _numLevel           (highBull,      lowsBull)
 
 moveAbove       =   trackHigh       >   trackHigh[1]
@@ -373,12 +341,6 @@ supBreak        =   (trackHigh      <   trackHigh[1]    or  moveBelow)
 breakOut        =   moveAbove     and   highest and     above == total             
 breakDwn        =   moveBelow     and   lowest  and     above == 0         
 
-[dh, uh]        =   _falseBreak         (trackHigh) 
-[dl, ul]        =   _falseBreak         (trackLows) 
-
-falseBreakBull  =   wasLows       and   (dh or dl)
-falseBreakBear  =   wasHigh       and   (uh or ul)
-
 [fh,hb]         =   _detect             (pivotHigh,     highBull)
 [fl,lb]         =   _detect             (pivotLows,     lowsBull)
 
@@ -387,18 +349,6 @@ bear            =   (fh or fl) and not  (hb or lb)
 
 bullCheck       =   not resBreak  and   not resBreak[1] and (fh or fl) and  close > open and     (hb or lb)
 bearCheck       =   not supBreak  and   not supBreak[1] and (fh or fl) and  close < open and not (hb or lb)
-
-highrange       =   reflect-offset
-lowsrange       =   offset
-
-sigLows         =   numLows        <=   lowsrange  
-sigHigh         =   numHigh        >=   highrange 
-
-isBull1         =   sigLows       and   bull
-isBear1         =   sigHigh       and   bear 
-
-isBull2         =   (sigLows       or   sigLows[1]) and         (bull or bull[1])
-isBear2         =   (sigHigh       or   sigHigh[1]) and         (bear or bear[1])
 
 data            =   tsi > tsi[1]  and   tsi < tsl 
 dtat            =   tsi < tsi[1]  and   tsi > tsl 
@@ -421,8 +371,6 @@ alertcondition      (resBreak       ,   'Resistance break'                      
 alertcondition      (supBreak       ,   'Support break'                         ,   'Support broke on {{interval}} chart. Price is {{close}}'                       )
 alertcondition      (bullCheck      ,   'Found support'                         ,   'Pushing Off Key Level Support on {{interval}} chart. Price is {{close}}'       )
 alertcondition      (bearCheck      ,   'Found resistance'                      ,   'Pushing Off Key Level Resistance on {{interval}} chart. Price is {{close}}'    )
-alertcondition      (falseBreakBull ,   'False break down'                      ,   'False Break Down on {{interval}} chart. Price is {{close}}'                    )
-alertcondition      (falseBreakBear ,   'False break up'                        ,   'False Break Up on {{interval}} chart. Price is {{close}}'                      )
 alertcondition      (breakOut       ,   'Breakout'                              ,   'Breakout on {{interval}} chart. Price is {{close}}'                            )
 alertcondition      (breakDwn       ,   'Breakdown'                             ,   'Breakdown on {{interval}} chart. Price is {{close}}'                           )
 
