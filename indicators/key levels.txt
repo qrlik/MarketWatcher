@@ -2,12 +2,7 @@
 //@version=5
 indicator           ('Key Levels', 'Key Levels', overlay= true, max_boxes_count= 500, max_labels_count= 500, max_lines_count=500)
 
-import              Bjorgum/BjCandlePatterns/2 as bj // TO DO
-
-// ================================== //
 // ------------> Tips <-------------- //
-// ================================== //
- // TO DO
 
 leftTip         =   "Look left for swing high/low in x number of bars to form pivot. The higher the number, the higher the script looks to the left for the highest/lowest point before drawing pivot"        
 rightTip        =   "Look right for swing high/low in x number of bars to form pivot. The higher the number, the higher the script looks to the right for the highest/lowest point before drawing pivot"       
@@ -22,9 +17,7 @@ srcTip          =   "Source input for pivots. Default tracks the highest and low
 bullPivotTip    =   "Color of bullish Key Levels\n(border, background)"            
 bearPivotTip    =   "Color of bearish Key Levels\n(border, background)"            
 
-// ================================== //
 // ---------> User Input <----------- //
-// ================================== //
 
 left            =   input.int       (20     ,   "Look Left"                     ,   group= "Zones"                , tooltip= leftTip            )    
 right           =   input.int       (15     ,   "Look Right"                    ,   group= "Zones"                , tooltip= rightTip           )    
@@ -41,31 +34,22 @@ bullBgCol       =   input.color     (color.new  (#64b5f6, 95), "", inline= "0"  
 bearBorder      =   input.color     (color.new  (#ffeb3b, 60), "", inline= "1"  ,   group= "Pivot Color"                                        )   
 bearBgCol       =   input.color     (color.new  (#ffeb3b, 95), "", inline= "1"  ,   group= "Pivot Color"          , tooltip= bearPivotTip       )
 
-// ================================== //
-// -----> Immutable Constants <------ //
-// ================================== //    
+// -----> Immutable Constants <------ //  
  
 sync            =   bar_index
-labUp           =   label.style_label_up
-labDn           =   label.style_label_down
 confirmed       =   barstate.isconfirmed
 
 var pivotHigh   =   array.new_box   (nPiv)
 var pivotLows   =   array.new_box   (nPiv)  
 var highBull    =   array.new_bool  (nPiv)
 var lowsBull    =   array.new_bool  (nPiv)
-var boxes       =   array.new_box   ()
 
 haSrc           =   src    ==       "HA"    
 hiLoSrc         =   src    ==       "High/Low"
 
-// ================================== //
 // ---> Functional Declarations <---- //
-// ================================== //
 
 atr             =   ta.atr          (atrLen)
-perMax          =   close*          0.02
-min             =   math.min        (perMax, atr*0.3)
 
 _haBody()       =>
     haClose     =   (open + high  +  low  + close)    / 4
@@ -89,38 +73,12 @@ _arrayBox(_x, _max, _val) =>
     if       array.size                         (_x) > _max
         _b = array.pop                          (_x)
 
-_arrayWrap(_x, _max, _val) =>  
-    array.unshift                               (_x,   _val)   
-    if  array.size                              (_x) > _max
-        box.delete(array.pop                    (_x))
-
-_delLab(_x)     =>
-    if array.size(_x) > 0 
-        label.delete           (array.pop       (_x))
-
-_delLine(_x)    =>
-    if array.size(_x) > 0 
-        line.delete            (array.pop       (_x))
-
-_delLevels(_x, _y)  =>
-    for i = 0 to array.size                     (_x)-1
-        _delLab                                 (_x)
-        _delLine                                (_y)
-
 _box(_x1, _t, _r, _b, _boCol, _bgCol, _e) =>
     box.new(                   _x1, _t, _r, _b  , 
      xloc        =             xloc.bar_index   ,
      extend      =             _e               ,
      border_color=             _boCol           ,   
      bgcolor     =             _bgCol           ) 
-
-_wrap(_cond, _x, _bb, _bc, _bgc) =>
-    _t           =             ta.highest       (high, _bb) + min
-    _b           =             ta.lowest        (low , _bb) - min
-    _l           =             bar_index -      _bb
-    _r           =             bar_index +      1
-    if  _cond
-        _arrayWrap            (_x, max, _box    (_l, _t, _r, _b, _bc, _bgc, extend.none)) 
 
 _getBox(_x,_i)   =>
     _box         =             array.get        (_x,_i)
@@ -156,69 +114,11 @@ _color(_x, _y)     =>
             _track -= 1
     _track
 
-_detect(_x,_y)      =>
-    int  _i         = 0
-    bool _found     = false
-    bool _isBull    = na
-    while (not _found and _i < array.size       (_x)  )
-        [t_, b_] =             _getBox          (_x,_i)
-        if low < t_ and high > b_
-            _isBull :=         array.get        (_y,_i)
-            _found  :=         true
-        _i          +=         1
-    [_found, _isBull]
-
-_numLevel(_x,_y)    =>
-    int _above      = 0
-    int _fill       = 0
-    for i = 0 to               array.size       (_x)-1
-        _isBull     =          array.get        (_x,i)
-        if  _isBull
-            _above += 1
-        if  not na(_isBull)
-            _fill  += 1
-    for i = 0 to               array.size       (_y)-1
-        _isBull     =          array.get        (_y,i)
-        if  _isBull
-            _above += 1
-        if  not na(_isBull)
-            _fill  += 1
-    [_above, _fill]  
-
-_check(_src,_l)     =>
-    bool _check     = false
-    for i = 0 to _l
-        if _src[i]
-            _check := true
-    _check
-
-_count(_src, _l)    =>
-    int _result     = 0
-    for i = 0 to _l
-        if _src > _src[i]
-            _result += 1
-    _result
-
-_label(_x, _y, y, _s, _col1, _col2) =>
-    transp = math.min   (color.t(_col1),  color.t(_col2))
-    array.unshift       (_x,   label.new (sync+fut,   y                                        , 
-                                          text      = str.tostring(math.round_to_mintick(y)   ), 
-                                          color     = color.new(_col1, transp)                 , 
-                                          style     = _s                                       , 
-                                          textcolor = color.white                             ))
-    if fut > 0
-        array.unshift   (_y,   line.new  (sync, y, sync+fut, y, color= color.new(_col1, transp)))
-
 _level(_x, _y)          =>
     var label [] lab    =      array.new_label  (nPiv)
     var line  [] lines  =      array.new_line   (nPiv)
-  
-// ================================== //
-// ----> Variable Calculations <----- //
-// ================================== //
 
-highest         =   close ==            ta.highest      (close,     right)
-lowest          =   close ==            ta.lowest       (close,     right)
+// ----> Variable Calculations <----- //
 
 [open_, close_] =   _haBody             ()
 
@@ -244,17 +144,13 @@ HL              =   pivot_high-         band
 LH              =   pivot_low+          band
 LL              =   pivot_low-          band
 
-coDiff          =   close -             open
-
-// ================================== //
 // --------> Logical Order <--------- //
-// ================================== //
 
-if pivot_high and   confirmed
+if bool(pivot_high) and   confirmed
     _arrayLoad      (highBull , nPiv,   false)      
     _arrayBox       (pivotHigh, nPiv,   _box(sync[right], HH, sync, HL, bearBorder, bearBgCol, extend.none))
 
-if pivot_low  and   confirmed
+if bool(pivot_low)  and   confirmed
     _arrayLoad      (lowsBull , nPiv,   true)      
     _arrayBox       (pivotLows, nPiv,   _box(sync[right], LH, sync, LL, bullBorder, bullBgCol, extend.none))
 
@@ -270,52 +166,9 @@ _extend             (pivotLows)
 trackHigh       =   _color              (pivotHigh,     highBull)
 trackLows       =   _color              (pivotLows,     lowsBull)
 
-// ================================== //
-// ----> Conditional Parameters <---- //
-// ================================== //
-
-[above, total]  =   _numLevel           (highBull,      lowsBull)
-
-moveAbove       =   trackHigh       >   trackHigh[1]
-moveBelow       =   trackLows       <   trackLows[1]
-
-resBreak        =   (trackLows      >   trackLows[1]    or  moveAbove) 
-supBreak        =   (trackHigh      <   trackHigh[1]    or  moveBelow) 
-
-breakOut        =   moveAbove     and   highest and     above == total             
-breakDwn        =   moveBelow     and   lowest  and     above == 0         
-
-[fh,hb]         =   _detect             (pivotHigh,     highBull)
-[fl,lb]         =   _detect             (pivotLows,     lowsBull)
-
-bull            =   (fh or fl) and      (hb or lb)
-bear            =   (fh or fl) and not  (hb or lb)
-
-bullCheck       =   not resBreak  and   not resBreak[1] and (fh or fl) and  close > open and     (hb or lb)
-bearCheck       =   not supBreak  and   not supBreak[1] and (fh or fl) and  close < open and not (hb or lb)
-
-hMatch          =   close > open
-sMatch          =   close < open
-
-// ================================== //
 // ------> Graphical Display <------- //
-// ================================== //
 
 _level              (pivotHigh, highBull)
 _level              (pivotLows, lowsBull)
 
-// ================================== //
-// -----> Alert Functionality <------ //
-// ================================== //
-
-alertcondition      (resBreak       ,   'Resistance break'                      ,   'Resistance broke on {{interval}} chart. Price is {{close}}'                    )
-alertcondition      (supBreak       ,   'Support break'                         ,   'Support broke on {{interval}} chart. Price is {{close}}'                       )
-alertcondition      (bullCheck      ,   'Found support'                         ,   'Pushing Off Key Level Support on {{interval}} chart. Price is {{close}}'       )
-alertcondition      (bearCheck      ,   'Found resistance'                      ,   'Pushing Off Key Level Resistance on {{interval}} chart. Price is {{close}}'    )
-alertcondition      (breakOut       ,   'Breakout'                              ,   'Breakout on {{interval}} chart. Price is {{close}}'                            )
-alertcondition      (breakDwn       ,   'Breakdown'                             ,   'Breakdown on {{interval}} chart. Price is {{close}}'                           )
-
-//  ____  __ _  ____ 
-// (  __)(  ( \(    \
-//  ) _) /    / ) D (
-// (____)\_)__)(____/
+// ------> END <------- //
