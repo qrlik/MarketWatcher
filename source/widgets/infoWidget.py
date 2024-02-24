@@ -290,9 +290,10 @@ def __updateViewed(ticker):
     global __viewedAgo, __viewedDate
     ago = '-'
     time = '-'
-    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.VIEWED) * 1000
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.VIEWED)
     tfs = configController.getTimeframes()
     if timestamp and __tickerController and len(tfs) > 0:
+        timestamp *= 1000
         lowestTf = configController.getTimeframes()[0]
         amount = __tickerController.getTimeframe(lowestTf).getCandlesController().getCandlesAmountByOpenTime(timestamp)
         ago = str(amount) + 'd '
@@ -304,9 +305,10 @@ def __updateBored(ticker):
     global __boredAgo, __boredDate, __tickerController
     ago = '-'
     time = '-'
-    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.BORED) * 1000
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.BORED)
     tfs = configController.getTimeframes()
     if timestamp and __tickerController and len(tfs) > 0:
+        timestamp *= 1000
         lowestTf = configController.getTimeframes()[0]
         amount = __tickerController.getTimeframe(lowestTf).getCandlesController().getCandlesAmountByOpenTime(timestamp)
         ago = str(amount)
