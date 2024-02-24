@@ -211,6 +211,15 @@ class CandlesController(QObject):
             jsonData.append(candle.toJson(self.__currentCandle))
         return jsonData
 
+    def getCandlesAmountByOpenTime(self, time):
+        amount = 0
+        for candle in self.__finishedCandles[::-1]:
+            if candle.openTime > time:
+                amount += 1
+            else:
+                break
+        return amount
+
     def getCandlesByOpenTime(self, openTime):
         finished = []
         for candle in self.__finishedCandles[::-1]:

@@ -290,27 +290,27 @@ def __updateViewed(ticker):
     global __viewedAgo, __viewedDate
     ago = '-'
     time = '-'
-    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.VIEWED)
-    if timestamp:
-        now = date.fromtimestamp(utils.getCurrentTimeSeconds())
-        stamp = date.fromtimestamp(timestamp)
-        diff = now - stamp
-        ago = str(diff.days) + 'd '
-        time = candle.getPrettyTime(timestamp * 1000, timeframe.Timeframe.ONE_DAY)
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.VIEWED) * 1000
+    tfs = configController.getTimeframes()
+    if timestamp and __tickerController and len(tfs) > 0:
+        lowestTf = configController.getTimeframes()[0]
+        amount = __tickerController.getTimeframe(lowestTf).getCandlesController().getCandlesAmountByOpenTime(timestamp)
+        ago = str(amount) + 'd '
+        time = candle.getPrettyTime(timestamp, timeframe.Timeframe.ONE_DAY)
     __viewedAgo.setText(ago)
     __viewedDate.setText(time)
 
 def __updateBored(ticker):
-    global __boredAgo, __boredDate
+    global __boredAgo, __boredDate, __tickerController
     ago = '-'
     time = '-'
-    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.BORED)
-    if timestamp:
-        now = date.fromtimestamp(utils.getCurrentTimeSeconds())
-        stamp = date.fromtimestamp(timestamp)
-        diff = now - stamp
-        ago = str(diff.days)
-        time = candle.getPrettyTime(timestamp * 1000, timeframe.Timeframe.ONE_DAY)
+    timestamp = cacheController.getDatestamp(ticker, cacheController.DateStamp.BORED) * 1000
+    tfs = configController.getTimeframes()
+    if timestamp and __tickerController and len(tfs) > 0:
+        lowestTf = configController.getTimeframes()[0]
+        amount = __tickerController.getTimeframe(lowestTf).getCandlesController().getCandlesAmountByOpenTime(timestamp)
+        ago = str(amount)
+        time = candle.getPrettyTime(timestamp, timeframe.Timeframe.ONE_DAY)
     __boredAgo.setText(ago)
     __boredDate.setText(time)
     __boredBox.setChecked(bool(timestamp))
