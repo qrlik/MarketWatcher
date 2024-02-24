@@ -109,10 +109,12 @@ class WatcherWindow(QMainWindow):
                 self.__progressBar.setVisible(False)
 
     def closeEvent(self, event):
-        apiRequests.requester.quit()
-        loaderController.forceQuit()
         cacheController.save()
         cacheController.saveCandles()
+
+        apiRequests.requester.quit()
+        loaderController.forceQuit()
+        
         api.atExit()
         QApplication.exit(0)
         return super().closeEvent(event)

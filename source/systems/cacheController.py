@@ -14,7 +14,7 @@ def load():
     __cache = utils.loadJsonFile(workMode.getCacheFile())
     __cache = __cache if __cache is not None else {}
 
-    __candles = utils.loadJsonMsgspecFile(workMode.getCacheCandlesFile())
+    __candles = utils.loadJsonFile(workMode.getCacheCandlesFile())
     __candles = __candles if __candles is not None else {}
 
 def save():
@@ -48,8 +48,7 @@ def saveCandles():
     for ticker, tickerController in watcherController.getTickers().items():
         for tf, tfController in tickerController.getTimeframes().items():
             __candles.setdefault(ticker, {}).setdefault(tf.name, tfController.getCandlesController().getJsonData())
-    utils.saveJsonMsgspecFile(workMode.getCacheCandlesFile(), __candles)
-    __candles.clear()
+    utils.saveJsonFile(workMode.getCacheCandlesFile(), __candles)
     
 def __getViewedDivergences():
     return __cache.setdefault("viewedDivergences", {})

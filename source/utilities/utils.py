@@ -41,28 +41,32 @@ def loadJsonFile(filename):
         with open(filename + '.json') as infile:
             return json.load(infile)
     except Exception as e:
+        logError(str(e))
         return None
 
 def saveJsonFile(filename, data):
     try:
         with open(filename + '.json', 'w') as outfile:
             json.dump(data, outfile)
-    except:
+    except Exception as e:
+        logError(str(e))
         return None
     
-def loadJsonMsgspecFile(filename):
-    try:
-        with open(filename + '.json', 'rb') as infile:
-            return msgspec.json.decode(infile.read())
-    except:
-        return None
+# def loadJsonMsgspecFile(filename):
+#     try:
+#         with open(filename + '.json', 'rb') as infile:
+#             return msgspec.json.decode(infile.read())
+#     except Exception as e:
+#         logError(str(e))
+#         return None
 
-def saveJsonMsgspecFile(filename, data):
-    try:
-        with open(filename + '.json', 'wb') as outfile:
-            outfile.write(msgspec.json.encode(data))
-    except:
-        return None
+# def saveJsonMsgspecFile(filename, data):
+#     try:
+#         with open(filename + '.json', 'wb') as outfile:
+#             outfile.write(msgspec.json.encode(data))
+#     except Exception as e:
+#         logError(str(e))
+#         return None
     
 def addLogListener(obj):
     __listeners.add(obj)
