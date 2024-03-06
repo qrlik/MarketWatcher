@@ -9,6 +9,7 @@ from systems import userDataController
 from systems import watcherController
 from systems import websocketController
 from widgets import watcherTable
+from utilities import utils
 
 class LoadingThread(QThread):
 	def __init__(self):
@@ -29,7 +30,8 @@ class LoadingThread(QThread):
 
 			self.fullProgress = len(tickers)
 			watcherController.loadTickets(tickers)
-		except Exception:
+		except Exception as e:
+			utils.logError(str(e))
 			self.exit()
 
 __thread = LoadingThread()
