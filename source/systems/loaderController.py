@@ -22,19 +22,24 @@ class LoadingThread(QThread):
 		soundNotifyController.init()
 		userDataController.init()
 
-		tickers = watcherController.requestTickers()
-		socketList = [ticker[0] for ticker in tickers]
-		websocketController.start(socketList, configController.getTimeframes())
+		try:
+			tickers = watcherController.requestTickers()
+			socketList = [ticker[0] for ticker in tickers]
+			websocketController.start(socketList, configController.getTimeframes())
 
-		self.fullProgress = len(tickers)
-		watcherController.loadTickets(tickers)
+			self.fullProgress = len(tickers)
+			watcherController.loadTickets(tickers)
+		except Exception:
+			self.exit()
 
 __thread = LoadingThread()
 __isDone = False
+__isValid = True
 
 def __onLoadFinish():
-	global __isDone
+	global __isDone,__isValid,__thread
 	__isDone = True
+	__isValid = __thread.fullProgress > 0
 	watcherTable.initList()
 	apiRequests.requester.start()
 	__thread.quit()
@@ -44,6 +49,9 @@ def forceQuit():
 
 def isDone():
 	return __isDone
+
+def isValid():
+	return __isValid
 
 def startLoad():
 	global __thread

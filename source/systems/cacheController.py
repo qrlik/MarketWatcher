@@ -42,7 +42,7 @@ def getCandles(ticker, timeframe):
     return candles
 
 def saveCandles():
-    if not loaderController.isDone():
+    if not loaderController.isDone() or not loaderController.isValid():
         return
     __candles.clear()
     for ticker, tickerController in watcherController.getTickers().items():
