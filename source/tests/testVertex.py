@@ -9,7 +9,7 @@ class vertexTester:
         self.testData = utils.loadJsonFile(utils.assetsFolder + 'tests/' + self.name)
 
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
-        self.candlesController.init('', self.testData['candlesFileName'])
+        self.candlesController.init('', self.testData['candlesFileName'], self.testData['precision'])
         
         self.vertexController = vertexController.VertexController()
         self.vertexController.init(self.candlesController)
@@ -19,7 +19,7 @@ class vertexTester:
 
     def __checkError(self, result, index):
         if not result:
-            utils.logError(self.name + ' ERROR - ' + str(index))
+            print(self.name + ' ERROR - ' + str(index))
             assert(False)
 
     def test(self):
@@ -31,27 +31,26 @@ class vertexTester:
 
         checkIndex = 0
         self.vertexController.process()
-        lastCandle = None
+
         for candle in candles:
             if self.checksAmount == checkIndex:
                 break
 
             if candle.time == self.checks[checkIndex]['time']:
-                vertex1 = candle.vertex
-                vertex2 = self.checks[checkIndex].get('vertex', None)
+                vertex1 = candle.vertexClose
+                vertex2 = self.checks[checkIndex].get('vertex', None) # to do Close
                 vertex2 = vertexController.VertexType[vertex2] if vertex2 else vertex2
 
                 result &= vertex1 == vertex2
 
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
-            lastCandle = candle
 
         result &= checkIndex == self.checksAmount
         if result:
-            utils.log(self.name + ' OK')
+            print(self.name + ' OK')
         else:
-            utils.logError(self.name + ' FAILED')
+            print(self.name + ' FAILED')
 
 def test():
     vertexTester('testVertex1').test()

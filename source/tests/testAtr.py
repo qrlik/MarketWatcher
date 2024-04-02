@@ -9,10 +9,10 @@ class atrTester:
         self.testData = utils.loadJsonFile(utils.assetsFolder + 'tests/' + self.name)
 
         self.candlesController = candlesController.CandlesController(timeframe.Timeframe.ONE_DAY)
-        self.candlesController.init('', self.testData['candlesFileName'])
+        self.candlesController.init('', self.testData['candlesFileName'], self.testData['precision'])
         
         self.atrController = atrController.AtrController()
-        self.atrController.init(self.candlesController, self.testData['precision'])
+        self.atrController.init(self.candlesController)
         self.atrController.setSize(self.testData['size'])
 
         self.checks = self.testData['data']
@@ -20,7 +20,7 @@ class atrTester:
 
     def __checkError(self, result, index):
         if not result:
-            utils.logError(self.name + ' ERROR - ' + str(index))
+            print(self.name + ' ERROR - ' + str(index))
             assert(False)
 
     def test(self):
@@ -45,9 +45,10 @@ class atrTester:
 
         result &= checkIndex == self.checksAmount
         if result:
-            utils.log(self.name + ' OK')
+            print(self.name + ' OK')
         else:
-            utils.logError(self.name + ' FAILED')
+            print(self.name + ' FAILED')
 
 def test():
-    atrTester('testAtr1').test()
+    atrTester('testAtr_WMA').test()
+    #atrTester('testAtr_EMA').test()

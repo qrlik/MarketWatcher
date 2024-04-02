@@ -1,53 +1,54 @@
 {
 	"candlesFileName": "400_1d_BTC",
 	"size": 14,
+	"precision": 2,
 	"data": [
 		{
-			"time": "04:00 09-03-2023",
+			"time": "09 March 23",
 			"vertex": null
 		},
 		{
-			"time": "04:00 10-03-2023",
+			"time": "10 March 23",
 			"vertex": "LOW"
 		},
 		{
-			"time": "04:00 11-03-2023",
+			"time": "11 March 23",
 			"vertex": null
 		},
 		{
-			"time": "04:00 12-03-2023",
+			"time": "12 March 23",
 			"vertex": null
 		},
 		{
-			"time": "04:00 13-03-2023",
+			"time": "13 March 23",
 			"vertex": null
 		},
 		{
-			"time": "04:00 14-03-2023",
+			"time": "14 March 23",
 			"vertex": "HIGH"
 		},
 		{
-			"time": "04:00 15-03-2023",
+			"time": "15 March 23",
 			"vertex": "LOW"
 		},
 		{
-			"time": "04:00 16-03-2023",
+			"time": "16 March 23",
 			"vertex": null
 		},
 		{
-			"time": "04:00 17-03-2023",
+			"time": "17 March 23",
 			"vertex": "HIGH"
 		},
 		{
-			"time": "04:00 18-03-2023",
+			"time": "18 March 23",
 			"vertex": "LOW"
 		},
 		{
-			"time": "04:00 19-03-2023",
+			"time": "19 March 23",
 			"vertex": "HIGH"
 		},
 		{
-			"time": "04:00 20-03-2023",
+			"time": "20 March 23",
 			"vertex": "LOW"
 		}
 	]
