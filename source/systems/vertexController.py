@@ -29,39 +29,42 @@ class VertexController:
         if len(self.__strengthCloses) > self.__strengthClosesLength:
             self.__strengthCloses.pop(0)
 
-    def __calculateVertex(self, candle):
+    def __calculateVertex(self, candle, priceAttrName, vertexAttrName):
         if not self.__lastCandle:
             return None
-        if candle.close > self.__lastCandle.close:
-            candle.vertex = VertexType.HIGH
-            if self.__lastCandle.vertex == VertexType.HIGH:
-                self.__lastCandle.vertex = None
-        elif candle.close < self.__lastCandle.close:
-            candle.vertex = VertexType.LOW
-            if self.__lastCandle.vertex == VertexType.LOW:
-                self.__lastCandle.vertex = None
-        else:
-            candle.vertex = self.__lastCandle.vertex
-            self.__lastCandle.vertex = None
-        self.__calculateVertexStrength(candle)
+        candlePrice = getattr(candle, priceAttrName)
+        lastCandlePrice = getattr(self.__lastCandle, priceAttrName)
+        lastCandleVertex = getattr(self.__lastCandle, vertexAttrName)
 
-    def __calculateVertexStrength(self, candle):
-        if candle.vertex is None:
+        if candlePrice > lastCandlePrice:
+            setattr(candle, vertexAttrName, VertexType.HIGH)
+            if lastCandleVertex == VertexType.HIGH:
+                setattr(self.__lastCandle, vertexAttrName, None)
+        elif candlePrice < lastCandlePrice:
+            setattr(candle, vertexAttrName, VertexType.LOW)
+            if lastCandleVertex == VertexType.LOW:
+                setattr(self.__lastCandle, vertexAttrName, None)
+        else:
+            setattr(candle, vertexAttrName, lastCandleVertex)
+            setattr(self.__lastCandle, vertexAttrName, None)
+
+    def __calculateVertexStrengthClose(self, candle):
+        if candle.vertexClose is None:
             return
         for close in self.__strengthCloses[::-1]:
-            if candle.vertex == VertexType.HIGH:
+            if candle.vertexClose == VertexType.HIGH:
                 if close <= candle.close:
-                    candle.vertexStrength += 1
+                    candle.vertexStrengthClose += 1
                 else:
                     break
-            elif candle.vertex == VertexType.LOW:
+            elif candle.vertexClose == VertexType.LOW:
                 if close >= candle.close:
-                    candle.vertexStrength += 1
+                    candle.vertexStrengthClose += 1
                 else:
                     break
         if len(self.__strengthCloses) != self.__strengthClosesLength \
-        and candle.vertexStrength == len(self.__strengthCloses):
-            candle.vertexStrength = self.__strengthClosesLength
+        and candle.vertexStrengthClose == len(self.__strengthCloses):
+            candle.vertexStrengthClose = self.__strengthClosesLength
 
     def process(self):
         candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
@@ -72,5 +75,8 @@ class VertexController:
             return
         
         for candle in candles:
-            self.__calculateVertex(candle)
+            #self.__calculateVertex(candle, 'high', 'vertexHigh')
+            #self.__calculateVertex(candle, 'low', 'vertexLow')
+            self.__calculateVertex(candle, 'close', 'vertexClose')
+            self.__calculateVertexStrengthClose(candle)
             self.__updateCandles(candle)

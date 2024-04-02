@@ -88,20 +88,20 @@ class DivergenceController:
     def __processVertexs(self):
         for i in range(len(self.__candles)):
             fromC = self.__candles[i]
-            if not fromC.vertex or not fromC.rsi:
+            if not fromC.vertexClose or not fromC.rsi:
                 continue
             
             self.__lines.setdefault(i, [])
             self.__divergencesByFirst.setdefault(i, [])
             self.__divergencesBySecond.setdefault(i, [])
 
-            isHigh = fromC.vertex == vertexController.VertexType.HIGH
+            isHigh = fromC.vertexClose == vertexController.VertexType.HIGH
             anglePrice = -math.pi / 2 if isHigh else math.pi / 2
             angleRsi = -math.pi / 2 if isHigh else math.pi / 2
             
             for j in range(i + 1, len(self.__candles)):
                 toC = self.__candles[j]
-                if fromC.vertex != toC.vertex or not toC.rsi:
+                if fromC.vertexClose != toC.vertexClose or not toC.rsi:
                     continue
                 newAnglePrice = math.atan((toC.close - fromC.close) / (j - i))
                 newAngleRsi = math.atan((toC.rsi - fromC.rsi) / (j - i))
@@ -144,8 +144,8 @@ class DivergenceController:
     def __processDivergences(self):
         for firstVertex, lines in self.__lines.items():
             firstCandle = self.__candles[firstVertex]
-            maxLength = self.__getDivergenceLength(firstCandle.vertexStrength)
-            isHigh = firstCandle.vertex == vertexController.VertexType.HIGH
+            maxLength = self.__getDivergenceLength(firstCandle.vertexStrengthClose)
+            isHigh = firstCandle.vertexClose == vertexController.VertexType.HIGH
             for secondVertex in lines[::-1]:
                 secondCandle = self.__candles[secondVertex]
                 
