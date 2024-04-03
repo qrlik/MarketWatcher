@@ -26,7 +26,7 @@ class VertexController:
         self.__lastCandle = candle
         self.__lastOpenTime = candle.openTime + candle.interval
         self.__strengthCloses.append(candle.close)
-        if len(self.__strengthCloses) > self.__strengthClosesLength:
+        if len(self.__strengthCloses) > self.__strengthClosesLength + 1:
             self.__strengthCloses.pop(0)
 
     def __calculateVertex(self, candle, priceAttrName, vertexAttrName):
@@ -49,9 +49,10 @@ class VertexController:
             setattr(self.__lastCandle, vertexAttrName, None)
 
     def __calculateVertexStrengthClose(self, candle):
-        if candle.vertexClose is None:
+        if not candle or candle.vertexClose is None or len(self.__strengthCloses) < 2:
             return
-        for close in self.__strengthCloses[::-1]:
+
+        for close in self.__strengthCloses[-2::-1]: # reverse iterate start from pre-last
             if candle.vertexClose == VertexType.HIGH:
                 if close <= candle.close:
                     candle.vertexStrengthClose += 1
@@ -75,8 +76,8 @@ class VertexController:
             return
         
         for candle in candles:
-            #self.__calculateVertex(candle, 'high', 'vertexHigh')
-            #self.__calculateVertex(candle, 'low', 'vertexLow')
             self.__calculateVertex(candle, 'close', 'vertexClose')
-            self.__calculateVertexStrengthClose(candle)
+            self.__calculateVertexStrengthClose(self.__lastCandle) # calculate for previous
             self.__updateCandles(candle)
+
+        self.__calculateVertexStrengthClose(self.__lastCandle) # calculate for last

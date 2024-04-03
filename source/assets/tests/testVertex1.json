@@ -5,51 +5,87 @@
 	"data": [
 		{
 			"time": "09 March 23",
-			"vertex": null
+			"data": {
+				"vertexClose": null,
+				"vertexStrengthClose": 0
+			}
 		},
 		{
 			"time": "10 March 23",
-			"vertex": "LOW"
+			"data": {
+				"vertexClose": "LOW",
+				"vertexStrengthClose": 10
+			}
 		},
 		{
 			"time": "11 March 23",
-			"vertex": null
+			"data": {
+				"vertexClose": null,
+				"vertexStrengthClose": 0
+			}
 		},
 		{
 			"time": "12 March 23",
-			"vertex": null
+			"data": {
+				"vertexClose": null,
+				"vertexStrengthClose": 0
+			}
 		},
 		{
 			"time": "13 March 23",
-			"vertex": null
+			"data": {
+				"vertexClose": null,
+				"vertexStrengthClose": 0
+			}
 		},
 		{
 			"time": "14 March 23",
-			"vertex": "HIGH"
+			"data": {
+				"vertexClose": "HIGH",
+				"vertexStrengthClose": 10
+			}
 		},
 		{
 			"time": "15 March 23",
-			"vertex": "LOW"
+			"data": {
+				"vertexClose": "LOW",
+				"vertexStrengthClose": 1
+			}
 		},
 		{
 			"time": "16 March 23",
-			"vertex": null
+			"data": {
+				"vertexClose": null,
+				"vertexStrengthClose": 0
+			}
 		},
 		{
 			"time": "17 March 23",
-			"vertex": "HIGH"
+			"data": {
+				"vertexClose": "HIGH",
+				"vertexStrengthClose": 10
+			}
 		},
 		{
 			"time": "18 March 23",
-			"vertex": "LOW"
+			"data": {
+				"vertexClose": "LOW",
+				"vertexStrengthClose": 1
+			}
 		},
 		{
 			"time": "19 March 23",
-			"vertex": "HIGH"
+			"data": {
+				"vertexClose": "HIGH",
+				"vertexStrengthClose": 10
+			}
 		},
 		{
 			"time": "20 March 23",
-			"vertex": "LOW"
+			"data": {
+				"vertexClose": "LOW",
+				"vertexStrengthClose": 1
+			}
 		}
 	]
 }

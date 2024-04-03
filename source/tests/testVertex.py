@@ -37,11 +37,12 @@ class vertexTester:
                 break
 
             if candle.time == self.checks[checkIndex]['time']:
-                vertex1 = candle.vertexClose
-                vertex2 = self.checks[checkIndex].get('vertex', None) # to do Close
-                vertex2 = vertexController.VertexType[vertex2] if vertex2 else vertex2
-
-                result &= vertex1 == vertex2
+                for key, value in self.checks[checkIndex]['data'].items():
+                    candleValue = getattr(candle, key)
+                    if isinstance(candleValue, vertexController.VertexType):
+                        candleValue = candleValue.name
+                    
+                    result &= candleValue == value
 
                 self.__checkError(result, checkIndex)
                 checkIndex += 1
