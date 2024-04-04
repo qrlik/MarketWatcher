@@ -76,6 +76,8 @@ class VertexController:
             return
         
         for candle in candles:
+            self.__calculateVertex(candle, 'high', 'vertexHigh')
+            self.__calculateVertex(candle, 'low', 'vertexLow')
             self.__calculateVertex(candle, 'close', 'vertexClose')
             self.__calculateVertexStrengthClose(self.__lastCandle) # calculate for previous
             self.__updateCandles(candle)

@@ -76,11 +76,6 @@ class DivergenceController:
     def init(self, candleController):
         self.__candleController = candleController
 
-    def setSizes(self, strengthToLength, actual, rsiSize):
-        self.__strengthToLength = strengthToLength
-        self.__actualLength = actual
-        self.__rsiSize = rsiSize
-
     def __updateCandles(self,  candles):
         self.__candles = candles
         self.__lastOpenTime = candles[0].openTime
@@ -182,7 +177,7 @@ class DivergenceController:
                     continue
 
     def __isDivergenceLengthActual(self, divergence):
-        return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles)
+        return divergence.secondIndex + self.__actualLength + 1 >= len(self.__candles) # plus 1 because 2 candles make 1 lenght range
 
     def __processActualsByPowerAndLength(self):
         for _, divergences in self.__divergencesByFirst.items():
