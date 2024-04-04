@@ -32,12 +32,15 @@ class TimeframeController:
         return amount
 
     def loop(self):
-        if self.__data.candlesController.sync():
-            self.__data.atrController.process()
-            self.__data.rsiController.process()
-            self.__data.vertexController.process()
-            self.__data.divergenceController.process()
-            self.__data.candlesController.markClean()
+        if not self.__data.candlesController.isNeedSync():
+            return
+        
+        self.__data.atrController.process()
+        self.__data.rsiController.process()
+        self.__data.vertexController.process()
+        self.__data.divergenceController.process()
+
+        self.__data.candlesController.markClean()
 
     def getTimeframe(self):
         return self.__data.timeframe

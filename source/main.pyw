@@ -57,9 +57,10 @@ if __name__ == "__main__":
     # prof.disable()
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
-
-# добавить кнопку save!
-# поймать хуету с пустым файлом
+        
+# fix getFtpNasdaqData, mb save cached result?
+# refactor tickerController loop, move feeController inside tfController
+# look to actual yfinance multithread lib with less 1d intervals
         
 # рисовать вертикальную линию на 200 свечей?
 # добавить количество акций в индикатор

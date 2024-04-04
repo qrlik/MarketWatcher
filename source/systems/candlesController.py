@@ -187,12 +187,10 @@ class CandlesController(QObject):
         if len(self.__finishedCandles) > self.__amountForCache:
             self.__finishedCandles = self.__finishedCandles[-self.__amountForCache:]
 
-    def sync(self):
+    def isNeedSync(self):
         isDirty = self.__initDirty
         if self.__isWaitResponse():
-            isDirty |= self.__checkSyncResponse()
-            if not self.__isWaitResponse() and workMode.isStock():
-                return isDirty
+            isDirty = self.__checkSyncResponse() # if False will reiterate initDirty in next loop
         if not self.__isWaitResponse():
             isDirty |= self.__syncFromWebsocket()
         return isDirty
