@@ -18,13 +18,13 @@ class VertexProcessData:
         topProcess = VertexProcessData()
         bottomProcess = VertexProcessData()
 
-        if candle.vertexClose == VertexType.HIGH:
+        if candle.vertexClose == VertexType.HIGH: # possible bottleneck (can check only pivots)
             topProcess.isClose = True
             topProcess.isPivot = True
         elif candle.vertexHigh == VertexType.HIGH: # wide bottleneck (can check every pivot)
             topProcess.isPivot = True
 
-        if candle.vertexClose == VertexType.LOW:
+        if candle.vertexClose == VertexType.LOW: # possible bottleneck (can check only pivots)
             bottomProcess.isClose = True
             bottomProcess.isPivot = True
         elif candle.vertexLow == VertexType.LOW: # wide bottleneck
@@ -38,7 +38,7 @@ class VertexData:
         self.pivot = 0.0
         self.close = 0.0
 
-class LineData:
+class LinesData: # data for lines from one vertex (close + pivot) to another
     def __init__(self, firstIndex, firstCandle, isTop):
         self.firstVertex = VertexData()
         self.firstVertex.index = firstIndex
@@ -79,16 +79,22 @@ class ChannelController:
     def __processLines(self):
         for firstIndex in range(len(self.__candles) - self.__minLength):
             firstCandle = self.__candles[firstIndex]
-            topProcess, bottomProcess = VertexProcessData.getProcessData(firstCandle)
-            if not topProcess.isValid() and not bottomProcess.isValid():
+            topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle)
+            if not topFirstVertex.isValid() and not bottomFirstVertex.isValid():
                 continue
-            
-            topLine = LineData(firstIndex, firstCandle, True)
-            bottomLine = LineData(firstIndex, firstCandle, False)
+
+            topLines = LinesData(firstIndex, firstCandle, True) if topFirstVertex.isValid() else None
+            bottomLines = LinesData(firstIndex, firstCandle, False) if bottomFirstVertex.isValid() else None
             for secondIndex in range(firstIndex + 1, len(self.__candles)):
                 secondCandle = self.__candles[secondIndex]
-            # close if high/low -> top.close / bottom.close
-            # pivot always -> top.pivot + bottom.pivot
+                if topFirstVertex.isPivot:
+                    pass # first pivot(high) -> second pivot(high) , close
+                if topFirstVertex.isClose:
+                    pass # first close -> second pivot(high) , close
+                if bottomFirstVertex.isPivot:
+                    pass # first pivot(low) -> second pivot(low) , close
+                if bottomFirstVertex.isPivot:
+                    pass # first pivot(low) -> second pivot(low) , close
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
