@@ -5,6 +5,12 @@ from utilities import utils
 import sys
 
 
+class VertexData:
+    def __init__(self, index, pivot, close):
+        self.index = index
+        self.pivot = pivot
+        self.close = close
+
 class VertexProcessData:
     def __init__(self):
         self.isClose = False
@@ -32,26 +38,41 @@ class VertexProcessData:
 
         return (topProcess, bottomProcess)
 
-class VertexData:
-    def __init__(self):
-        self.index = -1
-        self.pivot = 0.0
-        self.close = 0.0
+
+
+class LineFormula: # y = kx + b
+    def __init__(self, x1, y1, x2, y2):
+        self.__x1 = x1
+        self.__y1 = y1
+        self.update(x2, y2)
+
+    def update(self, x2, y2):
+        self.__k = (y2 - self.__y1) / (x2 - self.__x1) if x2 != self.__x1 else 0
+        self.__b = self.__y1 - self.__k * self.__x1
+
+    def comparePoint(self, x, y, functor):
+        lineY = self.__k * x + self.__b
+        return functor(y, lineY)
+    
+
 
 class LinesData: # data for lines from one vertex (close + pivot) to another
     def __init__(self, firstIndex, firstCandle, isTop):
-        self.firstVertex = VertexData()
-        self.firstVertex.index = firstIndex
-        self.firstVertex.close = firstCandle.close
-        self.firstVertex.pivot = firstCandle.high if isTop else firstCandle.low
+        pivot = firstCandle.high if isTop else firstCandle.low
+        self.firstVertex = VertexData(firstIndex, pivot, firstCandle.close)
 
         # Extreme Channel Line
         ECL_y = 0.0 if isTop else sys.float_info.max
-        self.closeECL = utils.LineFormula(firstIndex, self.firstVertex.close, firstIndex + 1, ECL_y)
-        self.pivotECL = utils.LineFormula(firstIndex, self.firstVertex.pivot, firstIndex + 1, ECL_y)
+        self.closeECL = LineFormula(firstIndex, self.firstVertex.close, firstIndex + 1, ECL_y)
+        self.pivotECL = LineFormula(firstIndex, self.firstVertex.pivot, firstIndex + 1, ECL_y)
 
-        self.closeToSecondVertex = [] # VertexData (index growth)
-        self.pivotToSecondVertex = [] # VertexData (index growth)
+        self.closeToSecondVertexs = [] # VertexData (index growth)
+        self.pivotToSecondVertexs = [] # VertexData (index growth)
+
+    def isValid(self):
+        return len(self.closeToSecondVertexs) > 0 or len(self.pivotToSecondVertexs) > 0
+
+
 
 class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength')
@@ -69,12 +90,13 @@ class ChannelController:
     def __reset(self):
         self.__candles = []
         self.__lastOpenTime = 0
-        self.__topLines = [] # LineData (index growth)
-        self.__bottomLines = [] # LineData (index growth)
+        self.__topLines = [] # LinesData (index growth)
+        self.__bottomLines = [] # LinesData (index growth)
 
     def __updateCandles(self,  candles):
         self.__candles = candles
         self.__lastOpenTime = candles[0].openTime
+
 
     def __processLines(self):
         for firstIndex in range(len(self.__candles) - self.__minLength):
@@ -85,16 +107,53 @@ class ChannelController:
 
             topLines = LinesData(firstIndex, firstCandle, True) if topFirstVertex.isValid() else None
             bottomLines = LinesData(firstIndex, firstCandle, False) if bottomFirstVertex.isValid() else None
+            topPivotUpdate,topCloseUpdate,bottomPivotUpdate,bottomCloseUpdate = None
+
             for secondIndex in range(firstIndex + 1, len(self.__candles)):
                 secondCandle = self.__candles[secondIndex]
                 if topFirstVertex.isPivot:
-                    pass # first pivot(high) -> second pivot(high) , close
+                    topPivotUpdate = self.__processTwoVertexLines(secondIndex, secondCandle.high, secondCandle.close, topLines.pivotECL, topPivotUpdate, topLines.pivotToSecondVertexs, utils.less)
                 if topFirstVertex.isClose:
-                    pass # first close -> second pivot(high) , close
+                    topCloseUpdate = self.__processTwoVertexLines(secondIndex, secondCandle.high, secondCandle.close, topLines.closeECL, topCloseUpdate, topLines.closeToSecondVertexs, utils.less)
                 if bottomFirstVertex.isPivot:
-                    pass # first pivot(low) -> second pivot(low) , close
+                    bottomPivotUpdate = self.__processTwoVertexLines(secondIndex, secondCandle.low, secondCandle.close, bottomLines.pivotECL, bottomPivotUpdate, bottomLines.pivotToSecondVertexs, utils.greater)
                 if bottomFirstVertex.isPivot:
-                    pass # first pivot(low) -> second pivot(low) , close
+                    bottomCloseUpdate = self.__processTwoVertexLines(secondIndex, secondCandle.low, secondCandle.close, bottomLines.closeECL, bottomCloseUpdate, bottomLines.closeToSecondVertexs, utils.greater)
+            
+            # to do refactor __processTwoVertexLines, a lot of arguments
+            # to do update container point by last actual ECL (may be use dirty index to optimize), delete all VertexData pivot and close None
+
+            if topLines.isValid():
+                self.__topLines.append(topLines)
+            if bottomLines.isValid():
+                self.__bottomLines.append(bottomLines)
+
+
+    def __processTwoVertexLines(self, secondIndex, secondPivotPoint, secondClosePoint, ECL:LineFormula, prevClose, vertexContainer:list, functor):
+        updateECL = False
+        if prevClose is not None:
+            if functor(secondClosePoint, prevClose): # top < | bottom >
+                if not ECL.comparePoint(secondIndex, secondClosePoint, functor): # top < (right side) | bottom > (left side)
+                    updateECL = True # update at the end to prevent float compare
+            else:
+                ECL.update(secondIndex - 1, prevClose) # update ECL by previous close
+
+        if ECL.comparePoint(secondIndex, secondPivotPoint, functor): # top < | bottom > | # possible bottleneck (can check only vertexPivot HIGH/LOW)
+            return None
+        secondVertex = VertexData(secondIndex, secondPivotPoint, None)
+
+        if ECL.comparePoint(secondIndex, secondClosePoint, functor): # top < | bottom > | # possible bottleneck (can check only vertexClose HIGH/LOW)
+            vertexContainer.append(secondVertex)
+            return None
+        secondVertex.close = secondClosePoint
+        vertexContainer.append(secondVertex)
+        
+        if updateECL:
+            ECL.update(secondIndex, secondClosePoint)
+            return None
+        else:
+            return secondClosePoint
+
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()

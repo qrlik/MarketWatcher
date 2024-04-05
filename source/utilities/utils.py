@@ -102,7 +102,8 @@ def floor(value: float, degree: int = 2) -> float:
     tens = math.pow(10, degree)
     return math.floor(value * tens) / tens
 
-class LineFormula: # y = kx + b
-    def __init__(self, x1, y1, x2, y2):
-        self.__k = (y2 - y1) / (x2 - x1) if x2 != x1 else 0
-        self.__b = y1 - self.__k * x1
+def less(lhs, rhs):
+    return lhs < rhs
+
+def greater(lhs, rhs):
+    return lhs > rhs
