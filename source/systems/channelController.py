@@ -1,8 +1,8 @@
 from systems import settingsController
 from systems.vertexController import VertexType
+from utilities import utils
 
-from collections import OrderedDict
-
+import sys
 
 
 class VertexProcessData:
@@ -39,12 +39,19 @@ class VertexData:
         self.close = 0.0
 
 class LineData:
-    def __init__(self):
+    def __init__(self, firstIndex, firstCandle, isTop):
         self.firstVertex = VertexData()
+        self.firstVertex.index = firstIndex
+        self.firstVertex.close = firstCandle.close
+        self.firstVertex.pivot = firstCandle.high if isTop else firstCandle.low
+
+        # Extreme Channel Line
+        ECL_y = 0.0 if isTop else sys.float_info.max
+        self.closeECL = utils.LineFormula(firstIndex, self.firstVertex.close, firstIndex + 1, ECL_y)
+        self.pivotECL = utils.LineFormula(firstIndex, self.firstVertex.pivot, firstIndex + 1, ECL_y)
+
         self.closeToSecondVertex = [] # VertexData (index growth)
-        self.closeECL = None # TO DO struct
         self.pivotToSecondVertex = [] # VertexData (index growth)
-        self.pivotECL = None # TO DO struct
 
 class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength')
@@ -69,22 +76,26 @@ class ChannelController:
         self.__candles = candles
         self.__lastOpenTime = candles[0].openTime
 
-    def __processVertexs(self):
-        for firstIndex in range(len(self.__candles)):
+    def __processLines(self):
+        for firstIndex in range(len(self.__candles) - self.__minLength):
             firstCandle = self.__candles[firstIndex]
             topProcess, bottomProcess = VertexProcessData.getProcessData(firstCandle)
-            if not topProcess.isValid() and bottomProcess.isValid():
+            if not topProcess.isValid() and not bottomProcess.isValid():
                 continue
-
+            
+            topLine = LineData(firstIndex, firstCandle, True)
+            bottomLine = LineData(firstIndex, firstCandle, False)
             for secondIndex in range(firstIndex + 1, len(self.__candles)):
-                pass
+                secondCandle = self.__candles[secondIndex]
+            # close if high/low -> top.close / bottom.close
+            # pivot always -> top.pivot + bottom.pivot
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()
         if len(candles) > maxAmount:
             candles = candles[-maxAmount:]
-        elif len(candles) == 0:
+        if len(candles) < 3:
             return
         if candles[0].openTime != self.__lastOpenTime:
             self.__reset()
@@ -93,7 +104,7 @@ class ChannelController:
 
         self.__updateCandles(candles)
 
-        self.__processVertexs()
+        self.__processLines()
 
         # self.__processDivergences()
         # self.__processActualsByPowerAndLength()
