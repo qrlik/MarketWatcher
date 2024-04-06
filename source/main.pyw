@@ -58,9 +58,11 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
         
-# fix getFtpNasdaqData, mb save cached result?
-# refactor tickerController loop, move feeController inside tfController
+# move feeController inside tfController, may be cache fee filter results for N days
+# fix bored ago calculate, make fixed tf for it, not lowest    
+
 # look to actual yfinance multithread lib with less 1d intervals
+# fix getFtpNasdaqData, mb save cached result?
         
 # рисовать вертикальную линию на 200 свечей?
 # добавить количество акций в индикатор
