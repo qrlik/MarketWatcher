@@ -59,7 +59,28 @@ class LinesData:
     def __init__(self, index, price, ECL_y):
         # Extreme Channel Line (accept any price shadow, and close if it one candle momentum)
         self.ECL = LineFormula(index, price, index + 1, ECL_y)
-        self.priceToSecondVertexs = [] # VertexData (index growth)
+        self.dirtyLength = 0
+        self.priceToSecondVertexs = [] # VertexData (index growth). None is optional
+
+    def cleanupVertexs(self, dirtyFunctor):
+        if self.dirtyLength < 1:
+            return
+        
+        acceptedVertexs = []
+        for i in range(len(self.priceToSecondVertexs)):
+            vertex = self.priceToSecondVertexs[i]
+            if i >= self.dirtyLength:
+                acceptedVertexs.append(vertex)
+            else:
+                if vertex.pivot and not self.ECL.comparePoint(vertex.index, vertex.pivot, dirtyFunctor): # pivot is good
+                    if vertex.close and not self.ECL.comparePoint(vertex.index, vertex.close, dirtyFunctor): # close is good
+                        acceptedVertexs.append(vertex)
+                    else:
+                        vertex.close = None
+                        acceptedVertexs.append(vertex)
+
+        self.dirtyLength = 0
+        self.priceToSecondVertexs = acceptedVertexs
 
 class VertexLinesData: # data for lines from one vertex (close + pivot) to another
     def __init__(self, index, candle, isTop):
@@ -125,7 +146,10 @@ class ChannelController:
                 if bottomFirstVertex.isPivot:
                     bottomCloseUpdate = self.__processVertexLines(bottomVertex, bottomLines.linesFromClose, bottomCloseUpdate, utils.greater)
             
-            # to do update container point by last actual ECL (may be use dirty index to optimize), delete all VertexData pivot and close None
+            topLines.linesFromPivot.cleanupVertexs(utils.less)
+            topLines.linesFromClose.cleanupVertexs(utils.less)
+            bottomLines.linesFromPivot.cleanupVertexs(utils.greater)
+            bottomLines.linesFromClose.cleanupVertexs(utils.greater)
 
             if topLines.isValid():
                 self.__topLines.append(topLines)
@@ -141,16 +165,17 @@ class ChannelController:
         if prevClose is not None:
             if functor(vertex.close, prevClose): # top < | bottom >
                 if not ECL.comparePoint(vertex.index, vertex.close, functor): # top < (right side) | bottom > (left side)
-                    updateECL = True # update at the end to prevent float compare
+                    updateECL = True # update to new ECL at the end to prevent float compare
             else:
+                linesData.dirtyLength = len(linesData.priceToSecondVertexs) - 1 # [0, last) dirty
                 ECL.update(vertex.index - 1, prevClose)
 
-        # pivot pass ECL
+        # ECL check pivot
         if ECL.comparePoint(vertex.index, vertex.pivot, functor): # top < | bottom > | # possible bottleneck (can check only vertexPivot HIGH/LOW)
             return None
         secondVertex = VertexData(vertex.index, vertex.pivot, None)
 
-        # close pass ECL
+        # ECL check close
         if ECL.comparePoint(vertex.index, vertex.close, functor): # top < | bottom > | # possible bottleneck (can check only vertexClose HIGH/LOW)
             linesData.priceToSecondVertexs.append(secondVertex) # only pivot pass ECL
             return None
@@ -158,6 +183,7 @@ class ChannelController:
         linesData.priceToSecondVertexs.append(secondVertex)
         
         if updateECL:
+            linesData.dirtyLength = len(linesData.priceToSecondVertexs) - 2 # [0, last_two) dirty
             ECL.update(vertex.index, vertex.close)
             return None
         else:
