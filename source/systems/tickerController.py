@@ -92,8 +92,9 @@ class TickerController:
 
     def loop(self):
         isFirst = True
+        isDirty = False
         for _, tfController in self.__timeframes.items():
-            tfController.loop()
+            isDirty |= tfController.loop()
 
             # to do refactor, move feeController inside tfController
             if isFirst:
@@ -101,3 +102,5 @@ class TickerController:
                 if lastCandle:
                     self.__feeAcceptable = feeController.isFeeAcceptable(lastCandle.atr)
             isFirst = False
+        
+        return isDirty

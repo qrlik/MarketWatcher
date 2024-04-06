@@ -27,6 +27,7 @@ class WatcherWindow(QMainWindow):
     def __init__(self):
         super(WatcherWindow, self).__init__()
 
+        self.__dataDirty = False
         #self.__initConfigWindow()
         self.__onStart()
         utils.addLogListener(self)
@@ -84,34 +85,34 @@ class WatcherWindow(QMainWindow):
         loaderController.startLoad()
 
     def __loop(self):
-        watcherController.loop()
-        userDataController.update()
-        watcherTable.update(False if workMode.isStock() else True) # list will not be updated for crypto runtime changes from websocket
-        soundNotifyController.update()
-
+        self.__dataDirty |= watcherController.loop()
         self.__updateProgressBar()
+        if self.__dataDirty and self.__loadedLogged:
+            watcherTable.update() # list will not be updated for crypto runtime changes from websocket
+            self.__dataDirty = False
+        userDataController.update()
+        soundNotifyController.update()
 
     def __updateProgressBar(self):
         if not loaderController.isDone():
             self.__progressBar.setValue(loaderController.getProgress())
-        else:
-            progress = apiRequests.requester.getProgress()
-            if progress >= 0 and progress < 100:
-                self.__progressBar.setValue(progress)
-            elif not self.__loadedLogged: # -1 or 100
+            return
+        
+        progress = apiRequests.requester.getProgress()
+        if progress >= 0 and progress < 100:
+            self.__progressBar.setValue(progress)
+        elif not self.__loadedLogged: # -1 or 100
 
-                if not loaderController.isValid() or progress < 0:
-                    self.log('Nothing to request')
-                else:
-                    cacheController.saveCandles()
-                    cacheController.saveLastCandlesCheck()
-                    if workMode.isStock():
-                        watcherTable.update(True)
+            if not loaderController.isValid() or progress < 0:
+                self.log('Nothing to request')
+            else:
+                cacheController.saveCandles()
+                cacheController.saveLastCandlesCheck()
 
-                    self.log('Ready')
-                    
-                self.__loadedLogged = True
-                self.__progressBar.setVisible(False)
+                self.log('Ready')
+                
+            self.__loadedLogged = True
+            self.__progressBar.setVisible(False)
 
     def closeEvent(self, event):
         cacheController.save()

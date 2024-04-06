@@ -28,6 +28,9 @@ def loadTickets(tickers):
 def loop():
     global __loading
     if __loading:
-        return
+        return False
+    
+    isDirty = False
     for _, controller in __tickers.items():
-        controller.loop()
+        isDirty |= controller.loop()
+    return isDirty

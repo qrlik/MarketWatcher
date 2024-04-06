@@ -33,7 +33,7 @@ class TimeframeController:
 
     def loop(self):
         if not self.__data.candlesController.isNeedSync():
-            return
+            return False
         
         self.__data.atrController.process()
         self.__data.rsiController.process()
@@ -41,6 +41,7 @@ class TimeframeController:
         self.__data.divergenceController.process()
 
         self.__data.candlesController.markClean()
+        return True
 
     def getTimeframe(self):
         return self.__data.timeframe

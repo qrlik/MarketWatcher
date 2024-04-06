@@ -62,10 +62,9 @@ def sortList():
     elif __sortColumn == 1:
         __watcherTable.sortItems(__sortColumn, order = Qt.SortOrder.DescendingOrder)
 
-def update(withList):
+def update():
     __updateRatio()
-    if withList:
-        __updateList()
+    __updateList()
     if workMode.isCrypto():
         __updateInfoWidget(False)
 

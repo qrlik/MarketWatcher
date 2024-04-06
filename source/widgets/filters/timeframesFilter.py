@@ -31,7 +31,7 @@ def __checkAll(state):
     for tf, button in __buttons.items():
         button.setChecked(state)
         __tfStates[tf] = state
-    watcherTable.update(True)
+    watcherTable.update()
 
 def __updateChecks():
     global __tfStates,__generalButton
@@ -41,14 +41,14 @@ def __updateChecks():
         __tfStates[tf] = state
         allChecked &= state
     __generalButton.setChecked(allChecked)
-    watcherTable.update(True)
+    watcherTable.update()
 
 def __updateTricked():
     global __trickState
     for tf, button in __trickButtons.items():
         state = button.isChecked()
         __trickState[tf] = state
-    watcherTable.update(True)
+    watcherTable.update()
 
 def __createButtons(name:str, tfCallback, trickCallback):
     layout = QHBoxLayout()

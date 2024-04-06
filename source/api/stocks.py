@@ -41,14 +41,14 @@ def __updateTickersInfo(tickers):
 
 def getTickersList(withInfo=True):
     tickers = set()
-    sp500 = yahoo.tickers_sp500()
+    #sp500 = yahoo.tickers_sp500()
     dow = yahoo.tickers_dow()
-    nasdaq = yahoo.tickers_nasdaq(yahoo.NasdaqTier.GLOBAL_SELECT)
+    #nasdaq = yahoo.tickers_nasdaq(yahoo.NasdaqTier.GLOBAL_SELECT)
     #other = si.tickers_other()
 
-    tickers.update(sp500)
+    #tickers.update(sp500)
     tickers.update(dow)
-    tickers.update(nasdaq)
+    #tickers.update(nasdaq)
     #tickers.update(other)
 
     if withInfo:
