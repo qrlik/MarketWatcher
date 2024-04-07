@@ -60,6 +60,7 @@ if __name__ == "__main__":
         
 # move feeController inside tfController, may be cache fee filter results for N days
 # fix bored ago calculate, make fixed tf for it, not lowest    
+# fix divergence actual length for channels!
 
 # look to actual yfinance multithread lib with less 1d intervals
 # fix getFtpNasdaqData, mb save cached result?

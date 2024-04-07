@@ -5,7 +5,8 @@ class VertexType(Enum):
     RISE = 0,
     HIGH = 1,
     FALL = 2,
-    LOW = 3
+    LOW = 3,
+    SAME = 4
 
 class VertexController:
     def __init__(self):
@@ -47,8 +48,7 @@ class VertexController:
             if lastCandleVertex == VertexType.LOW:
                 setattr(self.__lastCandle, vertexAttrName, VertexType.FALL)
         else:
-            setattr(candle, vertexAttrName, lastCandleVertex)
-            setattr(self.__lastCandle, vertexAttrName, None)
+            setattr(candle, vertexAttrName, VertexType.SAME)
 
     def __calculateVertexStrengthClose(self, candle):
         if not candle or len(self.__strengthCloses) < 2:
