@@ -6,7 +6,7 @@
 		{
 			"time": "09 March 23",
 			"data": {
-				"vertexClose": null,
+				"vertexClose": "FALL",
 				"vertexStrengthClose": 0
 			}
 		},
@@ -20,21 +20,21 @@
 		{
 			"time": "11 March 23",
 			"data": {
-				"vertexClose": null,
+				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
 		},
 		{
 			"time": "12 March 23",
 			"data": {
-				"vertexClose": null,
+				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
 		},
 		{
 			"time": "13 March 23",
 			"data": {
-				"vertexClose": null,
+				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
 		},
@@ -55,7 +55,7 @@
 		{
 			"time": "16 March 23",
 			"data": {
-				"vertexClose": null,
+				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
 		},

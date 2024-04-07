@@ -83,7 +83,9 @@ class DivergenceController:
     def __processVertexs(self):
         for i in range(len(self.__candles)):
             fromC = self.__candles[i]
-            if not fromC.vertexClose or not fromC.rsi:
+            if not fromC.rsi:
+                continue
+            if not fromC.vertexClose in [vertexController.VertexType.HIGH, vertexController.VertexType.LOW]:
                 continue
             
             self.__lines.setdefault(i, [])

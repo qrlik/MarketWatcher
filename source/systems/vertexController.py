@@ -2,8 +2,10 @@ from enum import Enum
 from systems import settingsController
 
 class VertexType(Enum):
-    HIGH = 0,
-    LOW = 1
+    RISE = 0,
+    HIGH = 1,
+    FALL = 2,
+    LOW = 3
 
 class VertexController:
     def __init__(self):
@@ -39,17 +41,19 @@ class VertexController:
         if candlePrice > lastCandlePrice:
             setattr(candle, vertexAttrName, VertexType.HIGH)
             if lastCandleVertex == VertexType.HIGH:
-                setattr(self.__lastCandle, vertexAttrName, None)
+                setattr(self.__lastCandle, vertexAttrName, VertexType.RISE)
         elif candlePrice < lastCandlePrice:
             setattr(candle, vertexAttrName, VertexType.LOW)
             if lastCandleVertex == VertexType.LOW:
-                setattr(self.__lastCandle, vertexAttrName, None)
+                setattr(self.__lastCandle, vertexAttrName, VertexType.FALL)
         else:
             setattr(candle, vertexAttrName, lastCandleVertex)
             setattr(self.__lastCandle, vertexAttrName, None)
 
     def __calculateVertexStrengthClose(self, candle):
-        if not candle or candle.vertexClose is None or len(self.__strengthCloses) < 2:
+        if not candle or len(self.__strengthCloses) < 2:
+            return
+        if not candle.vertexClose in [VertexType.HIGH, VertexType.LOW]:
             return
 
         for close in self.__strengthCloses[-2::-1]: # reverse iterate start from pre-last
