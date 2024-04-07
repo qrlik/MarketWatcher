@@ -3,7 +3,7 @@ from systems.vertexController import VertexType
 from utilities import utils
 
 import sys
-
+import math
 
 class VertexData:
     def __init__(self, index, pivot, close):
@@ -49,6 +49,9 @@ class LineFormula: # y = kx + b
     def update(self, x2, y2):
         self.__k = (y2 - self.__y1) / (x2 - self.__x1) if x2 != self.__x1 else 0
         self.__b = self.__y1 - self.__k * self.__x1
+        if utils.isDebug():
+            self.__x2 = x2
+            self.__y2 = y2
 
     def comparePoint(self, x, y, functor):
         lineY = self.__k * x + self.__b
@@ -85,11 +88,11 @@ class LinesData:
 class VertexLinesData: # data for lines from one vertex (close + pivot) to another
     def __init__(self, index, candle, isTop):
         pivot = candle.high if isTop else candle.low
-        self.firstVertex = VertexData(index, pivot, candle.close)
+        self.firstVertex = VertexData(index, math.log2(pivot), math.log2(candle.close))
 
         ECL_y = 0.0 if isTop else sys.float_info.max
-        self.linesFromClose = LinesData(index, candle.close, ECL_y)
-        self.linesFromPivot = LinesData(index, pivot, ECL_y)
+        self.linesFromClose = LinesData(index, self.firstVertex.close, ECL_y)
+        self.linesFromPivot = LinesData(index, self.firstVertex.pivot, ECL_y)
 
     def isValid(self):
         return len(self.linesFromClose.priceToSecondVertexs) > 0 or len(self.linesFromPivot.priceToSecondVertexs) > 0
@@ -135,8 +138,8 @@ class ChannelController:
 
             for secondIndex in range(firstIndex + 1, len(self.__candles)):
                 secondCandle = self.__candles[secondIndex]
-                topVertex = VertexData(secondIndex, secondCandle.high, secondCandle.close)
-                bottomVertex = VertexData(secondIndex, secondCandle.low, secondCandle.close)
+                topVertex = VertexData(secondIndex, math.log2(secondCandle.high), math.log2(secondCandle.close))
+                bottomVertex = VertexData(secondIndex, math.log2(secondCandle.low), math.log2(secondCandle.close))
 
                 if topFirstVertex.isPivot:
                     topPivotUpdate = self.__processVertexLines(topVertex, topLines.linesFromPivot, topPivotUpdate, utils.less)
@@ -207,7 +210,6 @@ class ChannelController:
 
         self.__processLines()
 
-        x = 5
         # self.__processDivergences()
         # self.__processActualsByPowerAndLength()
         # self.__processTricked()

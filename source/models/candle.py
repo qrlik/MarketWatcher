@@ -1,7 +1,6 @@
 from models import timeframe
 
 from datetime import datetime
-import math
 
 class Candle:
     def __init__(self):
@@ -14,11 +13,6 @@ class Candle:
         self.high = 0.0
         self.low = 0.0
         self.close = 0.0
-
-        self.openLog = 0.0
-        self.highLog = 0.0
-        self.lowLog = 0.0
-        self.closeLog = 0.0
 
         self.atr = None
         self.rsi = None
@@ -41,12 +35,6 @@ class Candle:
         and self.low == __value.low \
         and self.close == __value.close
     
-def __updateLogs(candle):
-    candle.openLog = math.log(candle.open)
-    candle.highLog = math.log(candle.high)
-    candle.lowLog = math.log(candle.low)
-    candle.closeLog = math.log(candle.close)
-
 def getPrettyTime(timestamp, interval):
     dt = datetime.fromtimestamp(timestamp / 1000)
     if interval == timeframe.Timeframe.ONE_MONTH \
@@ -75,7 +63,6 @@ def fromJson(data, tf:str):
     result.low = data[3]
     result.close = data[4]
     result.closeTime = result.openTime + result.interval - 1
-    __updateLogs(result)
     return result
 
 def toSpotJson(candle:Candle):
