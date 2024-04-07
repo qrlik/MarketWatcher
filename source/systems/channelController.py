@@ -89,7 +89,7 @@ class VertexLinesData: # data for lines from one vertex (close + pivot) to anoth
 
         ECL_y = 0.0 if isTop else sys.float_info.max
         self.linesFromClose = LinesData(index, candle.close, ECL_y)
-        self.linesFromPivot = LinesData(index, candle.pivot, ECL_y)
+        self.linesFromPivot = LinesData(index, pivot, ECL_y)
 
     def isValid(self):
         return len(self.linesFromClose.priceToSecondVertexs) > 0 or len(self.linesFromPivot.priceToSecondVertexs) > 0
@@ -108,6 +108,7 @@ class ChannelController:
 
     def __init__(self):
         self.__candleController = None
+        self.__reset()
 
     def __reset(self):
         self.__candles = []
@@ -130,7 +131,7 @@ class ChannelController:
             # lines data from first vertex to second
             topLines = VertexLinesData(firstIndex, firstCandle, True)
             bottomLines = VertexLinesData(firstIndex, firstCandle, False)
-            topPivotUpdate,topCloseUpdate,bottomPivotUpdate,bottomCloseUpdate = None
+            topPivotUpdate,topCloseUpdate,bottomPivotUpdate,bottomCloseUpdate = None,None,None,None
 
             for secondIndex in range(firstIndex + 1, len(self.__candles)):
                 secondCandle = self.__candles[secondIndex]
@@ -206,6 +207,7 @@ class ChannelController:
 
         self.__processLines()
 
+        x = 5
         # self.__processDivergences()
         # self.__processActualsByPowerAndLength()
         # self.__processTricked()

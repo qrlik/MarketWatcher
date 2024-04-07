@@ -5,6 +5,7 @@ from systems import rsiController
 from systems import divergenceController
 from systems import vertexController
 from systems import candlesController
+from systems import channelController
 
 class TimeframeData:
     def __init__(self, tf: timeframe.Timeframe):
@@ -14,6 +15,7 @@ class TimeframeData:
         self.vertexController: vertexController.VertexController = vertexController.VertexController()
         self.candlesController: candlesController.CandlesController = candlesController.CandlesController(tf)
         self.divergenceController: divergenceController.DivergenceController = divergenceController.DivergenceController()
+        self.channelController: channelController.ChannelController = channelController.ChannelController()
         
 class TimeframeController:
     def __init__(self, tf: timeframe.Timeframe, tckController):
@@ -24,11 +26,13 @@ class TimeframeController:
         self.__data.rsiController.init(self.__data.candlesController)
         self.__data.divergenceController.init(self.__data.candlesController)
         self.__data.vertexController.init(self.__data.candlesController)
+        self.__data.channelController.init(self.__data.candlesController)
 
     def __getCandlesAmountForInit(self):
         amount = self.__data.atrController.getCandlesAmountForInit()
         amount = max(amount, self.__data.rsiController.getCandlesAmountForInit())
         amount = max(amount, self.__data.divergenceController.getCandlesAmountForInit())
+        amount = max(amount, self.__data.channelController.getCandlesAmountForInit())
         return amount
 
     def loop(self):
@@ -39,6 +43,7 @@ class TimeframeController:
         self.__data.rsiController.process()
         self.__data.vertexController.process()
         self.__data.divergenceController.process()
+        self.__data.channelController.process()
 
         self.__data.candlesController.markClean()
         return True
