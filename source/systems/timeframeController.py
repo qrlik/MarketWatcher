@@ -50,8 +50,7 @@ class TimeframeController:
         prof = profile.Profile()
         prof.enable()
 
-        # 1.7s for AAPL 1w [200,1000] length -> compare with final result
-        # 2.2s - make worse
+        # 3.1s for AAPL 1w [200,1000] length -> 95s 
 
         self.__data.channelController.process()
     

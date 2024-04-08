@@ -110,22 +110,54 @@ class VertexLinesData: # data for lines from one vertex (close + pivot) to anoth
 
 
 class ChannelZone:
-    def __init__(self, start):
-        self.__start = start
-        self.__end = start
+    def __init__(self, point):
+        self.start = point
+        self.end = point
     def addPoint(self, point, delta):
-        if point > self.__end:
-            if point - self.__end <= delta:
-                self.__end = point
+        if point > self.end:
+            if point - self.end <= delta:
+                self.end = point
                 return True
             return False
         return True
+    def isIntersect(self,zone):
+        if zone.start > self.end or self.start > zone.end:
+            return False
+        return True
+
+    @staticmethod
+    def zonesetIsIntersect(zoneset1, zoneset2):
+        #-1 if zoneset1 is subset or equal. zoneset1 <= zoneset2
+        # 1 if zoneset1 is superset. zoneset1 > zoneset2
+        # 0 if different. zoneset1 != zoneset2
+
+        IsFirstLess = len(zoneset1) <= len(zoneset2)
+        topIteration1 = zoneset1 if IsFirstLess else zoneset2
+        topIteration2 = zoneset2 if IsFirstLess else zoneset1
+
+        subsetAll = True
+        for zone1 in topIteration1: # iterate less/equal set
+            subset = False
+            for zone2 in topIteration2:
+                if zone1.isIntersect(zone2): # is equal
+                    subset = True
+                    break
+            if not subset:
+                subsetAll = False
+                break
+
+        if subsetAll:
+            if IsFirstLess: # zoneset1 <= zoneset2
+                return -1
+            else: # zoneset1 > zoneset2
+                return 1
+        return 0
 
 
-class ChannelInitData:
+class ChannelData:
     def __init__(self, zoneDelta):
-        self.__topPoints = []
-        self.__bottomPoints = []
+        self.top = []
+        self.bottom = []
         self.__zoneDelta = zoneDelta
 
     def __makeZones(self, container):
@@ -138,20 +170,30 @@ class ChannelInitData:
         return zones
 
     def addTopPoint(self, point):
-        self.__topPoints.append(point)
+        self.top.append(point)
     def addBottomPoint(self, point):
-        self.__bottomPoints.append(point)
+        self.bottom.append(point)
+
     def calculate(self):
-        self.__topPoints.sort()
-        self.__bottomPoints.sort()
-        self.__topPoints = self.__makeZones(self.__topPoints) # rename or new class?
-        self.__bottomPoints = self.__makeZones(self.__bottomPoints)
+        self.top.sort()
+        self.bottom.sort()
+        self.top = self.__makeZones(self.top)
+        self.bottom = self.__makeZones(self.bottom)
+
     def isValid(self, minPerSide, minForBoth):
-        topZones = len(self.__topPoints)
-        bottomZones = len(self.__bottomPoints)
+        topZones = len(self.top)
+        bottomZones = len(self.bottom)
         if topZones < minPerSide or bottomZones < minPerSide:
             return False
         return topZones + bottomZones >= minForBoth
+    
+    def checkSubzones(self, channel):
+        topResult = ChannelZone.zonesetIsIntersect(self.top, channel.top)
+        bottomResult = ChannelZone.zonesetIsIntersect(self.bottom, channel.bottom)
+
+        if topResult == bottomResult: # to do more complex compare
+            return topResult
+        return 0
 
 
 
@@ -279,7 +321,7 @@ class ChannelController:
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            newChannel = ChannelInitData(zoneDelta)
+            newChannel = ChannelData(zoneDelta)
 
             newChannel.addTopPoint(line1.getX1()) if isTop else newChannel.addBottomPoint(line1.getX1())
             newChannel.addTopPoint(line1.getX2()) if isTop else newChannel.addBottomPoint(line1.getX2())
@@ -303,20 +345,22 @@ class ChannelController:
                     for line2_j in range(line2_i + 1, len(lines2.linesToSecondVertexs)):
                         line2_next = lines2.linesToSecondVertexs[line2_j]
                         newChannel.addBottomPoint(line2_next.getX2()) if isTop else newChannel.addTopPoint(line2_next.getX2())
+
             # may be make ordered set?
             newChannel.calculate()
-            if newChannel.isValid(2, 4): # to do make setting
-                self.__channels.append(newChannel)
-                # to do filter subsets
 
-            # if len(newChannel) > 4:
-            #     for channel in self.__channels:
-            #         if newChannel.issubset(channel):
-            #             return
-            #         if newChannel.issuperset(channel):
-            #             channel = frozenset(newChannel)
-            #             return
-            #     self.__channels.add(frozenset(newChannel))  
+            if newChannel.isValid(2, 4): # to do make setting
+                i = 0
+                for channel in self.__channels:
+                    subsetResult = newChannel.checkSubzones(channel)
+                    if subsetResult == 1: # newChannel > channel
+                        self.__channels.pop(i)
+                        break
+                    if subsetResult == -1: # newChannel <= channel
+                        continue
+                    i += 1
+
+                self.__channels.append(newChannel) # newChannel != channels
             
     def process(self):
         candles = self.__candleController.getFinishedCandles()
