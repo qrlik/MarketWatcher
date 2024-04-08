@@ -109,6 +109,21 @@ class VertexLinesData: # data for lines from one vertex (close + pivot) to anoth
         return len(self.linesFromClose.linesToSecondVertexs) > 0 or len(self.linesFromPivot.linesToSecondVertexs) > 0
 
 
+class ChannelZone:
+    def __init__(self, start):
+        self.__start = start
+        self.__end = start
+
+class ChannelInitData:
+    def __init__(self):
+        self.__topPoints = []
+        self.__bottomPoints = []
+    def addTopPoint(self, point):
+        self.__topPoints.append(point)
+    def addBottomPoint(self, point):
+        self.__bottomPoints.append(point)
+
+
 
 class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength')
@@ -129,6 +144,7 @@ class ChannelController:
         self.__lastOpenTime = 0
         self.__topLines = [] # VertexLinesData (index growth)
         self.__bottomLines = [] # VertexLinesData (index growth)
+        self.__channels = set()
 
     def __updateCandles(self,  candles):
         self.__candles = candles
@@ -202,7 +218,69 @@ class ChannelController:
         else:
             return vertex.close
 
+    def __processChannels(self):
+        self.__processOneSideLinesForChannels(True)
+        self.__processOneSideLinesForChannels(False)
 
+    def __processOneSideLinesForChannels(self, isTop):
+        firstSide = self.__topLines if isTop else self.__bottomLines
+        secondSide = self.__bottomLines if isTop else self.__topLines
+        breakFunctor = utils.less if isTop else utils.greater
+        approximateFunctor = utils.greater if isTop else utils.less
+
+        for linesVertex1 in firstSide:
+            for linesVertex2 in secondSide:
+                if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
+                    continue
+                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor)
+                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor)
+                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor)
+                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor)
+
+
+    def __processVertexsChannels(self, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor):
+        if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:
+            return
+        
+        for line1_i in range(len(lines1.linesToSecondVertexs)):
+            line1 = lines1.linesToSecondVertexs[line1_i]
+            if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
+                return
+            
+            #newChannel = ChannelInitData()
+
+            newChannel = set()
+            newChannel.add(line1.getX1())
+            newChannel.add(line1.getX2())
+            newChannel.add(lines2.linesToSecondVertexs[0].getX1())
+
+            for line2_i in range(len(lines2.linesToSecondVertexs)):
+                line2 = lines2.linesToSecondVertexs[line2_i]
+                if approximateFunctor(line2.getAngle(), line1.getAngle()): # between ECL_2 and line1
+                    pass # to do calculate approximate touch side 2
+                else:
+                    # all prev line1 can be  approximate touch side 1
+                    
+                    # [this, next lines1] touch side 1
+                    for line1_j in range(line1_i + 1, len(lines1.linesToSecondVertexs)):
+                        line1_next = lines1.linesToSecondVertexs[line1_j]
+                        newChannel.add(line1_next.getX2())
+
+                    # [this, next lines2] - touch side 2
+                    newChannel.add(line2.getX2())
+                    for line2_j in range(line2_i + 1, len(lines2.linesToSecondVertexs)):
+                        line2_next = lines2.linesToSecondVertexs[line2_j]
+                        newChannel.add(line2_next.getX2())
+
+            if len(newChannel) > 4:
+                for channel in self.__channels:
+                    if newChannel.issubset(channel):
+                        return
+                    if newChannel.issuperset(channel):
+                        channel = frozenset(newChannel)
+                        return
+                self.__channels.add(frozenset(newChannel))  
+            
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()
@@ -218,6 +296,7 @@ class ChannelController:
         self.__updateCandles(candles)
 
         self.__processLines()
+        self.__processChannels()
 
         x = 5
 
