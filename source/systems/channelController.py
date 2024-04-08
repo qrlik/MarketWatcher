@@ -26,6 +26,8 @@ class ChannelController:
     def __reset(self):
         self.__candles = []
         self.__lastOpenTime = 0
+        self.__topExtremePoints = []
+        self.__bottomExtremePoints = []
         self.__topLines = [] # VertexLinesData (index growth)
         self.__bottomLines = [] # VertexLinesData (index growth)
         self.__channels = []
@@ -65,12 +67,7 @@ class ChannelController:
             topLines.linesFromClose.cleanupVertexs(utils.less, False)
             bottomLines.linesFromPivot.cleanupVertexs(utils.greater, True)
             bottomLines.linesFromClose.cleanupVertexs(utils.greater, True)
-
-            if topLines.isValid():
-                self.__topLines.append(topLines)
-            if bottomLines.isValid():
-                self.__bottomLines.append(bottomLines)
-
+            self.__addLines(topLines, bottomLines)
 
     def __processVertexLines(self, vertex:VertexData, linesData:LinesData, prevClose, functor):
         ECL = linesData.ECL
@@ -101,6 +98,27 @@ class ChannelController:
             return None
         else:
             return vertex.close
+
+    def __addLines(self, topLines, bottomLines):
+        if topLines.isValid():
+            self.__topLines.append(topLines)
+
+            if topLines.linesFromClose.ECL.isValid():
+                self.__topExtremePoints.append((topLines.linesFromClose.ECL.getX2(), topLines.linesFromClose.ECL.getY2())) 
+            if topLines.linesFromPivot.ECL.isValid():
+                self.__topExtremePoints.append((topLines.linesFromPivot.ECL.getX2(), topLines.linesFromPivot.ECL.getY2()))
+
+        if bottomLines.isValid():
+            self.__bottomLines.append(bottomLines)
+
+            if bottomLines.linesFromClose.ECL.isValid():
+                self.__bottomExtremePoints.append((bottomLines.linesFromClose.ECL.getX2(), bottomLines.linesFromClose.ECL.getY2())) 
+            if bottomLines.linesFromPivot.ECL.isValid():
+                self.__bottomExtremePoints.append((bottomLines.linesFromPivot.ECL.getX2(), bottomLines.linesFromPivot.ECL.getY2()))
+
+    def __processExtremePoint(self):
+        self.__topExtremePoints = sorted(set(self.__topExtremePoints))
+        self.__bottomExtremePoints = sorted(set(self.__bottomExtremePoints))
 
     def __processChannels(self):
         self.__processOneSideLinesForChannels(True)
@@ -214,6 +232,7 @@ class ChannelController:
         self.__updateCandles(candles)
 
         self.__processLines()
+        self.__processExtremePoint()
         self.__processChannels()
 
         print(len(self.__channels))

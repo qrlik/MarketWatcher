@@ -58,6 +58,9 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
         
+# to do can improve channel calculate if store next max/min prices in candle?
+# can check can current ECL cross current min max in future
+
 # move feeController inside tfController, may be cache fee filter results for N days
 # fix bored ago calculate, make fixed tf for it, not lowest    
 # fix divergence actual length for channels!
