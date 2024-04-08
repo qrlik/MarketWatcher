@@ -113,15 +113,45 @@ class ChannelZone:
     def __init__(self, start):
         self.__start = start
         self.__end = start
+    def addPoint(self, point, delta):
+        if point > self.__end:
+            if point - self.__end <= delta:
+                self.__end = point
+                return True
+            return False
+        return True
+
 
 class ChannelInitData:
-    def __init__(self):
+    def __init__(self, zoneDelta):
         self.__topPoints = []
         self.__bottomPoints = []
+        self.__zoneDelta = zoneDelta
+
+    def __makeZones(self, container):
+        if len(container) == 0:
+            return []
+        zones = [ ChannelZone(container[0]) ]
+        for point in container[1:]: # start from second
+            if not zones[-1].addPoint(point, self.__zoneDelta):
+                zones.append(ChannelZone(point))
+        return zones
+
     def addTopPoint(self, point):
         self.__topPoints.append(point)
     def addBottomPoint(self, point):
         self.__bottomPoints.append(point)
+    def calculate(self):
+        self.__topPoints.sort()
+        self.__bottomPoints.sort()
+        self.__topPoints = self.__makeZones(self.__topPoints) # rename or new class?
+        self.__bottomPoints = self.__makeZones(self.__bottomPoints)
+    def isValid(self, minPerSide, minForBoth):
+        topZones = len(self.__topPoints)
+        bottomZones = len(self.__bottomPoints)
+        if topZones < minPerSide or bottomZones < minPerSide:
+            return False
+        return topZones + bottomZones >= minForBoth
 
 
 
@@ -144,7 +174,7 @@ class ChannelController:
         self.__lastOpenTime = 0
         self.__topLines = [] # VertexLinesData (index growth)
         self.__bottomLines = [] # VertexLinesData (index growth)
-        self.__channels = set()
+        self.__channels = []
 
     def __updateCandles(self,  candles):
         self.__candles = candles
@@ -229,16 +259,18 @@ class ChannelController:
         approximateFunctor = utils.greater if isTop else utils.less
 
         for linesVertex1 in firstSide:
+            zoneDelta = int((self.__maxLength - linesVertex1.firstVertex.index) * 0.02) # to do settings
+            zoneDelta = max(zoneDelta, 2)
             for linesVertex2 in secondSide:
                 if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
                     continue
-                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor)
-                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor)
-                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor)
-                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor)
+                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop, zoneDelta)
+                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop, zoneDelta)
+                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop, zoneDelta)
+                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop, zoneDelta)
 
 
-    def __processVertexsChannels(self, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor):
+    def __processVertexsChannels(self, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop, zoneDelta):
         if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:
             return
         
@@ -247,12 +279,12 @@ class ChannelController:
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            #newChannel = ChannelInitData()
+            newChannel = ChannelInitData(zoneDelta)
 
-            newChannel = set()
-            newChannel.add(line1.getX1())
-            newChannel.add(line1.getX2())
-            newChannel.add(lines2.linesToSecondVertexs[0].getX1())
+            newChannel.addTopPoint(line1.getX1()) if isTop else newChannel.addBottomPoint(line1.getX1())
+            newChannel.addTopPoint(line1.getX2()) if isTop else newChannel.addBottomPoint(line1.getX2())
+            line2_X1 = lines2.linesToSecondVertexs[0].getX1()
+            newChannel.addBottomPoint(line2_X1) if isTop else newChannel.addTopPoint(line2_X1)
 
             for line2_i in range(len(lines2.linesToSecondVertexs)):
                 line2 = lines2.linesToSecondVertexs[line2_i]
@@ -264,22 +296,27 @@ class ChannelController:
                     # [this, next lines1] touch side 1
                     for line1_j in range(line1_i + 1, len(lines1.linesToSecondVertexs)):
                         line1_next = lines1.linesToSecondVertexs[line1_j]
-                        newChannel.add(line1_next.getX2())
+                        newChannel.addTopPoint(line1_next.getX2()) if isTop else newChannel.addBottomPoint(line1_next.getX2())
 
                     # [this, next lines2] - touch side 2
-                    newChannel.add(line2.getX2())
+                    newChannel.addBottomPoint(line2.getX2())
                     for line2_j in range(line2_i + 1, len(lines2.linesToSecondVertexs)):
                         line2_next = lines2.linesToSecondVertexs[line2_j]
-                        newChannel.add(line2_next.getX2())
+                        newChannel.addBottomPoint(line2_next.getX2()) if isTop else newChannel.addTopPoint(line2_next.getX2())
+            # may be make ordered set?
+            newChannel.calculate()
+            if newChannel.isValid(2, 4): # to do make setting
+                self.__channels.append(newChannel)
+                # to do filter subsets
 
-            if len(newChannel) > 4:
-                for channel in self.__channels:
-                    if newChannel.issubset(channel):
-                        return
-                    if newChannel.issuperset(channel):
-                        channel = frozenset(newChannel)
-                        return
-                self.__channels.add(frozenset(newChannel))  
+            # if len(newChannel) > 4:
+            #     for channel in self.__channels:
+            #         if newChannel.issubset(channel):
+            #             return
+            #         if newChannel.issuperset(channel):
+            #             channel = frozenset(newChannel)
+            #             return
+            #     self.__channels.add(frozenset(newChannel))  
             
     def process(self):
         candles = self.__candleController.getFinishedCandles()
