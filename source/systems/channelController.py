@@ -103,17 +103,17 @@ class ChannelController:
         if topLines.isValid():
             self.__topLines.append(topLines)
 
-            if topLines.linesFromClose.ECL.isValid():
+            if len(topLines.linesFromClose.linesToSecondVertexs) > 0:
                 self.__topExtremePoints.append((topLines.linesFromClose.ECL.getX2(), topLines.linesFromClose.ECL.getY2())) 
-            if topLines.linesFromPivot.ECL.isValid():
+            if len(topLines.linesFromPivot.linesToSecondVertexs) > 0:
                 self.__topExtremePoints.append((topLines.linesFromPivot.ECL.getX2(), topLines.linesFromPivot.ECL.getY2()))
 
         if bottomLines.isValid():
             self.__bottomLines.append(bottomLines)
 
-            if bottomLines.linesFromClose.ECL.isValid():
+            if len(bottomLines.linesFromClose.linesToSecondVertexs) > 0:
                 self.__bottomExtremePoints.append((bottomLines.linesFromClose.ECL.getX2(), bottomLines.linesFromClose.ECL.getY2())) 
-            if bottomLines.linesFromPivot.ECL.isValid():
+            if len(bottomLines.linesFromPivot.linesToSecondVertexs) > 0:
                 self.__bottomExtremePoints.append((bottomLines.linesFromPivot.ECL.getX2(), bottomLines.linesFromPivot.ECL.getY2()))
 
     def __processExtremePoint(self):
@@ -196,9 +196,25 @@ class ChannelController:
             return None
         return newChannel
 
-    def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1, isTop, approximateFunctor):
+    def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1:LineFormula, isTop, approximateFunctor):
         # process channel by second side validation (touches amount and both sides check)
         line2_X1 = lines2.linesToSecondVertexs[0].getX1()
+        line2_Y1 = lines2.linesToSecondVertexs[0].getY1()
+
+        # if isTop second side is bottom
+        extremePoints = self.__bottomExtremePoints if isTop else self.__topExtremePoints
+        extremeFunctor = utils.greater if isTop else utils.less
+        for extreme_i in reversed(range(0, len(extremePoints))):
+            extremePoint = extremePoints[extreme_i]
+            if extremePoint[0] >= line2_X1:
+                continue
+            if extremePoint[0] <= line1.getX1():
+                break
+            # to do may be check here touches and approximate touch
+            extremeLine = LineFormula(extremePoint[0], extremePoint[1], line2_X1, line2_Y1)
+            if extremeFunctor(extremeLine.getAngle(), line1.getAngle()): # if extreme point beyond channel from left side for second side
+                return None
+
         newChannel.addBottomPoint(line2_X1) if isTop else newChannel.addTopPoint(line2_X1)
         approximatePassed = False
         for line2_i in range(len(lines2.linesToSecondVertexs)):

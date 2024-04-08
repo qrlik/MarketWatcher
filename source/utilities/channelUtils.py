@@ -43,17 +43,13 @@ class LineFormula: # y = kx + b
         self.__x1 = x1
         self.__y1 = y1
         self.update(x2, y2)
-        self.__updated = False
 
     def update(self, x2, y2):
         self.__k = (y2 - self.__y1) / (x2 - self.__x1) if x2 != self.__x1 else 0
         self.__b = self.__y1 - self.__k * self.__x1
         self.__x2 = x2
         self.__y2 = y2
-        self.__updated = True
 
-    def isValid(self):
-        return self.__updated
     def getX1(self):
         return self.__x1
     def getY1(self):
