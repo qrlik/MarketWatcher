@@ -135,22 +135,8 @@ class ChannelController:
             if not newChannel:
                 return
 
-            line2_X1 = lines2.linesToSecondVertexs[0].getX1()
-            newChannel.addBottomPoint(line2_X1) if isTop else newChannel.addTopPoint(line2_X1)
-            approximatePassed = False
-            for line2_i in range(len(lines2.linesToSecondVertexs)):
-                line2 = lines2.linesToSecondVertexs[line2_i]
-                if approximatePassed: # touch side 2
-                    newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
-                elif approximateFunctor(line2.getAngle(), line1.getAngle()):
-                    pass # to do calculate approximate touch side 2
-                else:
-                    newChannel.secondLine = line2
-                    newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
-                    approximatePassed = True
-
-            newChannel.calculateBottom() if isTop else newChannel.calculateTop()
-            if not newChannel.isValid(2, 4): # to do make setting
+            newChannel = self.__processChannelBySecondSide(newChannel, lines2, line1, isTop, approximateFunctor)
+            if not newChannel:
                 continue
 
             i = 0
@@ -189,6 +175,27 @@ class ChannelController:
         newChannel.calculateTop() if isTop else newChannel.calculateBottom()
         isFirstSideValid = newChannel.isValidTop(2) if isTop else newChannel.isValidBottom(2) # to do make setting
         if not isFirstSideValid:
+            return None
+        return newChannel
+
+    def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1, isTop, approximateFunctor):
+        # process channel by second side validation (touches amount and both sides check)
+        line2_X1 = lines2.linesToSecondVertexs[0].getX1()
+        newChannel.addBottomPoint(line2_X1) if isTop else newChannel.addTopPoint(line2_X1)
+        approximatePassed = False
+        for line2_i in range(len(lines2.linesToSecondVertexs)):
+            line2 = lines2.linesToSecondVertexs[line2_i]
+            if approximatePassed: # touch side 2
+                newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
+            elif approximateFunctor(line2.getAngle(), line1.getAngle()):
+                pass # to do calculate approximate touch side 2
+            else:
+                newChannel.secondLine = line2
+                newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
+                approximatePassed = True
+
+        newChannel.calculateBottom() if isTop else newChannel.calculateTop()
+        if not newChannel.isValid(2, 4): # to do make setting
             return None
         return newChannel
 
