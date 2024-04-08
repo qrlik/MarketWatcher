@@ -131,12 +131,22 @@ class ChannelZone:
         # 1 if zoneset1 is superset. zoneset1 > zoneset2
         # 0 if different. zoneset1 != zoneset2
 
+        if zoneset1[-1].end < zoneset2[0].start:
+            return 0
+        if zoneset2[-1].end < zoneset1[0].start:
+            return 0
+
         IsFirstLess = len(zoneset1) <= len(zoneset2)
         topIteration1 = zoneset1 if IsFirstLess else zoneset2
         topIteration2 = zoneset2 if IsFirstLess else zoneset1
 
         subsetAll = True
         for zone1 in topIteration1: # iterate less/equal set
+            if topIteration2[-1].end < zone1.start:
+                return 0
+            if zone1.end < topIteration2[0].start:
+                return 0
+
             subset = False
             for zone2 in topIteration2:
                 if zone1.isIntersect(zone2): # is equal
@@ -349,16 +359,18 @@ class ChannelController:
             newChannel.calculate()
             if newChannel.isValid(2, 4): # to do make setting
                 i = 0
+                needAppend = True
                 for channel in self.__channels:
                     subsetResult = newChannel.checkSubzones(channel)
                     if subsetResult == 1: # newChannel > channel
                         self.__channels.pop(i)
                         break
                     if subsetResult == -1: # newChannel <= channel
-                        continue
+                        needAppend = False
+                        break
                     i += 1
-
-                self.__channels.append(newChannel) # newChannel != channels
+                if needAppend:
+                    self.__channels.append(newChannel) # newChannel != channels || newChannel > channel
             
     def process(self):
         candles = self.__candleController.getFinishedCandles()
@@ -377,6 +389,7 @@ class ChannelController:
         self.__processLines()
         self.__processChannels()
 
+        print(len(self.__channels))
         x = 5
 
         # self.__processDivergences()
