@@ -175,8 +175,8 @@ class ChannelData:
         self.bottom.append(point)
 
     def calculate(self):
-        self.top.sort()
-        self.bottom.sort()
+        self.top = sorted(set(self.top))
+        self.bottom = sorted(set(self.bottom))
         self.top = self.__makeZones(self.top)
         self.bottom = self.__makeZones(self.bottom)
 
@@ -346,9 +346,7 @@ class ChannelController:
                         line2_next = lines2.linesToSecondVertexs[line2_j]
                         newChannel.addBottomPoint(line2_next.getX2()) if isTop else newChannel.addTopPoint(line2_next.getX2())
 
-            # may be make ordered set?
             newChannel.calculate()
-
             if newChannel.isValid(2, 4): # to do make setting
                 i = 0
                 for channel in self.__channels:
