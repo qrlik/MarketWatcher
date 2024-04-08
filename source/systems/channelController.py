@@ -112,18 +112,18 @@ class ChannelController:
         breakFunctor = utils.less if isTop else utils.greater
         approximateFunctor = utils.greater if isTop else utils.less
 
+        channelData = ChannelData()
         for linesVertex1 in firstSide:
-            zoneDelta = int((self.__maxLength - linesVertex1.firstVertex.index) * 0.02) # to do settings
-            zoneDelta = max(zoneDelta, 2)
+            channelData.length = self.__maxLength - linesVertex1.firstVertex.index
             for linesVertex2 in secondSide:
                 if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
                     continue
-                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop, zoneDelta)
-                self.__processVertexsChannels(linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop, zoneDelta)
-                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop, zoneDelta)
-                self.__processVertexsChannels(linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop, zoneDelta)
+                self.__processVertexsChannels(channelData, linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelData, linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelData, linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelData, linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
 
-    def __processVertexsChannels(self, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop, zoneDelta):
+    def __processVertexsChannels(self, channelData:ChannelData, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop):
         if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:
             return
         for line1_i in range(len(lines1.linesToSecondVertexs)):
@@ -131,19 +131,8 @@ class ChannelController:
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            newChannel = ChannelData(zoneDelta)
-            
-            # to do all prev line1 can be  approximate touch side 1
-            # [this, next lines1] touch side 1
-            newChannel.addTopPoint(line1.getX1()) if isTop else newChannel.addBottomPoint(line1.getX1())
-            newChannel.addTopPoint(line1.getX2()) if isTop else newChannel.addBottomPoint(line1.getX2())
-            for line1_j in range(line1_i + 1, len(lines1.linesToSecondVertexs)):
-                line1_next = lines1.linesToSecondVertexs[line1_j]
-                newChannel.addTopPoint(line1_next.getX2()) if isTop else newChannel.addBottomPoint(line1_next.getX2())
-            
-            newChannel.calculateTop() if isTop else newChannel.calculateBottom()
-            isFirstSideValid = newChannel.isValidTop(2) if isTop else newChannel.isValidBottom(2) # to do make setting
-            if not isFirstSideValid:
+            newChannel = self.__createChannelByFirstSide(channelData, lines1, line1_i, isTop)
+            if not newChannel:
                 return
 
             line2_X1 = lines2.linesToSecondVertexs[0].getX1()
@@ -156,6 +145,7 @@ class ChannelController:
                 elif approximateFunctor(line2.getAngle(), line1.getAngle()):
                     pass # to do calculate approximate touch side 2
                 else:
+                    newChannel.secondLine = line2
                     newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
                     approximatePassed = True
 
@@ -175,8 +165,33 @@ class ChannelController:
                     break
                 i += 1
             if needAppend:
+                newChannel.isTop = isTop
+                newChannel.length = channelData.length
+                newChannel.mainLine = line1
                 self.__channels.append(newChannel) # newChannel != channels || newChannel > channel
  
+    def __createChannelByFirstSide(self, channelData:ChannelData, lines1, index, isTop):
+        # create channel and check first side validation (touches amount)
+        line1 = lines1.linesToSecondVertexs[index]
+
+        newChannel = ChannelData()
+        newChannel.zoneDelta = int((channelData.length) * 0.02) # to do settings
+        newChannel.zoneDelta = max(newChannel.zoneDelta, 2)
+        
+        # to do all prev line1 can be  approximate touch side 1
+        # [this, next lines1] touch side 1
+        newChannel.addTopPoint(line1.getX1()) if isTop else newChannel.addBottomPoint(line1.getX1())
+        newChannel.addTopPoint(line1.getX2()) if isTop else newChannel.addBottomPoint(line1.getX2())
+        for line1_j in range(index + 1, len(lines1.linesToSecondVertexs)):
+            line1_next = lines1.linesToSecondVertexs[line1_j]
+            newChannel.addTopPoint(line1_next.getX2()) if isTop else newChannel.addBottomPoint(line1_next.getX2())
+        
+        newChannel.calculateTop() if isTop else newChannel.calculateBottom()
+        isFirstSideValid = newChannel.isValidTop(2) if isTop else newChannel.isValidBottom(2) # to do make setting
+        if not isFirstSideValid:
+            return None
+        return newChannel
+
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()

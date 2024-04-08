@@ -163,17 +163,22 @@ class ChannelZone:
 
 
 class ChannelData:
-    def __init__(self, zoneDelta):
+    def __init__(self):
+        self.isTop = None
+        self.length = 0
+        self.mainLine = None
+        self.secondLine = None
+
         self.top = []
         self.bottom = []
-        self.__zoneDelta = zoneDelta
+        self.zoneDelta = 0
 
     def __makeZones(self, container):
         if len(container) == 0:
             return []
         zones = [ ChannelZone(container[0]) ]
         for point in container[1:]: # start from second
-            if not zones[-1].addPoint(point, self.__zoneDelta):
+            if not zones[-1].addPoint(point, self.zoneDelta):
                 zones.append(ChannelZone(point))
         return zones
 
