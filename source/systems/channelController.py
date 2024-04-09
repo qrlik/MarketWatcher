@@ -198,24 +198,12 @@ class ChannelController:
 
     def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1:LineFormula, isTop, approximateFunctor):
         # process channel by second side validation (touches amount and both sides check)
-        line2_X1 = lines2.linesToSecondVertexs[0].getX1()
-        line2_Y1 = lines2.linesToSecondVertexs[0].getY1()
-
-        # if isTop second side is bottom
-        extremePoints = self.__bottomExtremePoints if isTop else self.__topExtremePoints
-        extremeFunctor = utils.greater if isTop else utils.less
-        for extreme_i in reversed(range(0, len(extremePoints))):
-            extremePoint = extremePoints[extreme_i]
-            if extremePoint[0] >= line2_X1:
-                continue
-            if extremePoint[0] <= line1.getX1():
-                break
-            # to do may be check here touches and approximate touch
-            extremeLine = LineFormula(extremePoint[0], extremePoint[1], line2_X1, line2_Y1)
-            if extremeFunctor(extremeLine.getAngle(), line1.getAngle()): # if extreme point beyond channel from left side for second side
-                return None
-
-        newChannel.addBottomPoint(line2_X1) if isTop else newChannel.addTopPoint(line2_X1)
+        line2 = lines2.linesToSecondVertexs[0]
+        
+        if not self.__processChannelByLefthandOfSecondSide(isTop, line1, line2):
+            return None
+        # process right side lines [v2, channel_end]
+        newChannel.addBottomPoint(line2.getX1()) if isTop else newChannel.addTopPoint(line2.getX1())
         approximatePassed = False
         for line2_i in range(len(lines2.linesToSecondVertexs)):
             line2 = lines2.linesToSecondVertexs[line2_i]
@@ -232,6 +220,22 @@ class ChannelController:
         if not newChannel.isValid(2, 4): # to do make setting
             return None
         return newChannel
+
+    def __processChannelByLefthandOfSecondSide(self, isTop, line1, line2): # process left side (channel_start, v2)
+        # if isTop second side is bottom
+        extremePoints = self.__bottomExtremePoints if isTop else self.__topExtremePoints
+        extremeFunctor = utils.greater if isTop else utils.less
+        for extreme_i in reversed(range(0, len(extremePoints))):
+            extremePoint = extremePoints[extreme_i]
+            if extremePoint[0] >= line2.getX1():
+                continue
+            if extremePoint[0] <= line1.getX1():
+                break
+            # to do may be check here touches and approximate touch
+            extremeLine = LineFormula(extremePoint[0], extremePoint[1], line2.getX1(), line2.getY1())
+            if extremeFunctor(extremeLine.getAngle(), line1.getAngle()): # if extreme point beyond channel from left side for second side
+                return False
+        return True
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
