@@ -6,8 +6,13 @@
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,
 	"atrAverageLength": 50,
+
 	"channelMinLength": 200,
 	"channelMaxLength": 1000,
+	"channelOneSideZones": 2,
+	"channelBothSidesZones": 4,
+	"channelZonePrecisionPercent": 0.02,
+
 	"vertexStrengthToDivergenceLength": {
 		"1": 5,
 		"2": 10,
@@ -22,6 +27,7 @@
 	},
 	"divergenceActualLength": 0,
 	"divergenceTrickedFactor": 0.2,
+
 	"rsiLength": 14,
 	"spotSymbolsExceptions": [
 		"BLUR"

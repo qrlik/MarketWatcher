@@ -158,15 +158,16 @@ class ChannelZone:
 
 
 class ChannelData:
-    def __init__(self):
+    def __init__(self, length, zonePrecision):
         self.isTop = None
-        self.length = 0
+        self.length = length
         self.mainLine = None
         self.secondLine = None
 
         self.top = []
         self.bottom = []
-        self.zoneDelta = 0
+        zoneDelta = int(length * zonePrecision)
+        self.zoneDelta = max(zoneDelta, 2)
 
     def __makeZones(self, container):
         if len(container) == 0:
