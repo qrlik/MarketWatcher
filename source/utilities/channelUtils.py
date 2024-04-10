@@ -70,6 +70,11 @@ class LineFormula: # y = kx + b
         lineY = self.__k * x + self.__b
         return functor(y, lineY)
     
+    @staticmethod
+    def getParallelLine(line, delta):
+        point1 = (line.getX1(), line.getY1() + delta)
+        point2 = (line.getX2(), line.getY2() + delta)
+        return LineFormula(point1[0], point1[1], point2[0], point2[1]) 
 
 
 class LinesData:

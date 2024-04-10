@@ -209,12 +209,8 @@ class ChannelController:
         # process righthand lines [v2, channel_end]
         newChannel.addBottomPoint(vertex2[0]) if isTop else newChannel.addTopPoint(vertex2[0])
 
-        # to do refactor
         sign = -1 if isTop else 1
-        point1_1 = (line1.getX1(), line1.getY1() + sign * newChannel.width)
-        point2_1 = (line1.getX2(), line1.getY2() + sign * newChannel.width)
-        line1_fromVertex2 = LineFormula(point1_1[0], point1_1[1], point2_1[0], point2_1[1]) 
-
+        line2 = LineFormula.getParallelLine(line1, sign * newChannel.width)
         approximatePassed = False
         aproximateTouchDelta = self.__approximateTouchPrecisionPercent * newChannel.width
         for line_i in range(len(lines2.linesToSecondVertexs)):
@@ -222,11 +218,11 @@ class ChannelController:
             if approximatePassed: # crosses
                 newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
             elif approximateFunctor(line.getAngle(), line1.getAngle()): # check aproximate touch
-                assert(line1_fromVertex2.calculateY(line.getX2()) <= line.getY2() if isTop else line1_fromVertex2.calculateY(line.getX2()) >= line.getY2())
-                if line1_fromVertex2.getDeltaY(line.getX2(), line.getY2()) <= aproximateTouchDelta:
+                assert(line2.calculateY(line.getX2()) <= line.getY2() if isTop else line2.calculateY(line.getX2()) >= line.getY2())
+                if line2.getDeltaY(line.getX2(), line.getY2()) <= aproximateTouchDelta:
                     newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
             else: # crosses
-                newChannel.secondLine = line1_fromVertex2 # to do make from v2 point or store v2 only
+                newChannel.secondLine = line2
                 newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
                 approximatePassed = True
 
