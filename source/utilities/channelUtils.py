@@ -60,6 +60,12 @@ class LineFormula: # y = kx + b
         return self.__y2
     def getAngle(self):
         return self.__k
+    def calculateY(self, x):
+        return self.__k * x + self.__b
+    def getDeltaY(self, x, y):
+        line_y = self.__k * x + self.__b
+        return abs(line_y - y)
+
     def comparePoint(self, x, y, functor):
         lineY = self.__k * x + self.__b
         return functor(y, lineY)
@@ -158,7 +164,7 @@ class ChannelZone:
 
 
 class ChannelData:
-    def __init__(self, length, zonePrecision):
+    def __init__(self, length, zonePrecision, line1:LineFormula, point2):
         self.isTop = None
         self.length = length
         self.mainLine = None
@@ -168,6 +174,7 @@ class ChannelData:
         self.bottom = []
         zoneDelta = int(length * zonePrecision)
         self.zoneDelta = max(zoneDelta, 2)
+        self.width = line1.getDeltaY(point2[0], point2[1])
 
     def __makeZones(self, container):
         if len(container) == 0:

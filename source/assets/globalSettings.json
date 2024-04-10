@@ -9,9 +9,10 @@
 
 	"channelMinLength": 200,
 	"channelMaxLength": 1000,
-	"channelOneSideZones": 2,
-	"channelBothSidesZones": 4,
+	"channelOneSideZonesMinimum": 2,
+	"channelBothSidesZonesMinimum": 4,
 	"channelZonePrecisionPercent": 0.02,
+	"channelApproximateTouchPrecisionPercent": 0.02,
 
 	"vertexStrengthToDivergenceLength": {
 		"1": 5,

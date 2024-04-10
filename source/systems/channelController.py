@@ -12,15 +12,16 @@ import math
 class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength')
     __minLength = settingsController.getSetting('channelMinLength')
-    __channelOneSideZones = settingsController.getSetting('channelOneSideZones')
-    __channelBothSidesZones = settingsController.getSetting('channelBothSidesZones')
-    __channelZonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
+    __oneSideZonesMinimum = settingsController.getSetting('channelOneSideZonesMinimum')
+    __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
+    __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
+    __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
 
     def init(self, candleController):
         self.__candleController = candleController
 
     def getCandlesAmountForInit(self):
-        return self.__maxLength + 1 # plus 1 because 2 candles make 1 lenght range
+        return self.__maxLength + 1 # plus 1 because 2 candles make 1 length range
 
     def __init__(self):
         self.__candleController = None
@@ -151,7 +152,10 @@ class ChannelController:
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            newChannel = self.__createChannelByFirstSide(channelLength, lines1, line1_i, isTop)
+            point2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
+            newChannel = ChannelData(channelLength, self.__zonePrecisionPercent, line1, point2)
+
+            newChannel = self.__processChannelByFirstSide(newChannel, lines1, line1_i, isTop)
             if not newChannel:
                 return
 
@@ -175,62 +179,74 @@ class ChannelController:
                 newChannel.mainLine = line1
                 self.__channels.append(newChannel) # newChannel != channels || newChannel > channel
  
-    def __createChannelByFirstSide(self, channelLength, lines1, index, isTop):
+    def __processChannelByFirstSide(self, newChannel:ChannelData, lines1, index, isTop):
         # create channel and check first side validation (touches amount)
         line1 = lines1.linesToSecondVertexs[index]
-        newChannel = ChannelData(channelLength, self.__channelZonePrecisionPercent)
+        aproximateTouchDelta = self.__approximateTouchPrecisionPercent * newChannel.width
         
-        # to do all prev line1 can be  approximate touch side 1
-        # [this, next lines1] touch side 1
         newChannel.addTopPoint(line1.getX1()) if isTop else newChannel.addBottomPoint(line1.getX1())
-        newChannel.addTopPoint(line1.getX2()) if isTop else newChannel.addBottomPoint(line1.getX2())
-        for line1_j in range(index + 1, len(lines1.linesToSecondVertexs)):
-            line1_next = lines1.linesToSecondVertexs[line1_j]
-            newChannel.addTopPoint(line1_next.getX2()) if isTop else newChannel.addBottomPoint(line1_next.getX2())
-        
+        for line_i in range(len(lines1.linesToSecondVertexs)):
+            line = lines1.linesToSecondVertexs[line_i]
+            if line_i < index: # previous lines, check aproximate touch
+                assert(line1.calculateY(line.getX2()) >= line.getY2() if isTop else line1.calculateY(line.getX2()) <= line.getY2())
+                if line1.getDeltaY(line.getX2(), line.getY2()) <= aproximateTouchDelta:
+                    newChannel.addTopPoint(line.getX2()) if isTop else newChannel.addBottomPoint(line.getX2())
+            else: # crosses
+                newChannel.addTopPoint(line.getX2()) if isTop else newChannel.addBottomPoint(line.getX2())
+
         newChannel.calculateTop() if isTop else newChannel.calculateBottom()
-        isFirstSideValid = newChannel.isValidTop(self.__channelOneSideZones) if isTop else newChannel.isValidBottom(self.__channelOneSideZones)
+        isFirstSideValid = newChannel.isValidTop(self.__oneSideZonesMinimum) if isTop else newChannel.isValidBottom(self.__oneSideZonesMinimum)
         if not isFirstSideValid:
             return None
         return newChannel
 
     def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1:LineFormula, isTop, approximateFunctor):
         # process channel by second side validation (touches amount and both sides check)
-        line2 = lines2.linesToSecondVertexs[0]
         
-        if not self.__processChannelByLefthandOfSecondSide(isTop, line1, line2):
+        vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
+        if not self.__processChannelByLefthandOfSecondSide(isTop, line1, vertex2): 
             return None
-        # process right side lines [v2, channel_end]
-        newChannel.addBottomPoint(line2.getX1()) if isTop else newChannel.addTopPoint(line2.getX1())
+        # process righthand lines [v2, channel_end]
+        newChannel.addBottomPoint(vertex2[0]) if isTop else newChannel.addTopPoint(vertex2[0])
+
+        # to do refactor
+        sign = -1 if isTop else 1
+        point1_1 = (line1.getX1(), line1.getY1() + sign * newChannel.width)
+        point2_1 = (line1.getX2(), line1.getY2() + sign * newChannel.width)
+        line1_fromVertex2 = LineFormula(point1_1[0], point1_1[1], point2_1[0], point2_1[1]) 
+
         approximatePassed = False
-        for line2_i in range(len(lines2.linesToSecondVertexs)):
-            line2 = lines2.linesToSecondVertexs[line2_i]
-            if approximatePassed: # touch side 2
-                newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
-            elif approximateFunctor(line2.getAngle(), line1.getAngle()):
-                pass # to do calculate approximate touch side 2
-            else:
-                newChannel.secondLine = line2
-                newChannel.addBottomPoint(line2.getX2()) if isTop else newChannel.addTopPoint(line2.getX2())
+        aproximateTouchDelta = self.__approximateTouchPrecisionPercent * newChannel.width
+        for line_i in range(len(lines2.linesToSecondVertexs)):
+            line = lines2.linesToSecondVertexs[line_i]
+            if approximatePassed: # crosses
+                newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
+            elif approximateFunctor(line.getAngle(), line1.getAngle()): # check aproximate touch
+                assert(line1_fromVertex2.calculateY(line.getX2()) <= line.getY2() if isTop else line1_fromVertex2.calculateY(line.getX2()) >= line.getY2())
+                if line1_fromVertex2.getDeltaY(line.getX2(), line.getY2()) <= aproximateTouchDelta:
+                    newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
+            else: # crosses
+                newChannel.secondLine = line1_fromVertex2 # to do make from v2 point or store v2 only
+                newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
                 approximatePassed = True
 
         newChannel.calculateBottom() if isTop else newChannel.calculateTop()
-        if not newChannel.isValid(self.__channelOneSideZones, self.__channelBothSidesZones):
+        if not newChannel.isValid(self.__oneSideZonesMinimum, self.__bothSidesZonesMinimum):
             return None
         return newChannel
 
-    def __processChannelByLefthandOfSecondSide(self, isTop, line1, line2): # process left side (channel_start, v2)
+    def __processChannelByLefthandOfSecondSide(self, isTop, line1, vertex2): # process left side (channel_start, v2)
         # if isTop second side is bottom
         extremePoints = self.__bottomExtremePoints if isTop else self.__topExtremePoints
         extremeFunctor = utils.greater if isTop else utils.less
         for extreme_i in reversed(range(0, len(extremePoints))):
             extremePoint = extremePoints[extreme_i]
-            if extremePoint[0] >= line2.getX1():
+            if extremePoint[0] >= vertex2[0]:
                 continue
             if extremePoint[0] <= line1.getX1():
                 break
             # to do may be check here touches and approximate touch
-            extremeLine = LineFormula(extremePoint[0], extremePoint[1], line2.getX1(), line2.getY1())
+            extremeLine = LineFormula(extremePoint[0], extremePoint[1], vertex2[0], vertex2[1])
             if extremeFunctor(extremeLine.getAngle(), line1.getAngle()): # if extreme point beyond channel from left side for second side
                 return False
         return True
@@ -254,6 +270,8 @@ class ChannelController:
         self.__processChannels()
 
         print(len(self.__channels))
+        self.__channels.sort(key=lambda channel : channel.length)
+
         x = 5
         # 0.02 -> 0.04 . 82 -> x
         # 2,4 -> 2,5 . 82 -> x
