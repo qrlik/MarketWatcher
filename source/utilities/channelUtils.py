@@ -128,6 +128,10 @@ class ChannelZone:
         if zone.start > self.end or self.start > zone.end:
             return False
         return True
+    def __str__(self):
+        if self.start == self.end:
+            return str(self.start)
+        return '(' + str(self.start) + ',' + str(self.end) + ')'
 
     @staticmethod
     def zonesetIsIntersect(zoneset1, zoneset2):
@@ -168,12 +172,12 @@ class ChannelZone:
         return 0
 
 
-class ChannelData:
+class ChannelProcessData:
     def __init__(self, length, zonePrecision, line1:LineFormula, point2):
         self.isTop = None
         self.length = length
         self.mainLine = None
-        self.secondLine = None
+        self.secondVertex = None
 
         self.top = []
         self.bottom = []
@@ -221,3 +225,56 @@ class ChannelData:
         if topResult == bottomResult: # to do more complex compare
             return topResult
         return 0
+    
+class ChannelPoint:
+    def __init__(self, index, price, candle):
+        self.index = index
+        self.price = price
+        self.candle = candle
+
+    def __str__(self):
+        if self.price is None:
+            return str(self.index)
+        return '(' + str(self.index) + ',' + str(self.price) + ')'
+
+class Channel:
+    def __init__(self):
+        self.isTop = None
+        self.mainPoint_1:ChannelPoint = None
+        self.mainPoint_2:ChannelPoint = None
+        self.minorPoint:ChannelPoint = None
+        self.topZones = []
+        self.bottomZones = []
+        self.length = None
+        self.width = None
+        self.angle = None
+
+    def calculateWidthPercent(self, mainPrice):
+        if self.angle >= 0:
+            division = mainPrice / self.minorPoint.price if self.isTop else self.minorPoint.price / mainPrice
+            assert(division > 1)
+            self.width = (division - 1) * 100
+        else:
+            division = self.minorPoint.price / mainPrice if self.isTop else mainPrice / self.minorPoint.price
+            assert(division < 1)
+            self.width = (1 - division) * 100
+
+    def __str__(self):
+        result = str(self.length) + '\t'
+        if self.isTop:
+            result += str(self.mainPoint_1) + str(self.mainPoint_2) + ' | '
+            result += str(self.minorPoint)
+        else:
+            result += str(self.minorPoint) + ' | '
+            result += str(self.mainPoint_1) + str(self.mainPoint_2)
+        result += '\n'
+        for zone in self.topZones:
+            result += str(zone) + ','
+        result += '\n'
+        for zone in self.bottomZones:
+            result += str(zone) + ','
+        result += '\n==============================='
+        result += '\n'
+        return result
+
+

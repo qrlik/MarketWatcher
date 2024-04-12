@@ -60,6 +60,7 @@ if __name__ == "__main__":
         
 # to do check channel settings
 # to do not count first touch if it not enought strength vertex
+# to do checkSubzones make comparison for strength when zones is ==
 
 # to do can improve channel calculate if store next max/min prices in candle?
 # can check can current ECL cross current min max in future

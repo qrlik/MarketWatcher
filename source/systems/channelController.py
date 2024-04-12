@@ -5,13 +5,16 @@ from utilities.channelUtils import VertexProcessData
 from utilities.channelUtils import LineFormula
 from utilities.channelUtils import LinesData
 from utilities.channelUtils import VertexLinesData
-from utilities.channelUtils import ChannelData
+from utilities.channelUtils import Channel
+from utilities.channelUtils import ChannelZone
+from utilities.channelUtils import ChannelPoint
+from utilities.channelUtils import ChannelProcessData
 
 import math
 
 class ChannelController:
-    __maxLength = settingsController.getSetting('channelMaxLength')
-    __minLength = settingsController.getSetting('channelMinLength')
+    __maxLength = settingsController.getSetting('channelMaxLength') + 1 # plus 1 because 2 candles make 1 length range
+    __minLength = settingsController.getSetting('channelMinLength') + 1
     __oneSideZonesMinimum = settingsController.getSetting('channelOneSideZonesMinimum')
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
@@ -21,7 +24,7 @@ class ChannelController:
         self.__candleController = candleController
 
     def getCandlesAmountForInit(self):
-        return self.__maxLength + 1 # plus 1 because 2 candles make 1 length range
+        return self.__maxLength
 
     def __init__(self):
         self.__candleController = None
@@ -153,7 +156,7 @@ class ChannelController:
                 return
             
             point2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
-            newChannel = ChannelData(channelLength, self.__zonePrecisionPercent, line1, point2)
+            newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, point2)
 
             newChannel = self.__processChannelByFirstSide(newChannel, lines1, line1_i, isTop)
             if not newChannel:
@@ -179,7 +182,7 @@ class ChannelController:
                 newChannel.mainLine = line1
                 self.__channels.append(newChannel) # newChannel != channels || newChannel > channel
  
-    def __processChannelByFirstSide(self, newChannel:ChannelData, lines1, index, isTop):
+    def __processChannelByFirstSide(self, newChannel:ChannelProcessData, lines1, index, isTop):
         # create channel and check first side validation (touches amount)
         line1 = lines1.linesToSecondVertexs[index]
         aproximateTouchDelta = self.__approximateTouchPrecisionPercent * newChannel.width
@@ -200,13 +203,14 @@ class ChannelController:
             return None
         return newChannel
 
-    def __processChannelBySecondSide(self, newChannel:ChannelData, lines2, line1:LineFormula, isTop, approximateFunctor):
+    def __processChannelBySecondSide(self, newChannel:ChannelProcessData, lines2, line1:LineFormula, isTop, approximateFunctor):
         # process channel by second side validation (touches amount and both sides check)
         
         vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
         if not self.__processChannelByLefthandOfSecondSide(isTop, line1, vertex2): 
             return None
         # process righthand lines [v2, channel_end]
+        newChannel.secondVertex = vertex2
         newChannel.addBottomPoint(vertex2[0]) if isTop else newChannel.addTopPoint(vertex2[0])
 
         sign = -1 if isTop else 1
@@ -222,7 +226,6 @@ class ChannelController:
                 if line2.getDeltaY(line.getX2(), line.getY2()) <= aproximateTouchDelta:
                     newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
             else: # crosses
-                newChannel.secondLine = line2
                 newChannel.addBottomPoint(line.getX2()) if isTop else newChannel.addTopPoint(line.getX2())
                 approximatePassed = True
 
@@ -247,12 +250,40 @@ class ChannelController:
                 return False
         return True
 
+    def __getPrice(self, log):
+        price = pow(2, log)
+        return round(price, self.__candleController.getPricePrecision(price))
+
+    def __createReadableInfo(self):
+        channels = []
+        getIndex = lambda i : len(self.__candles) - i - 1
+        for channel in self.__channels:
+            c = Channel()
+            c.isTop = channel.isTop
+            c.mainPoint_1 = ChannelPoint(getIndex(channel.mainLine.getX1()), self.__getPrice(channel.mainLine.getY1()), self.__candles[channel.mainLine.getX1()])
+            c.mainPoint_2 = ChannelPoint(getIndex(channel.mainLine.getX2()), self.__getPrice(channel.mainLine.getY2()), self.__candles[channel.mainLine.getX2()])
+            c.minorPoint = ChannelPoint(getIndex(channel.secondVertex[0]), self.__getPrice(channel.secondVertex[1]), self.__candles[channel.secondVertex[0]])
+            for zone in channel.top:
+                z = ChannelZone(ChannelPoint(getIndex(zone.start), None, self.__candles[zone.start]))
+                z.end = ChannelPoint(getIndex(zone.end), None, self.__candles[zone.end])
+                c.topZones.append(z)
+            for zone in channel.bottom:
+                z = ChannelZone(ChannelPoint(getIndex(zone.start), None, self.__candles[zone.start]))
+                z.end = ChannelPoint(getIndex(zone.end), None, self.__candles[zone.end])
+                c.bottomZones.append(z)
+
+            c.angle = channel.mainLine.getAngle() # to do handle side channel (when angle about zero)
+            c.calculateWidthPercent(self.__getPrice(channel.mainLine.calculateY(channel.secondVertex[0])))
+            c.length = channel.length
+            channels.append(c)
+        self.__channels = channels
+
     def process(self):
         candles = self.__candleController.getFinishedCandles()
         maxAmount = self.getCandlesAmountForInit()
         if len(candles) > maxAmount:
             candles = candles[-maxAmount:]
-        if len(candles) < 3:
+        if len(candles) < self.__minLength:
             return
         if candles[0].openTime != self.__lastOpenTime:
             self.__reset()
@@ -266,8 +297,12 @@ class ChannelController:
         self.__processChannels()
 
         print(len(self.__channels))
-        self.__channels.sort(key=lambda channel : channel.length)
+        self.__channels.sort(key=lambda channel : channel.length, reverse=True)
 
+        self.__createReadableInfo()
+
+        for channel in self.__channels:
+            print(str(channel))
         x = 5
         # 0.02 -> 0.04 . 82 -> x
         # 2,4 -> 2,5 . 82 -> x
