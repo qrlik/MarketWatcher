@@ -1,5 +1,6 @@
 from systems.vertexController import VertexType
 
+from enum import IntEnum
 import sys
 import math
 
@@ -113,21 +114,43 @@ class VertexLinesData: # data for lines from one vertex (close + pivot) to anoth
         return len(self.linesFromClose.linesToSecondVertexs) > 0 or len(self.linesFromPivot.linesToSecondVertexs) > 0
 
 
+class ZoneComparisonResult(IntEnum):
+    DIFFERENT = 0,
+    EQUAL = 1,
+    GREATER = 2,
+    LESS = 3,
+
 class ChannelZone:
-    def __init__(self, point):
+    def __init__(self, point, precision = None):
         self.start = point
         self.end = point
+        if precision is not None:
+            self.precision = precision
+            self.precisionStart = self.start
+            self.precisionEnd = self.end
+            self.__updateRangeWithPrecision()
+
+    def __updateRangeWithPrecision(self):
+        actualRange = self.end - self.start
+        if actualRange < self.precision:
+            delta = int((self.precision - actualRange) / 2)
+            self.precisionStart = self.start - delta
+            self.precisionEnd = self.end + delta
+
     def addPoint(self, point, delta):
         if point > self.end:
             if point - self.end <= delta:
                 self.end = point
+                self.__updateRangeWithPrecision()
                 return True
             return False
         return True
+    
     def isIntersect(self,zone):
-        if zone.start > self.end or self.start > zone.end:
+        if zone.precisionStart > self.precisionEnd or self.precisionStart > zone.precisionEnd:
             return False
         return True
+    
     def __str__(self):
         if self.start == self.end:
             return str(self.start)
@@ -135,28 +158,14 @@ class ChannelZone:
 
     @staticmethod
     def zonesetIsIntersect(zoneset1, zoneset2):
-        #-1 if zoneset1 is subset or equal. zoneset1 <= zoneset2
-        # 1 if zoneset1 is superset. zoneset1 > zoneset2
-        # 0 if different. zoneset1 != zoneset2
-
-        if zoneset1[-1].end < zoneset2[0].start:
-            return 0
-        if zoneset2[-1].end < zoneset1[0].start:
-            return 0
-
         IsFirstLess = len(zoneset1) <= len(zoneset2)
-        topIteration1 = zoneset1 if IsFirstLess else zoneset2
-        topIteration2 = zoneset2 if IsFirstLess else zoneset1
+        zoneIteration1 = zoneset1 if IsFirstLess else zoneset2
+        zoneIteration2 = zoneset2 if IsFirstLess else zoneset1
 
         subsetAll = True
-        for zone1 in topIteration1: # iterate less/equal set
-            if topIteration2[-1].end < zone1.start:
-                return 0
-            if zone1.end < topIteration2[0].start:
-                return 0
-
+        for zone1 in zoneIteration1: # iterate less/equal set
             subset = False
-            for zone2 in topIteration2:
+            for zone2 in zoneIteration2:
                 if zone1.isIntersect(zone2): # is equal
                     subset = True
                     break
@@ -165,15 +174,18 @@ class ChannelZone:
                 break
 
         if subsetAll:
-            if IsFirstLess: # zoneset1 <= zoneset2
-                return -1
-            else: # zoneset1 > zoneset2
-                return 1
-        return 0
+            if len(zoneset1) == len(zoneset2):
+                return ZoneComparisonResult.EQUAL
+            if IsFirstLess:
+                return ZoneComparisonResult.LESS
+            else:
+                return ZoneComparisonResult.GREATER
+        return ZoneComparisonResult.DIFFERENT
+
 
 
 class ChannelProcessData:
-    def __init__(self, length, zonePrecision, line1:LineFormula, point2):
+    def __init__(self, length, zonePrecisionPercent, line1:LineFormula, point2):
         self.isTop = None
         self.length = length
         self.mainLine = None
@@ -181,17 +193,17 @@ class ChannelProcessData:
 
         self.top = []
         self.bottom = []
-        zoneDelta = int(length * zonePrecision)
-        self.zoneDelta = max(zoneDelta, 2)
+        zonePrecision = int(length * zonePrecisionPercent)
+        self.zonePrecision = max(zonePrecision, 2)
         self.width = line1.getDeltaY(point2[0], point2[1])
 
     def __makeZones(self, container):
         if len(container) == 0:
             return []
-        zones = [ ChannelZone(container[0]) ]
+        zones = [ ChannelZone(container[0], self.zonePrecision) ]
         for point in container[1:]: # start from second
-            if not zones[-1].addPoint(point, self.zoneDelta):
-                zones.append(ChannelZone(point))
+            if not zones[-1].addPoint(point, self.zonePrecision):
+                zones.append(ChannelZone(point, self.zonePrecision))
         return zones
 
     def addTopPoint(self, point):
@@ -222,9 +234,15 @@ class ChannelProcessData:
         topResult = ChannelZone.zonesetIsIntersect(self.top, channel.top)
         bottomResult = ChannelZone.zonesetIsIntersect(self.bottom, channel.bottom)
 
-        if topResult == bottomResult: # to do more complex compare
+        if topResult == bottomResult:
             return topResult
-        return 0
+        # to do if both equal comparison by strength
+        if topResult == ZoneComparisonResult.EQUAL:
+            return bottomResult
+        if bottomResult == ZoneComparisonResult.EQUAL:
+            return topResult
+        
+        return ZoneComparisonResult.DIFFERENT
     
 class ChannelPoint:
     def __init__(self, index, price, candle):

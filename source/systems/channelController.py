@@ -9,6 +9,7 @@ from utilities.channelUtils import Channel
 from utilities.channelUtils import ChannelZone
 from utilities.channelUtils import ChannelPoint
 from utilities.channelUtils import ChannelProcessData
+from utilities.channelUtils import ZoneComparisonResult
 
 import math
 
@@ -157,6 +158,8 @@ class ChannelController:
             
             point2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
             newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, point2)
+            newChannel.isTop = isTop
+            newChannel.mainLine = line1
 
             newChannel = self.__processChannelByFirstSide(newChannel, lines1, line1_i, isTop)
             if not newChannel:
@@ -165,22 +168,17 @@ class ChannelController:
             newChannel = self.__processChannelBySecondSide(newChannel, lines2, line1, isTop, approximateFunctor)
             if not newChannel:
                 continue
-
-            i = 0
+            
             needAppend = True
-            for channel in self.__channels:
+            for channel in self.__channels[:]: # list copy
                 subsetResult = newChannel.checkSubzones(channel)
-                if subsetResult == 1: # newChannel > channel
-                    self.__channels.pop(i)
-                    break
-                if subsetResult == -1: # newChannel <= channel
+                if subsetResult == ZoneComparisonResult.GREATER:
+                    self.__channels.remove(channel)
+                elif subsetResult == ZoneComparisonResult.LESS or subsetResult == ZoneComparisonResult.EQUAL:
                     needAppend = False
                     break
-                i += 1
             if needAppend:
-                newChannel.isTop = isTop
-                newChannel.mainLine = line1
-                self.__channels.append(newChannel) # newChannel != channels || newChannel > channel
+                self.__channels.append(newChannel)
  
     def __processChannelByFirstSide(self, newChannel:ChannelProcessData, lines1, index, isTop):
         # create channel and check first side validation (touches amount)
