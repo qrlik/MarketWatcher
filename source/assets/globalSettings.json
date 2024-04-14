@@ -9,6 +9,7 @@
 
 	"channelMinLength": 200,
 	"channelMaxLength": 1000,
+	"channelFirstVertexStrength": 10,
 	"channelOneSideZonesMinimum": 2,
 	"channelBothSidesZonesMinimum": 4,
 	"channelZonePrecisionPercent": 0.02,

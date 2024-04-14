@@ -36,6 +36,13 @@ class VertexProcessData:
             bottomProcess.isPivot = True
 
         return (topProcess, bottomProcess)
+    
+    @staticmethod
+    def getStrengthProcessData(candle, minStrength, isTop):
+        vertex1PivotStrength = candle.vertexStrengthHigh if isTop else candle.vertexStrengthLow
+        isCloseAllowedByStrength = candle.vertexStrengthClose >= minStrength
+        isPivotAllowedByStrength = vertex1PivotStrength >= minStrength
+        return (isPivotAllowedByStrength, isCloseAllowedByStrength)
 
 
 

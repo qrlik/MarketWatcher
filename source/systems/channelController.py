@@ -17,6 +17,7 @@ class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength') + 1 # plus 1 because 2 candles make 1 length range
     __minLength = settingsController.getSetting('channelMinLength') + 1
     __oneSideZonesMinimum = settingsController.getSetting('channelOneSideZonesMinimum')
+    __firstVertexStrength = settingsController.getSetting('channelFirstVertexStrength')
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
     __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
@@ -139,14 +140,20 @@ class ChannelController:
         approximateFunctor = utils.greater if isTop else utils.less
 
         for linesVertex1 in firstSide:
+            pivotAllowByStrength, closeAllowByStrength = VertexProcessData.getStrengthProcessData(self.__candles[linesVertex1.firstVertex.index], self.__firstVertexStrength, isTop)
+            if not pivotAllowByStrength and not closeAllowByStrength:
+                continue
+
             channelLength = self.__maxLength - linesVertex1.firstVertex.index
             for linesVertex2 in secondSide:
                 if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
                     continue
-                self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
-                self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
-                self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
-                self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
+                if pivotAllowByStrength:
+                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
+                if closeAllowByStrength:
+                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
 
     def __processVertexsChannels(self, channelLength, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop):
         if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:

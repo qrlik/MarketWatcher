@@ -6,6 +6,12 @@
 		{
 			"time": "09 March 23",
 			"data": {
+				"vertexHigh": "FALL",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "FALL",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "FALL",
 				"vertexStrengthClose": 0
 			}
@@ -13,6 +19,12 @@
 		{
 			"time": "10 March 23",
 			"data": {
+				"vertexHigh": "LOW",
+				"vertexStrengthHigh": 10,
+
+				"vertexLow": "LOW",
+				"vertexStrengthLow": 10,
+
 				"vertexClose": "LOW",
 				"vertexStrengthClose": 10
 			}
@@ -20,6 +32,12 @@
 		{
 			"time": "11 March 23",
 			"data": {
+				"vertexHigh": "RISE",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
@@ -27,6 +45,12 @@
 		{
 			"time": "12 March 23",
 			"data": {
+				"vertexHigh": "RISE",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
@@ -34,6 +58,12 @@
 		{
 			"time": "13 March 23",
 			"data": {
+				"vertexHigh": "RISE",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
@@ -41,6 +71,12 @@
 		{
 			"time": "14 March 23",
 			"data": {
+				"vertexHigh": "HIGH",
+				"vertexStrengthHigh": 10,
+
+				"vertexLow": "HIGH",
+				"vertexStrengthLow": 10,
+
 				"vertexClose": "HIGH",
 				"vertexStrengthClose": 10
 			}
@@ -48,6 +84,12 @@
 		{
 			"time": "15 March 23",
 			"data": {
+				"vertexHigh": "FALL",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "LOW",
+				"vertexStrengthLow": 1,
+
 				"vertexClose": "LOW",
 				"vertexStrengthClose": 1
 			}
@@ -55,6 +97,12 @@
 		{
 			"time": "16 March 23",
 			"data": {
+				"vertexHigh": "LOW",
+				"vertexStrengthHigh": 2,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "RISE",
 				"vertexStrengthClose": 0
 			}
@@ -62,6 +110,12 @@
 		{
 			"time": "17 March 23",
 			"data": {
+				"vertexHigh": "HIGH",
+				"vertexStrengthHigh": 10,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "HIGH",
 				"vertexStrengthClose": 10
 			}
@@ -69,6 +123,12 @@
 		{
 			"time": "18 March 23",
 			"data": {
+				"vertexHigh": "LOW",
+				"vertexStrengthHigh": 1,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "LOW",
 				"vertexStrengthClose": 1
 			}
@@ -76,6 +136,12 @@
 		{
 			"time": "19 March 23",
 			"data": {
+				"vertexHigh": "RISE",
+				"vertexStrengthHigh": 0,
+
+				"vertexLow": "RISE",
+				"vertexStrengthLow": 0,
+
 				"vertexClose": "HIGH",
 				"vertexStrengthClose": 10
 			}
@@ -83,6 +149,12 @@
 		{
 			"time": "20 March 23",
 			"data": {
+				"vertexHigh": "HIGH",
+				"vertexStrengthHigh": 10,
+
+				"vertexLow": "HIGH",
+				"vertexStrengthLow": 10,
+
 				"vertexClose": "LOW",
 				"vertexStrengthClose": 1
 			}

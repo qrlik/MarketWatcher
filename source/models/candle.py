@@ -18,7 +18,11 @@ class Candle:
         self.rsi = None
 
         self.vertexHigh = None
+        self.vertexStrengthHigh = 0
+
         self.vertexLow = None
+        self.vertexStrengthLow = 0
+        
         self.vertexClose = None
         self.vertexStrengthClose = 0
 
