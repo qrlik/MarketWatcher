@@ -5,7 +5,7 @@
 	"loopInterval": 33,
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,
-	"atrAverageLength": 50,
+	"atrAverageLength": 100,
 
 	"channelMinLength": 200,
 	"channelMaxLength": 1000,
