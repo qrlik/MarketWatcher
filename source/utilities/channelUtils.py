@@ -275,22 +275,37 @@ class Channel:
         self.minorPoint:ChannelPoint = None
         self.topZones = []
         self.bottomZones = []
-        self.length = None
-        self.width = None
         self.angle = None
+        self.length = None
+        self.widthPercent = None
+        self.widthPrice = None
+        self.strength = None
 
-    def calculateWidthPercent(self, mainPrice):
+    def __calculateWidthPercent(self, mainPrice):
         if self.angle >= 0:
             division = mainPrice / self.minorPoint.price if self.isTop else self.minorPoint.price / mainPrice
             assert(division > 1)
-            self.width = (division - 1) * 100
+            self.widthPercent = (division - 1) * 100
         else:
             division = self.minorPoint.price / mainPrice if self.isTop else mainPrice / self.minorPoint.price
             assert(division < 1)
-            self.width = (1 - division) * 100
+            self.widthPercent = (1 - division) * 100
+
+    def __calculateWidthPrice(self, mainLine:LineFormula, logWidth, lastIndex):
+        sign = -1 if self.isTop else 1
+        minorLine = LineFormula.getParallelLine(mainLine, sign * logWidth)
+        self.widthPrice = abs(getPrice(mainLine.calculateY(lastIndex)) - getPrice(minorLine.calculateY(lastIndex)))
+
+    def __calculateStrength(self, lastCandle):
+        # to do take atr from lowest tf for comparison and multi filter
+        widthFactor = self.widthPrice / lastCandle.atr
+        anglePercent = abs(pow(2, self.angle) - 1) * 100
+        atrPercent = lastCandle.atr / lastCandle.close * 100
+        growSpeedFactor = anglePercent / atrPercent
+        self.strength = widthFactor * growSpeedFactor
 
     def __str__(self):
-        result = str(self.length) + '\t' + str(self.angle) + '\t'
+        result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t'
         if self.isTop:
             result += str(self.mainPoint_1) + str(self.mainPoint_2) + ' | '
             result += str(self.minorPoint)
@@ -314,6 +329,8 @@ class Channel:
         c = Channel()
 
         c.isTop = data.isTop
+        c.length = data.length
+        c.angle = data.mainLine.getAngle() # to do handle side channel (when angle about zero)
         c.mainPoint_1 = ChannelPoint(getIndex(data.mainLine.getX1()), getPrice(data.mainLine.getY1()), candles[data.mainLine.getX1()])
         c.mainPoint_2 = ChannelPoint(getIndex(data.mainLine.getX2()), getPrice(data.mainLine.getY2()), candles[data.mainLine.getX2()])
         c.minorPoint = ChannelPoint(getIndex(data.secondVertex[0]), getPrice(data.secondVertex[1]), candles[data.secondVertex[0]])
@@ -326,9 +343,9 @@ class Channel:
             z.end = ChannelPoint(getIndex(zone.end), None, candles[zone.end])
             c.bottomZones.append(z)
 
-        c.angle = data.mainLine.getAngle() # to do handle side channel (when angle about zero)
-        c.calculateWidthPercent(getPrice(data.mainLine.calculateY(data.secondVertex[0])))
-        c.length = data.length
+        c.__calculateWidthPercent(getPrice(data.mainLine.calculateY(data.secondVertex[0])))
+        c.__calculateWidthPrice(data.mainLine, data.width, maxLength)
+        c.__calculateStrength(candles[-1])
 
         return c
 
