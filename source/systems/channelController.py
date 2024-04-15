@@ -47,7 +47,7 @@ class ChannelController:
 
 
     def __processLines(self):
-        for firstIndex in range(len(self.__candles) - self.__minLength):
+        for firstIndex in range(len(self.__candles) - self.__minLength + 1):
             firstCandle = self.__candles[firstIndex]
             topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle)
             if not topFirstVertex.isValid() and not bottomFirstVertex.isValid():
@@ -144,7 +144,7 @@ class ChannelController:
             if not pivotAllowByStrength and not closeAllowByStrength:
                 continue
 
-            channelLength = self.__maxLength - linesVertex1.firstVertex.index
+            channelLength = len(self.__candles) - linesVertex1.firstVertex.index - 1
             for linesVertex2 in secondSide:
                 if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
                     continue
@@ -255,31 +255,10 @@ class ChannelController:
                 return False
         return True
 
-    def __getPrice(self, log):
-        price = pow(2, log)
-        return round(price, self.__candleController.getPricePrecision(price))
-
     def __createReadableInfo(self):
         channels = []
-        getIndex = lambda i : len(self.__candles) - i - 1
         for channel in self.__channels:
-            c = Channel()
-            c.isTop = channel.isTop
-            c.mainPoint_1 = ChannelPoint(getIndex(channel.mainLine.getX1()), self.__getPrice(channel.mainLine.getY1()), self.__candles[channel.mainLine.getX1()])
-            c.mainPoint_2 = ChannelPoint(getIndex(channel.mainLine.getX2()), self.__getPrice(channel.mainLine.getY2()), self.__candles[channel.mainLine.getX2()])
-            c.minorPoint = ChannelPoint(getIndex(channel.secondVertex[0]), self.__getPrice(channel.secondVertex[1]), self.__candles[channel.secondVertex[0]])
-            for zone in channel.top:
-                z = ChannelZone(ChannelPoint(getIndex(zone.start), None, self.__candles[zone.start]))
-                z.end = ChannelPoint(getIndex(zone.end), None, self.__candles[zone.end])
-                c.topZones.append(z)
-            for zone in channel.bottom:
-                z = ChannelZone(ChannelPoint(getIndex(zone.start), None, self.__candles[zone.start]))
-                z.end = ChannelPoint(getIndex(zone.end), None, self.__candles[zone.end])
-                c.bottomZones.append(z)
-
-            c.angle = channel.mainLine.getAngle() # to do handle side channel (when angle about zero)
-            c.calculateWidthPercent(self.__getPrice(channel.mainLine.calculateY(channel.secondVertex[0])))
-            c.length = channel.length
+            c = Channel.createFromProcessData(channel, self.__candles)
             channels.append(c)
         self.__channels = channels
 

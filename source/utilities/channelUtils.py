@@ -1,8 +1,13 @@
+from api import stocks
 from systems.vertexController import VertexType
 
 from enum import IntEnum
 import sys
 import math
+
+def getPrice(log):
+    price = pow(2, log)
+    return round(price, stocks.getPricePrecision(price))
 
 class VertexData:
     def __init__(self, index, pivot, close):
@@ -285,7 +290,7 @@ class Channel:
             self.width = (1 - division) * 100
 
     def __str__(self):
-        result = str(self.length) + '\t'
+        result = str(self.length) + '\t' + str(self.angle) + '\t'
         if self.isTop:
             result += str(self.mainPoint_1) + str(self.mainPoint_2) + ' | '
             result += str(self.minorPoint)
@@ -302,4 +307,28 @@ class Channel:
         result += '\n'
         return result
 
+    @staticmethod
+    def createFromProcessData(data:ChannelProcessData, candles):
+        maxLength = len(candles) - 1
+        getIndex = lambda i : maxLength - i
+        c = Channel()
+
+        c.isTop = data.isTop
+        c.mainPoint_1 = ChannelPoint(getIndex(data.mainLine.getX1()), getPrice(data.mainLine.getY1()), candles[data.mainLine.getX1()])
+        c.mainPoint_2 = ChannelPoint(getIndex(data.mainLine.getX2()), getPrice(data.mainLine.getY2()), candles[data.mainLine.getX2()])
+        c.minorPoint = ChannelPoint(getIndex(data.secondVertex[0]), getPrice(data.secondVertex[1]), candles[data.secondVertex[0]])
+        for zone in data.top:
+            z = ChannelZone(ChannelPoint(getIndex(zone.start), None, candles[zone.start]))
+            z.end = ChannelPoint(getIndex(zone.end), None, candles[zone.end])
+            c.topZones.append(z)
+        for zone in data.bottom:
+            z = ChannelZone(ChannelPoint(getIndex(zone.start), None, candles[zone.start]))
+            z.end = ChannelPoint(getIndex(zone.end), None, candles[zone.end])
+            c.bottomZones.append(z)
+
+        c.angle = data.mainLine.getAngle() # to do handle side channel (when angle about zero)
+        c.calculateWidthPercent(getPrice(data.mainLine.calculateY(data.secondVertex[0])))
+        c.length = data.length
+
+        return c
 
