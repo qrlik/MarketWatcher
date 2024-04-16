@@ -214,6 +214,7 @@ class ChannelProcessData:
         self.width = line1.getDeltaY(vertex2[0], vertex2[1])
         self.widthPrice = None
         self.strength = None
+        self.relevance = None
 
     def __makeZones(self, container):
         if len(container) == 0:
@@ -224,13 +225,26 @@ class ChannelProcessData:
                 zones.append(ChannelZone(point, self.zonePrecision))
         return zones
 
-    def __calculateWidthPrice(self, lastIndex):
+    def __calculateWidthPrice(self, lastCandle, lastIndex, relevancePercent):
         sign = -1 if self.isTop else 1
         minorLine = LineFormula.getParallelLine(self.mainLine, sign * self.width)
-        self.widthPrice = abs(getPrice(self.mainLine.calculateY(lastIndex)) - getPrice(minorLine.calculateY(lastIndex)))
+        mainLinePrice = getPrice(self.mainLine.calculateY(lastIndex))
+        minorLinePrice = getPrice(minorLine.calculateY(lastIndex))
+        self.widthPrice = abs(mainLinePrice - minorLinePrice)
+        self.__updateRelevance(lastCandle, mainLinePrice, minorLinePrice, relevancePercent)
 
-    def calculateStrength(self, lastCandle, lastIndex):
-        self.__calculateWidthPrice(lastIndex)
+    def __updateRelevance(self, lastCandle, mainLinePrice, minorLinePrice, relevancePercent):
+         # to do handle side channel (when angle about zero)
+        interestDelta = self.widthPrice * relevancePercent
+        if self.mainLine.getAngle() >= 0:
+            interestSidePrice = minorLinePrice if self.isTop else mainLinePrice
+            self.relevance = lastCandle.close <= interestSidePrice + interestDelta
+        else:
+            interestSidePrice = mainLinePrice if self.isTop else minorLinePrice
+            self.relevance = lastCandle.close >= interestSidePrice - interestDelta
+
+    def calculateStrengthAndRelevance(self, lastCandle, lastIndex, relevancePercent):
+        self.__calculateWidthPrice(lastCandle, lastIndex, relevancePercent)
 
         # to do take atr from lowest tf for comparison and multi filter
         widthFactor = self.widthPrice / lastCandle.atr
@@ -307,6 +321,7 @@ class Channel:
         self.widthPercent = None
         self.widthPrice = None
         self.strength = None
+        self.relevance = None
 
     def __calculateWidthPercent(self, mainPrice):
         if self.angle >= 0:
@@ -319,7 +334,7 @@ class Channel:
             self.widthPercent = (1 - division) * 100
 
     def __str__(self):
-        result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t'
+        result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t' + str(self.relevance) + '\n'
         if self.isTop:
             result += str(self.mainPoint_1) + str(self.mainPoint_2) + ' | '
             result += str(self.minorPoint)
@@ -360,6 +375,7 @@ class Channel:
         c.__calculateWidthPercent(getPrice(data.mainLine.calculateY(data.secondVertex[0])))
         c.widthPrice = data.widthPrice
         c.strength = data.strength
+        c.relevance = data.relevance
 
         return c
 

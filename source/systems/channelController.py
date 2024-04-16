@@ -19,7 +19,8 @@ class ChannelController:
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
     __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
-    __channelUnionByLengthPercent = settingsController.getSetting('channelUnionByLengthPercent')
+    __unionByLengthPercent = settingsController.getSetting('channelUnionByLengthPercent')
+    __relevanceByPricePercent = settingsController.getSetting('channelRelevanceByPricePercent')
 
     def init(self, candleController):
         self.__candleController = candleController
@@ -167,7 +168,7 @@ class ChannelController:
             newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, vertex2)
             newChannel.isTop = isTop
             newChannel.mainLine = line1
-            newChannel.calculateStrength(self.__candles[-1], len(self.__candles) - 1)
+            newChannel.calculateStrengthAndRelevance(self.__candles[-1], len(self.__candles) - 1, self.__relevanceByPricePercent)
 
             newChannel = self.__processChannelByFirstSide(newChannel, lines1, line1_i, isTop)
             if not newChannel:
@@ -259,7 +260,7 @@ class ChannelController:
             return
         result = []
         channelsForUnion = [ self.__channels[0] ]
-        getUnionLength = lambda len : len * (1 - self.__channelUnionByLengthPercent)
+        getUnionLength = lambda len : len * (1 - self.__unionByLengthPercent)
         unionLength = getUnionLength(self.__channels[0].length)
         for channel in self.__channels[1:]:
             if channel.length < unionLength:

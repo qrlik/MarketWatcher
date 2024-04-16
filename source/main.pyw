@@ -59,7 +59,6 @@ if __name__ == "__main__":
     # stats.print_stats(10) # top 10 rows
         
 # to do check channel settings
-# to do price near channel border threshold
 
 # to do channel visualize (remove union may be then)
 # to do can improve channel calculate if store next max/min prices in candle?
