@@ -1,5 +1,5 @@
 //@version=5
-indicator(title="Helper", shorttitle="Helper", overlay=true)
+indicator(title="Helper", shorttitle="Helper", overlay=true, max_boxes_count= 500, max_labels_count= 500, max_lines_count=500)
 
 length = input.int(title="ATR Length", defval=50, minval=1)
 smoothing = input.string(title="ATR Smoothing", defval="WMA", options=["RMA", "SMA", "EMA", "WMA"])
@@ -18,8 +18,11 @@ ma_function(source, length) =>
 		=> ta.wma(source, length)
 atr = ma_function(ta.tr(true), length)[index]
 
+
+
 // show close line
-plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2)
+plot(close, color=color.new(color.yellow, 35), title="Close", linewidth=2, display=display.all - display.status_line)
+
 
 
 // show position amount
@@ -28,9 +31,9 @@ price_for_position = close
 
 stop_percents = atr_for_position / price_for_position * 100
 order_size = order_risk_profit * 100 / stop_percents
-label_text = str.tostring(math.round(order_size)) + '$'
+label_text = str.tostring(math.round(order_size / close, 1)) + ' ' + str.tostring(math.round(order_size)) + '$'
 label_color = color.silver
-pos_label = label.new(bar_index + 2, price_for_position + profit_factor * atr_for_position, text=label_text, color=label_color, style=label.style_label_lower_left)
+pos_label = label.new(bar_index + 4, price_for_position + profit_factor * atr_for_position, text=label_text, color=label_color, style=label.style_label_lower_left)
 label.delete(pos_label[1])
 
 
@@ -48,7 +51,6 @@ draw_goal(false, color.green, 2)
 
 
 
-
 // show atr range
 plotchar(math.round(atr, 2), title = "Atr", char="", location=location.top, color=color.new(color.fuchsia, 100))
 plotchar(atr_factor, title = "Atr Factor", char="", location=location.top, color=color.new(color.lime, 100))
@@ -61,11 +63,189 @@ down = line.new(bar_index + 1, price_for_position - atr_for_position, bar_index 
 line.delete(down[1])
 plotchar(price_for_position - atr_for_position, title = "Down Atr", char="", location=location.top, color=color.new(color.orange, 100))
 
-
+	
 // show bar index
-plotchar(bar_index, title = "Bar", char="", location=location.top, color=color.new(color.white, 100))
+plotchar(int(last_bar_index - bar_index - 1), title = "Bar", char="", location=location.top, color=color.new(color.white, 100), precision=0)
 
 
 // mark not closed bar
 color = barstate.isrealtime ? color.new(#afafaf, 0) : na
 barcolor(color, show_last = 1)
+
+
+
+
+
+
+// ------------> Key Levels <-------------- //
+
+// ------------> Tips <-------------- //
+
+leftTip         =   "Look left for swing high/low in x number of bars to form pivot. The higher the number, the higher the script looks to the left for the highest/lowest point before drawing pivot"        
+rightTip        =   "Look right for swing high/low in x number of bars to form pivot. The higher the number, the higher the script looks to the right for the highest/lowest point before drawing pivot"       
+nPivTip         =   "This sets the array size, or the number of pivots to track at a time (x highs, and x number of lows)" 
+atrLenTip       =   "Number of bars to average. ATR is used to standardize zone width between assets and timeframes"     
+multTip         =   "ATR multiplier to set zone width. Default is half of one ATR from box bottom to box top"     
+perTip          =   "Max zone size as a percent of price. Some assets can be too volatile at low prices creating an unreasonably sized zone"
+maxTip          =   "Number of boxes for candlestick patterns to track historically. Note: the higher the number the less pivot zones will be tracked when looking back in time due to the limitation on the number of box elements allowed at once"
+futTip          =   "Number of bars to offset labels for price levels"
+srcTip          =   "Source input for pivots. Default tracks the highest and lowest bodies of HA candles to average price action, which can result in a level that sits in the overlap of support and resistance"     
+
+bullPivotTip    =   "Color of bullish Key Levels\n(border, background)"            
+bearPivotTip    =   "Color of bearish Key Levels\n(border, background)"            
+
+// ---------> User Input <----------- //
+
+left            =   input.int       (20     ,   "Look Left"                     ,   group= "Zones"                , tooltip= leftTip            )    
+right           =   input.int       (15     ,   "Look Right"                    ,   group= "Zones"                , tooltip= rightTip           )    
+nPiv            =   input.int       (4      ,   "Number of Pivots"              ,   group= "Zones"                , tooltip= nPivTip            )
+atrLen          =   input.int       (30     ,   "ATR Length"                    ,   group= "Zones"                , tooltip= atrLenTip          )
+mult            =   input.float     (0.5    ,   "Zone Width (ATR)"              ,   group= "Zones"                , tooltip= multTip            ,   step   = 0.1)
+per             =   input.float     (5      ,   "Max Zone Percent"              ,   group= "Zones"                , tooltip= perTip             )
+max             =   input.float     (10     ,   "Max Boxes for Patterns"        ,   group= "Zones"                , tooltip= maxTip             )
+fut             =   input.int       (30     ,   "Offset For Labels"             ,   group= "Zones"                , tooltip= futTip             )
+src             =   input.string    ("HA"   ,   "Source For Pivots"             ,   group= "Zones"                , tooltip= srcTip             ,   options= ["HA", "High/Low Body", "High/Low"])
+
+bullBorder      =   input.color     (color.new  (#64b5f6, 60), "", inline= "0"  ,   group= "Pivot Color"                                        )
+bullBgCol       =   input.color     (color.new  (#64b5f6, 95), "", inline= "0"  ,   group= "Pivot Color"          , tooltip= bullPivotTip       )
+bearBorder      =   input.color     (color.new  (#ffeb3b, 60), "", inline= "1"  ,   group= "Pivot Color"                                        )   
+bearBgCol       =   input.color     (color.new  (#ffeb3b, 95), "", inline= "1"  ,   group= "Pivot Color"          , tooltip= bearPivotTip       )
+
+// -----> Immutable Constants <------ //  
+ 
+sync            =   bar_index
+confirmed       =   barstate.isconfirmed
+
+var pivotHigh   =   array.new_box   (nPiv)
+var pivotLows   =   array.new_box   (nPiv)  
+var highBull    =   array.new_bool  (nPiv)
+var lowsBull    =   array.new_bool  (nPiv)
+
+haSrc           =   src    ==       "HA"    
+hiLoSrc         =   src    ==       "High/Low"
+
+// ---> Functional Declarations <---- //
+
+keyAtr             =   ta.atr          (atrLen)
+
+_haBody()       =>
+    haClose     =   (open + high  +  low  + close)    / 4
+    haOpen      =   float(na)
+    haOpen      :=  na(haOpen[1]) ? (open + close)    / 2 : 
+                   (nz(haOpen[1]) + nz(haClose[1]))   / 2
+    
+    [haOpen, haClose]
+    
+_extend(_x) =>
+    for i = 0 to               array.size       (_x)-1
+        box.set_right          (array.get       (_x, i), sync)
+        
+_arrayLoad(_x, _max, _val) =>  
+    array.unshift                               (_x,   _val)   
+    if  array.size                              (_x) > _max
+        array.pop                               (_x)
+
+_arrayBox(_x, _max, _val) =>  
+    array.unshift                               (_x,   _val)   
+    if       array.size                         (_x) > _max
+        _b = array.pop                          (_x)
+
+_box(_x1, _t, _r, _b, _boCol, _bgCol, _e) =>
+    box.new(                   _x1, _t, _r, _b  , 
+     xloc        =             xloc.bar_index   ,
+     extend      =             _e               ,
+     border_color=             _boCol           ,   
+     bgcolor     =             _bgCol           ) 
+
+_getBox(_x,_i)   =>
+    _box         =             array.get        (_x,_i)
+    _t           =             box.get_top      (_box)
+    _b           =             box.get_bottom   (_box)
+    [_t, _b]
+    
+_align(_x,_y)    =>
+    for i = 0 to               array.size       (_x) -1
+        [_T, _B] =             _getBox          (_y, 0)
+        [_t, _b] =             _getBox          (_x, i)
+        if _T > _b and         _T < _t or 
+           _B < _t and         _B > _b or 
+           _T > _t and         _B < _b or 
+           _B > _b and         _T < _t
+            box.set_top        (array.get       (_y, 0), _t)
+            box.set_bottom     (array.get       (_y, 0), _b)
+ 
+_color(_x, _y)     =>
+    var int _track = nPiv
+    for i = 0 to               array.size       (_x) -1
+        [t_, b_] =             _getBox          (_x, i)
+        _isBull  =             array.get        (_y, i)
+        if close > t_ and not  _isBull
+            box.set_extend(    array.get        (_x, i), extend.none)
+            array.set(_x, i,   _box             (sync  , t_, sync, b_, bullBorder, bullBgCol, extend.none))
+            array.set(_y, i,   true)
+            _track += 1
+        if close < b_ and _isBull
+            box.set_extend(    array.get        (_x, i), extend.none)
+            array.set(_x, i,   _box             (sync  , t_, sync, b_, bearBorder, bearBgCol, extend.none))
+            array.set(_y, i,   false)
+            _track -= 1
+    _track
+
+_level(_x, _y)          =>
+    var label [] lab    =      array.new_label  (nPiv)
+    var line  [] lines  =      array.new_line   (nPiv)
+
+// ----> Variable Calculations <----- //
+
+[open_, close_] =   _haBody             ()
+
+hiHaBod         =   math.max            (close_,        open_)
+loHaBod         =   math.min            (close_,        open_)
+
+hiBod           =   math.max            (close,         open)
+loBod           =   math.min            (close,         open)
+
+srcHigh         =   haSrc ?             hiHaBod :       hiLoSrc ?   high :      hiBod
+srcLow          =   haSrc ?             loHaBod :       hiLoSrc ?   low  :      loBod
+
+pivot_high      =   ta.pivothigh        (srcHigh,       left,       right)
+pivot_low       =   ta.pivotlow         (srcLow,        left,       right)
+
+perc            =   close*              (per/100)
+
+band            =   math.min            (keyAtr*mult,      perc)       [right]     /2
+
+HH              =   pivot_high+         band
+HL              =   pivot_high-         band
+
+LH              =   pivot_low+          band
+LL              =   pivot_low-          band
+
+// --------> Logical Order <--------- //
+
+if bool(pivot_high) and   confirmed
+    _arrayLoad      (highBull , nPiv,   false)      
+    _arrayBox       (pivotHigh, nPiv,   _box(sync[right], HH, sync, HL, bearBorder, bearBgCol, extend.none))
+
+if bool(pivot_low)  and   confirmed
+    _arrayLoad      (lowsBull , nPiv,   true)      
+    _arrayBox       (pivotLows, nPiv,   _box(sync[right], LH, sync, LL, bullBorder, bullBgCol, extend.none))
+
+//if alignZones
+_align          (pivotHigh,         pivotHigh)
+_align          (pivotHigh,         pivotLows)    
+_align          (pivotLows,         pivotLows)
+_align          (pivotLows,         pivotHigh)
+
+_extend             (pivotHigh)
+_extend             (pivotLows)
+
+trackHigh       =   _color              (pivotHigh,     highBull)
+trackLows       =   _color              (pivotLows,     lowsBull)
+
+// ------> Graphical Display <------- //
+
+_level              (pivotHigh, highBull)
+_level              (pivotLows, lowsBull)
+
+// ------> END <------- //
