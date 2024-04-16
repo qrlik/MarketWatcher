@@ -44,7 +44,7 @@ class TimeframeController:
         self.__data.vertexController.process()
         self.__data.divergenceController.process()
         self.__data.channelController.process()
-    
+
         self.__data.candlesController.markClean()
         return True
 
@@ -56,3 +56,5 @@ class TimeframeController:
         return self.__data.candlesController
     def getDivergenceController(self):
         return self.__data.divergenceController
+    def getChannelController(self):
+        return self.__data.channelController

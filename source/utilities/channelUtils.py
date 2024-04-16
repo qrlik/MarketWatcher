@@ -322,6 +322,7 @@ class Channel:
         self.widthPrice = None
         self.strength = None
         self.relevance = None
+        self.viewed = None # to do
 
     def __calculateWidthPercent(self, mainPrice):
         if self.angle >= 0:

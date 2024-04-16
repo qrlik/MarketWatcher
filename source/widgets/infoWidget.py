@@ -337,7 +337,52 @@ def __updateDatestamps(ticker):
     __updateBoredCount(None)
 
 def __updateChannelTable():
-    pass
+    global __channelTable,__tickerController
+    channels = []
+    for tf, tfController in __tickerController.getTimeframes().items():
+        for channel in tfController.getChannelController().getChannels():
+            channels.append((tf, channel))
+
+    if len(channels) != __channelTable.rowCount():
+        __channelTable.clearContents()
+        __channelTable.setRowCount(len(channels))
+        for row in range(len(channels)):
+            for column in range(__channelTable.horizontalHeader().count()):
+                item = QTableWidgetItem()
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                __channelTable.setItem(row, column, item)
+                
+    #heads = ['Type', 'Power', 'Point_1', 'Point_2', 'Point_3' ]
+    row = 0
+    headers = []
+    for tf, channel in channels:
+        color = guiDefines.bearColor if channel.angle < 0 else guiDefines.bullColor
+        relevanceColor = guiDefines.relevanceColor if channel.relevance else guiDefines.defaultBgColor
+        __channelTable.item(row, 0).setText('BEAR' if channel.angle < 0 else 'BULL')
+        __channelTable.item(row, 0).setForeground(color)
+        __channelTable.item(row, 0).setBackground(relevanceColor)
+        __channelTable.item(row, 1).setText(str(round(channel.strength, 2)))
+        __channelTable.item(row, 1).setForeground(guiDefines.defaultFontColor if channel.viewed else guiDefines.notViewedColor)
+
+        point_1 = channel.mainPoint_1 if channel.isTop else channel.minorPoint
+        __channelTable.item(row, 2).setText(str(point_1.index))
+        __channelTable.item(row, 2).setForeground(guiDefines.bullColor)
+        __channelTable.item(row, 2).setBackground(guiDefines.relevanceColor if point_1.price == point_1.candle.close else guiDefines.defaultBgColor)
+
+        point_2 = channel.mainPoint_2 if channel.isTop else channel.mainPoint_1
+        __channelTable.item(row, 3).setText(str(point_2.index))
+        __channelTable.item(row, 3).setForeground(guiDefines.bullColor if channel.isTop else guiDefines.bearColor)
+        __channelTable.item(row, 3).setBackground(guiDefines.relevanceColor if point_2.price == point_2.candle.close else guiDefines.defaultBgColor)
+
+        point_3 = channel.minorPoint if channel.isTop else channel.mainPoint_2
+        __channelTable.item(row, 4).setText(str(point_3.index))
+        __channelTable.item(row, 4).setForeground(guiDefines.bearColor)
+        __channelTable.item(row, 4).setBackground(guiDefines.relevanceColor if point_3.price == point_3.candle.close else guiDefines.defaultBgColor)
+
+        headers.append(timeframe.timeframeToPrettyStr[tf])
+        row += 1
+
+    __channelTable.setVerticalHeaderLabels(headers)
 
 def __updateDivergenceTable():
     global __divergenceTable,__tickerController

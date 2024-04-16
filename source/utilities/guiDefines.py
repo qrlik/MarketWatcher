@@ -4,6 +4,7 @@ from PySide6.QtGui import QColor
 bullColor:QColor = Qt.GlobalColor.darkGreen
 bearColor:QColor = Qt.GlobalColor.darkRed
 trickedColor:QColor = Qt.GlobalColor.gray
+relevanceColor:QColor = Qt.GlobalColor.gray
 notViewedColor:QColor = QColor(255,127,80)
 zeroColor:QColor = Qt.GlobalColor.darkGray
 invalidLastCandleColor:QColor = Qt.GlobalColor.blue

@@ -38,6 +38,9 @@ class ChannelController:
     def getCandlesAmountForInit(self):
         return self.__maxLength
 
+    def getChannels(self):
+        return self.__channels
+
     def __init__(self):
         self.__candleController = None
         self.__reset()
@@ -312,7 +315,7 @@ class ChannelController:
 
         self.__channels.sort(key=lambda channel : channel.length, reverse=True)
         self.__unionChannelsByLength()
-        self.__channels.sort(key=lambda channel : channel.strength, reverse=True)
+        self.__channels.sort(key=lambda channel : (channel.relevance, channel.strength), reverse=True)
         self.__createReadableInfo()
 
         # to do
