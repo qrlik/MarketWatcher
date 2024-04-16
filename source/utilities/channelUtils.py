@@ -263,14 +263,20 @@ class ChannelProcessData:
         topResult = ChannelZone.zonesetIsIntersect(self.top, channel.top)
         bottomResult = ChannelZone.zonesetIsIntersect(self.bottom, channel.bottom)
 
-        if topResult == bottomResult:
-            return topResult
-        # to do if both equal comparison by strength
         if topResult == ZoneComparisonResult.EQUAL:
+            if bottomResult == ZoneComparisonResult.EQUAL: # compare by strength
+                if self.strength > channel.strength:
+                    return ZoneComparisonResult.GREATER
+                elif self.strength == channel.strength:
+                    return ZoneComparisonResult.EQUAL
+                else:
+                    return ZoneComparisonResult.LESS
             return bottomResult
+        
         if bottomResult == ZoneComparisonResult.EQUAL:
             return topResult
-        
+        if topResult == bottomResult:
+            return topResult
         return ZoneComparisonResult.DIFFERENT
     
 class ChannelPoint:
