@@ -30,15 +30,19 @@ class VertexProcessData:
 
         if candle.vertexClose == VertexType.HIGH: # possible bottleneck (can check only pivots)
             topProcess.isClose = True
-            topProcess.isPivot = True
-        elif candle.vertexHigh == VertexType.HIGH: # wide bottleneck (can check every pivot)
-            topProcess.isPivot = True
+            if candle.close != candle.high:
+                topProcess.isPivot = True
+        if candle.vertexHigh == VertexType.HIGH: # wide bottleneck (can check every pivot)
+            if not topProcess.isClose or candle.close != candle.high:
+                topProcess.isPivot = True
 
         if candle.vertexClose == VertexType.LOW: # possible bottleneck (can check only pivots)
             bottomProcess.isClose = True
-            bottomProcess.isPivot = True
-        elif candle.vertexLow == VertexType.LOW: # wide bottleneck
-            bottomProcess.isPivot = True
+            if candle.close != candle.low:
+                bottomProcess.isPivot = True
+        if candle.vertexLow == VertexType.LOW: # wide bottleneck
+            if not bottomProcess.isClose or candle.close != candle.low:
+                bottomProcess.isPivot = True
 
         return (topProcess, bottomProcess)
     
