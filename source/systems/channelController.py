@@ -15,12 +15,22 @@ class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength') + 1 # plus 1 because 2 candles make 1 length range
     __minLength = settingsController.getSetting('channelMinLength') + 1
     __oneSideZonesMinimum = settingsController.getSetting('channelOneSideZonesMinimum')
-    __firstVertexStrength = settingsController.getSetting('channelFirstVertexStrength')
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
+    __firstVertexStrength = settingsController.getSetting('channelFirstVertexStrength')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
     __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
     __unionByLengthPercent = settingsController.getSetting('channelUnionByLengthPercent')
     __relevanceByPricePercent = settingsController.getSetting('channelRelevanceByPricePercent')
+
+    assert(__minLength > 0)
+    assert(__maxLength > __minLength)
+    assert(__oneSideZonesMinimum > 1)
+    assert(__bothSidesZonesMinimum >= 2 * __oneSideZonesMinimum)
+    assert(__firstVertexStrength >= 0)
+    assert(__zonePrecisionPercent > 0.0 and __zonePrecisionPercent <= 0.2)
+    assert(__approximateTouchPrecisionPercent > 0.0 and __approximateTouchPrecisionPercent <= 0.2)
+    assert(__unionByLengthPercent > 0.0 and __unionByLengthPercent <= 0.5)
+    assert(__relevanceByPricePercent > 0.0 and __relevanceByPricePercent <= 0.5)
 
     def init(self, candleController):
         self.__candleController = candleController
