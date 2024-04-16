@@ -6,8 +6,6 @@ from utilities.channelUtils import LineFormula
 from utilities.channelUtils import LinesData
 from utilities.channelUtils import VertexLinesData
 from utilities.channelUtils import Channel
-from utilities.channelUtils import ChannelZone
-from utilities.channelUtils import ChannelPoint
 from utilities.channelUtils import ChannelProcessData
 from utilities.channelUtils import ZoneComparisonResult
 
@@ -163,10 +161,11 @@ class ChannelController:
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            point2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
-            newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, point2)
+            vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
+            newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, vertex2)
             newChannel.isTop = isTop
             newChannel.mainLine = line1
+            newChannel.calculateStrength(self.__candles[-1], len(self.__candles) - 1)
 
             newChannel = self.__processChannelByFirstSide(newChannel, lines1, line1_i, isTop)
             if not newChannel:
@@ -211,12 +210,10 @@ class ChannelController:
     def __processChannelBySecondSide(self, newChannel:ChannelProcessData, lines2, line1:LineFormula, isTop, approximateFunctor):
         # process channel by second side validation (touches amount and both sides check)
         
-        vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
-        if not self.__processChannelByLefthandOfSecondSide(isTop, line1, vertex2): 
+        if not self.__processChannelByLefthandOfSecondSide(isTop, line1, newChannel.secondVertex): 
             return None
         # process righthand lines [v2, channel_end]
-        newChannel.secondVertex = vertex2
-        newChannel.addBottomPoint(vertex2[0]) if isTop else newChannel.addTopPoint(vertex2[0])
+        newChannel.addBottomPoint(newChannel.secondVertex[0]) if isTop else newChannel.addTopPoint(newChannel.secondVertex[0])
 
         sign = -1 if isTop else 1
         line2 = LineFormula.getParallelLine(line1, sign * newChannel.width)

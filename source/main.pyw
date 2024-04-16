@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # stats.print_stats(10) # top 10 rows
         
 # to do check channel settings
-# to do not count first touch if it not enought strength vertex
+# to do price near channel border threshold
 # to do checkSubzones make comparison for strength when zones is ==
 
 # to do can improve channel calculate if store next max/min prices in candle?

@@ -197,17 +197,19 @@ class ChannelZone:
 
 
 class ChannelProcessData:
-    def __init__(self, length, zonePrecisionPercent, line1:LineFormula, point2):
+    def __init__(self, length, zonePrecisionPercent, line1:LineFormula, vertex2):
         self.isTop = None
         self.length = length
         self.mainLine = None
-        self.secondVertex = None
+        self.secondVertex = vertex2
 
         self.top = []
         self.bottom = []
         zonePrecision = int(length * zonePrecisionPercent)
         self.zonePrecision = max(zonePrecision, 2)
-        self.width = line1.getDeltaY(point2[0], point2[1])
+        self.width = line1.getDeltaY(vertex2[0], vertex2[1])
+        self.widthPrice = None
+        self.strength = None
 
     def __makeZones(self, container):
         if len(container) == 0:
@@ -217,6 +219,21 @@ class ChannelProcessData:
             if not zones[-1].addPoint(point, self.zonePrecision):
                 zones.append(ChannelZone(point, self.zonePrecision))
         return zones
+
+    def __calculateWidthPrice(self, lastIndex):
+        sign = -1 if self.isTop else 1
+        minorLine = LineFormula.getParallelLine(self.mainLine, sign * self.width)
+        self.widthPrice = abs(getPrice(self.mainLine.calculateY(lastIndex)) - getPrice(minorLine.calculateY(lastIndex)))
+
+    def calculateStrength(self, lastCandle, lastIndex):
+        self.__calculateWidthPrice(lastIndex)
+
+        # to do take atr from lowest tf for comparison and multi filter
+        widthFactor = self.widthPrice / lastCandle.atr
+        anglePercent = abs(pow(2, self.mainLine.getAngle()) - 1) * 100
+        atrPercent = lastCandle.atr / lastCandle.close * 100
+        growSpeedFactor = anglePercent / atrPercent
+        self.strength = widthFactor * growSpeedFactor
 
     def addTopPoint(self, point):
         self.top.append(point)
@@ -291,19 +308,6 @@ class Channel:
             assert(division < 1)
             self.widthPercent = (1 - division) * 100
 
-    def __calculateWidthPrice(self, mainLine:LineFormula, logWidth, lastIndex):
-        sign = -1 if self.isTop else 1
-        minorLine = LineFormula.getParallelLine(mainLine, sign * logWidth)
-        self.widthPrice = abs(getPrice(mainLine.calculateY(lastIndex)) - getPrice(minorLine.calculateY(lastIndex)))
-
-    def __calculateStrength(self, lastCandle):
-        # to do take atr from lowest tf for comparison and multi filter
-        widthFactor = self.widthPrice / lastCandle.atr
-        anglePercent = abs(pow(2, self.angle) - 1) * 100
-        atrPercent = lastCandle.atr / lastCandle.close * 100
-        growSpeedFactor = anglePercent / atrPercent
-        self.strength = widthFactor * growSpeedFactor
-
     def __str__(self):
         result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t'
         if self.isTop:
@@ -344,8 +348,8 @@ class Channel:
             c.bottomZones.append(z)
 
         c.__calculateWidthPercent(getPrice(data.mainLine.calculateY(data.secondVertex[0])))
-        c.__calculateWidthPrice(data.mainLine, data.width, maxLength)
-        c.__calculateStrength(candles[-1])
+        c.widthPrice = data.widthPrice
+        c.strength = data.strength
 
         return c
 
