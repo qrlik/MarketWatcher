@@ -312,18 +312,15 @@ class ChannelController:
 
         self.__channels.sort(key=lambda channel : channel.length, reverse=True)
         self.__unionChannelsByLength()
+        self.__channels.sort(key=lambda channel : channel.strength, reverse=True)
         self.__createReadableInfo()
 
-        print(self.__candleController.getTicker() + ' ' + str(len(self.__channels)))
-        for channel in self.__channels:
-            print(str(channel))
-        print('\n\n')
-        # 0.02 -> 0.04 . 82 -> x
-        # 2,4 -> 2,5 . 82 -> x
-        # 2,4 -> 3,6 . 82 -> x
-
-        # self.__processDivergences()
-        # self.__processActualsByPowerAndLength()
-        # self.__processTricked()
+        # to do
         #cacheController.updateViewedDivergences(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__actuals)
+
+        # print(self.__candleController.getTicker() + ' ' + str(len(self.__channels)))
+        # for channel in self.__channels:
+        #     print(str(channel))
+        # print('\n\n')
+
         

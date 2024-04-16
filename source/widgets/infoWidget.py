@@ -28,7 +28,8 @@ __boredDate:QLabel = None
 __boredCounter:QLabel = None
 __boredSlider:QSlider = None
 __tabs:QTabWidget = None
-__table:QTableWidget = None
+__channelTable:QTableWidget = None
+__divergenceTable:QTableWidget = None
 __dataButton:QPushButton = None
 __linkButton:QPushButton = None
 __divergenceRatio:QProgressBar = None
@@ -47,11 +48,12 @@ def __init():
     __initProgressBar()
     __initTabs()
     __initDivergenceTable()
+    __initChannelTable()
     __initBored()
 
 def __initValues():
-    global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__table, \
-    __viewedAgo, __viewedDate, __boredBox, __boredAgo, __boredDate, __boredCounter, __boredSlider
+    global __widget, __nameValue, __categoryValue, __priceValue, __tabs, __dataButton,__divergenceRatio,__linkButton,__divergenceTable, \
+    __viewedAgo, __viewedDate, __boredBox, __boredAgo, __boredDate, __boredCounter, __boredSlider, __channelTable
 
     __nameValue = __widget.findChild(QLabel, 'nameValue')
     __categoryValue = __widget.findChild(QLabel, 'categoryValue')
@@ -64,7 +66,8 @@ def __initValues():
     __boredCounter = __widget.findChild(QLabel, 'boredCountLabel')
     __boredSlider = __widget.findChild(QSlider, 'boredSlider')
     __tabs = __widget.findChild(QTabWidget, 'tabWidget')
-    __table = __widget.findChild(QTableWidget, 'tableWidget')
+    __divergenceTable = __widget.findChild(QTableWidget, 'divergenceTable')
+    __channelTable = __widget.findChild(QTableWidget, 'channelTable')
     __divergenceRatio = __widget.findChild(QProgressBar, 'divergenceRatio')
     __dataButton = __widget.findChild(QPushButton, 'copyDataButton')
     __linkButton = __widget.findChild(QPushButton, 'openLinkButton')
@@ -143,16 +146,27 @@ def __initAtr(tab:QWidget):
     atrValue.setObjectName('atrValue')
     layout.addWidget(atrValue)
 
+def __initChannelTable():
+    global __channelTable
+    __channelTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+    __channelTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+
+    heads = ['Type', 'Power', 'Point_1', 'Point_2', 'Point_3' ]
+    __channelTable.setColumnCount(len(heads))
+    for i in range(len(heads)):
+        __channelTable.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+    __channelTable.setHorizontalHeaderLabels(heads)
+
 def __initDivergenceTable():
-    global __table
-    __table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-    __table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    global __divergenceTable
+    __divergenceTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+    __divergenceTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     
     heads = ['Type', 'Power', 'Break,%', 'Length', 'From' ]
-    __table.setColumnCount(len(heads))
+    __divergenceTable.setColumnCount(len(heads))
     for i in range(len(heads)):
-        __table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
-    __table.setHorizontalHeaderLabels(heads)
+        __divergenceTable.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+    __divergenceTable.setHorizontalHeaderLabels(heads)
 
 def __initBored():
     global __boredBox,__boredSlider,__boredCounter
@@ -322,8 +336,11 @@ def __updateDatestamps(ticker):
     __updateBored(ticker)
     __updateBoredCount(None)
 
+def __updateChannelTable():
+    pass
+
 def __updateDivergenceTable():
-    global __table,__tickerController
+    global __divergenceTable,__tickerController
     divergences = []
     for tf, tfController in __tickerController.getTimeframes().items():
         actuals = tfController.getDivergenceController().getActuals()
@@ -331,32 +348,32 @@ def __updateDivergenceTable():
         for divergence in actuals:
             divergences.append((tf, divergence))
 
-    if len(divergences) != __table.rowCount():
-        __table.clearContents()
-        __table.setRowCount(len(divergences))
+    if len(divergences) != __divergenceTable.rowCount():
+        __divergenceTable.clearContents()
+        __divergenceTable.setRowCount(len(divergences))
         for row in range(len(divergences)):
-            for column in range(__table.horizontalHeader().count()):
+            for column in range(__divergenceTable.horizontalHeader().count()):
                 item = QTableWidgetItem()
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                __table.setItem(row, column, item)
+                __divergenceTable.setItem(row, column, item)
 
     row = 0
     headers = []
     for tf, divergence in divergences:
         color = guiDefines.bearColor if divergence.signal.name == 'BEAR' else guiDefines.bullColor
         trickedColor = guiDefines.trickedColor if divergence.tricked else guiDefines.defaultBgColor
-        __table.item(row, 0).setText(divergence.type.name)
-        __table.item(row, 0).setForeground(color)
-        __table.item(row, 0).setBackground(trickedColor)
-        __table.item(row, 1).setText(str(divergence.power))
-        __table.item(row, 1).setForeground(guiDefines.defaultFontColor if divergence.viewed else guiDefines.notViewedColor)
-        __table.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
-        __table.item(row, 3).setText(str(divergence.secondIndex - divergence.firstIndex))
-        __table.item(row, 4).setText(divergence.firstCandle.time[:-5])
+        __divergenceTable.item(row, 0).setText(divergence.type.name)
+        __divergenceTable.item(row, 0).setForeground(color)
+        __divergenceTable.item(row, 0).setBackground(trickedColor)
+        __divergenceTable.item(row, 1).setText(str(divergence.power))
+        __divergenceTable.item(row, 1).setForeground(guiDefines.defaultFontColor if divergence.viewed else guiDefines.notViewedColor)
+        __divergenceTable.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
+        __divergenceTable.item(row, 3).setText(str(divergence.secondIndex - divergence.firstIndex))
+        __divergenceTable.item(row, 4).setText(divergence.firstCandle.time[:-5])
         headers.append(timeframe.timeframeToPrettyStr[tf])
         row += 1
 
-    __table.setVerticalHeaderLabels(headers)
+    __divergenceTable.setVerticalHeaderLabels(headers)
 
 
 def update(ticker:str, byClick):
@@ -373,6 +390,7 @@ def update(ticker:str, byClick):
         __updateTabValues(tabWidget, tfController.getCandlesController())
         __updateDatestamps(ticker)
 
+    __updateChannelTable()
     __updateDivergenceTable()
     if byClick:
         __onTabClicked()

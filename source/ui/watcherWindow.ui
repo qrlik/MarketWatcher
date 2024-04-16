@@ -359,7 +359,10 @@
           <widget class="QTabWidget" name="tabWidget"/>
          </item>
          <item>
-          <widget class="QTableWidget" name="tableWidget"/>
+          <widget class="QTableWidget" name="channelTable"/>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="divergenceTable"/>
          </item>
         </layout>
        </widget>
