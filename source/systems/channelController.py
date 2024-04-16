@@ -19,6 +19,7 @@ class ChannelController:
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
     __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
+    __channelUnionByLengthPercent = settingsController.getSetting('channelUnionByLengthPercent')
 
     def init(self, candleController):
         self.__candleController = candleController
@@ -252,6 +253,26 @@ class ChannelController:
                 return False
         return True
 
+    def __unionChannelsByLength(self):
+        if len(self.__channels) < 2:
+            return
+        result = []
+        channelsForUnion = [ self.__channels[0] ]
+        getUnionLength = lambda len : len * (1 - self.__channelUnionByLengthPercent)
+        unionLength = getUnionLength(self.__channels[0].length)
+        for channel in self.__channels[1:]:
+            if channel.length < unionLength:
+                channelsForUnion.sort(key=lambda c : c.strength, reverse=True)
+                result.append(channelsForUnion[0])
+                channelsForUnion.clear()
+
+            channelsForUnion.append(channel)
+            unionLength = getUnionLength(channel.length)
+
+        channelsForUnion.sort(key=lambda c : c.strength, reverse=True)
+        result.append(channelsForUnion[0])
+        self.__channels = result
+
     def __createReadableInfo(self):
         channels = []
         for channel in self.__channels:
@@ -277,14 +298,14 @@ class ChannelController:
         self.__processExtremePoint()
         self.__processChannels()
 
-        print(len(self.__channels))
         self.__channels.sort(key=lambda channel : channel.length, reverse=True)
-
+        self.__unionChannelsByLength()
         self.__createReadableInfo()
 
+        print(self.__candleController.getTicker() + ' ' + str(len(self.__channels)))
         for channel in self.__channels:
             print(str(channel))
-        x = 5
+        print('\n\n')
         # 0.02 -> 0.04 . 82 -> x
         # 2,4 -> 2,5 . 82 -> x
         # 2,4 -> 3,6 . 82 -> x

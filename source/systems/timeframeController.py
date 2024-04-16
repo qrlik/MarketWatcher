@@ -7,9 +7,6 @@ from systems import vertexController
 from systems import candlesController
 from systems import channelController
 
-import cProfile as profile 
-import pstats
-
 class TimeframeData:
     def __init__(self, tf: timeframe.Timeframe):
         self.timeframe = tf
@@ -46,22 +43,8 @@ class TimeframeController:
         self.__data.rsiController.process()
         self.__data.vertexController.process()
         self.__data.divergenceController.process()
-
-        prof = profile.Profile()
-        prof.enable()
-
-        # 2.5s for AAPL 1w [200,1000] length
-
         self.__data.channelController.process()
     
-        prof.disable()
-        stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
-        stats.print_stats(10) # top 10 rows
-        print(self.__ticker.getTicker())
-
-        quit()
-
-
         self.__data.candlesController.markClean()
         return True
 

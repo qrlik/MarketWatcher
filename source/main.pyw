@@ -61,6 +61,7 @@ if __name__ == "__main__":
 # to do check channel settings
 # to do price near channel border threshold
 
+# to do channel visualize (remove union may be then)
 # to do can improve channel calculate if store next max/min prices in candle?
 # can check can current ECL cross current min max in future
 
