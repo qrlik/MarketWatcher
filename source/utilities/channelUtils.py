@@ -225,6 +225,16 @@ class ChannelProcessData:
                 zones.append(ChannelZone(point, self.zonePrecision))
         return zones
 
+    def __isValidZones(self):
+        # filter for top/bottom + bottom/top zones sequence
+        if self.top[0].precisionStart < self.bottom[0].precisionStart:
+            if self.bottom[0].precisionEnd < self.top[-1].precisionEnd:
+                return True
+        else:
+            if self.top[0].precisionEnd < self.bottom[-1].precisionEnd:
+                return True
+        return False
+
     def __calculateWidthPrice(self, lastCandle, lastIndex, relevancePercent):
         sign = -1 if self.isTop else 1
         minorLine = LineFormula.getParallelLine(self.mainLine, sign * self.width)
@@ -275,7 +285,11 @@ class ChannelProcessData:
     def isValid(self, minPerSide, minForBoth):
         if not self.isValidTop(minPerSide) or not self.isValidBottom(minPerSide):
             return False
-        return len(self.top) + len(self.bottom) >= minForBoth
+        if not len(self.top) + len(self.bottom) >= minForBoth:
+            return False
+        if not self.__isValidZones():
+            return False
+        return True
     
     def checkSubzones(self, channel):
         topResult = ChannelZone.zonesetIsIntersect(self.top, channel.top)
