@@ -28,6 +28,13 @@ def __checkAll(state):
         __tfStates[tf] = state
     watcherTable.update()
 
+def __uncheckAll():
+    global __tfStates
+    for tf, button in __buttons.items():
+        button.setChecked(False)
+        __tfStates[tf] = False
+    watcherTable.update()
+
 def __updateChecks():
     global __tfStates,__generalButton
     allChecked = True
@@ -35,7 +42,7 @@ def __updateChecks():
         state = button.isChecked()
         __tfStates[tf] = state
         allChecked &= state
-    __generalButton.setChecked(allChecked)
+    #__generalButton.setChecked(allChecked)
     watcherTable.update()
 
 def __createButtons(name:str, tfCallback): #trickCallback):
@@ -45,6 +52,7 @@ def __createButtons(name:str, tfCallback): #trickCallback):
     tfButton.setCheckable(True)
     tfButton.setChecked(False)
     tfButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
+    tfButton.pressed.connect(__uncheckAll)
     tfButton.clicked.connect(tfCallback)
     layout.addWidget(tfButton)
 
@@ -57,9 +65,9 @@ def __initGrid():
     row = 0
     column = 0
 
-    genLayout, __generalButton = __createButtons('All', __checkAll)
-    layout.addLayout(genLayout, row, column)
-    row += 1
+    #genLayout, __generalButton = __createButtons('All', __checkAll)
+    #layout.addLayout(genLayout, row, column)
+    #row += 1
 
     for tf in configController.getTimeframes():
         tfLayout, tfButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks)
