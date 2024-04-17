@@ -179,12 +179,12 @@ class ChannelController:
     def __processVertexsChannels(self, channelLength, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop):
         if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:
             return
+        vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
         for line1_i in range(len(lines1.linesToSecondVertexs)):
             line1 = lines1.linesToSecondVertexs[line1_i]
             if breakFunctor(lines2.ECL.getAngle(), line1.getAngle()):
                 return
             
-            vertex2 = (lines2.ECL.getX1(), lines2.ECL.getY1())
             newChannel = ChannelProcessData(channelLength, self.__zonePrecisionPercent, line1, vertex2)
             newChannel.isTop = isTop
             newChannel.mainLine = line1

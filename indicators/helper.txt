@@ -65,7 +65,8 @@ plotchar(price_for_position - atr_for_position, title = "Down Atr", char="", loc
 
 	
 // show bar index
-plotchar(int(last_bar_index - bar_index - 1), title = "Bar", char="", location=location.top, color=color.new(color.white, 100), precision=0)
+delta = barstate.isrealtime ? -1 : 0
+plotchar(int(last_bar_index - bar_index - delta), title = "Bar", char="", location=location.top, color=color.new(color.white, 100), precision=0)
 
 
 // mark not closed bar
