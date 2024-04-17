@@ -238,11 +238,8 @@ class DivergenceController:
     
     def getRegularPowers(self):
         powers = DivergencesPowersInfo()
-        tricked = timeframesFilter.isDivergenceTricked(self.__candleController.getTimeframe())
         for divergence in self.__actuals:
             if divergence.type != DivergenceType.REGULAR:
-                continue
-            if tricked and not divergence.tricked:
                 continue
             if divergence.signal == DivergenceSignalType.BULL:
                 powers.maxPower = max(powers.maxPower, divergence.power)

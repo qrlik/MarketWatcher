@@ -7,11 +7,9 @@ from widgets import watcherTable
 
 __tfFilter:QFrame = None
 __tfStates:dict = {}
-__trickState:dict = {}
 
 __generalButton:QPushButton = None
 __buttons:dict = {}
-__trickButtons:dict = {}
 
 __maxColumns = 2
 
@@ -22,9 +20,6 @@ def init(parent):
 
 def isTfEnabled(tf:timeframe.Timeframe):
     return __tfStates.get(tf, False)
-
-def isDivergenceTricked(tf:timeframe.Timeframe):
-    return __trickState.get(tf, False)
 
 def __checkAll(state):
     global __tfStates
@@ -43,14 +38,7 @@ def __updateChecks():
     __generalButton.setChecked(allChecked)
     watcherTable.update()
 
-def __updateTricked():
-    global __trickState
-    for tf, button in __trickButtons.items():
-        state = button.isChecked()
-        __trickState[tf] = state
-    watcherTable.update()
-
-def __createButtons(name:str, tfCallback, trickCallback):
+def __createButtons(name:str, tfCallback): #trickCallback):
     layout = QHBoxLayout()
 
     tfButton = QPushButton(name)
@@ -59,16 +47,6 @@ def __createButtons(name:str, tfCallback, trickCallback):
     tfButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
     tfButton.clicked.connect(tfCallback)
     layout.addWidget(tfButton)
-
-    if trickCallback is not None:
-        trickButton = QPushButton('T')
-        trickButton.setCheckable(True)
-        trickButton.setChecked(False)
-        trickButton.setStyleSheet(guiDefines.getCheckedButtonSheet())
-        trickButton.clicked.connect(trickCallback)
-        trickButton.setFixedWidth(40)
-        layout.addWidget(trickButton)
-        return (layout, tfButton, trickButton)
 
     return (layout, tfButton)
 
@@ -79,19 +57,17 @@ def __initGrid():
     row = 0
     column = 0
 
-    genLayout, __generalButton = __createButtons('All', __checkAll, None)
+    genLayout, __generalButton = __createButtons('All', __checkAll)
     layout.addLayout(genLayout, row, column)
     row += 1
 
     for tf in configController.getTimeframes():
-        tfLayout, tfButton, trickButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks, __updateTricked)
+        tfLayout, tfButton = __createButtons(timeframe.getPrettyFormat(tf), __updateChecks)
         layout.addLayout(tfLayout, row, column)
 
         __buttons.setdefault(tf, tfButton)
-        __trickButtons.setdefault(tf, trickButton)
 
         __tfStates.setdefault(tf, False)
-        __trickState.setdefault(tf, False)
 
         column += 1
         if column >= __maxColumns:
