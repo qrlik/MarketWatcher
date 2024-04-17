@@ -58,16 +58,23 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
         
-# to do channel visualize (remove union may be then)
-# to do can improve channel calculate if store next max/min prices in candle?
-# can check can current ECL cross current min max in future
-
 # move feeController inside tfController, may be cache fee filter results for N days
 # fix bored ago calculate, make fixed tf for it, not lowest    
 # fix divergence actual length for channels!
 
+
+
+# to do channel visualize (remove union may be then)
+# to do can improve channel calculate if store next max/min prices in candle?
+# can check can current ECL cross current min max in future
+
+
+
 # look to actual yfinance multithread lib with less 1d intervals
 # fix getFtpNasdaqData, mb save cached result?
+
+
+       
         
 # рисовать вертикальную линию на 200 свечей?
 # добавить количество акций в индикатор

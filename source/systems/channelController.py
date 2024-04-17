@@ -11,6 +11,15 @@ from utilities.channelUtils import ZoneComparisonResult
 
 import math
 
+class ChannelsPowersInfo:
+    def __init__(self):
+        self.maxRelevancePower = 0.0
+        self.relevancePower = 0.0
+        self.newRelevancePower = 0.0
+        self.maxPower = 0.0
+        self.power = 0.0
+        self.newPower = 0.0
+
 class ChannelController:
     __maxLength = settingsController.getSetting('channelMaxLength') + 1 # plus 1 because 2 candles make 1 length range
     __minLength = settingsController.getSetting('channelMinLength') + 1
@@ -37,9 +46,6 @@ class ChannelController:
 
     def getCandlesAmountForInit(self):
         return self.__maxLength
-
-    def getChannels(self):
-        return self.__channels
 
     def __init__(self):
         self.__candleController = None
@@ -294,6 +300,24 @@ class ChannelController:
             c = Channel.createFromProcessData(channel, self.__candles)
             channels.append(c)
         self.__channels = channels
+
+    def getChannels(self):
+        return self.__channels
+
+    def getPowers(self):
+        powers = ChannelsPowersInfo()
+        for channel in self.__channels:
+            if channel.relevance:
+                powers.maxRelevancePower = max(powers.maxRelevancePower, channel.strength)
+                powers.relevancePower += channel.strength
+                if not channel.viewed:
+                    powers.newRelevancePower += channel.strength
+            else:
+                powers.maxPower = max(powers.maxPower, channel.strength)
+                powers.power += channel.strength
+                if not channel.viewed:
+                    powers.newPower += channel.strength
+        return powers
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
