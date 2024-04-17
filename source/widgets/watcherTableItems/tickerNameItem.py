@@ -30,18 +30,5 @@ class TickerNameItem(QTableWidgetItem):
         if positionColor != guiDefines.defaultFontColor:
             return
         
-        allPower = 0.0
-        for _, controller in tickerController.getFilteredTimeframes().items():
-            powers = controller.getDivergenceController().getRegularPowers()
-            if powers.bullPower == 0.0 and powers.bearPower == 0.0:
-                allPower = 0.0
-                break
-            
-            allPower += powers.bullPower
-            allPower += abs(powers.bearPower)
-
-
-        if allPower == 0.0:
-            super().setForeground(guiDefines.zeroColor)
         if tickerController.isBored():
             super().setForeground(guiDefines.boredColor)
