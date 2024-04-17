@@ -46,7 +46,7 @@ class ChannelController:
         self.__candleController = candleController
 
     def getCandlesAmountForInit(self):
-        return self.__maxLength
+        return self.__maxLength + self.__firstVertexStrength
 
     def __init__(self):
         self.__candleController = None
@@ -322,9 +322,8 @@ class ChannelController:
 
     def process(self):
         candles = self.__candleController.getFinishedCandles()
-        maxAmount = self.getCandlesAmountForInit()
-        if len(candles) > maxAmount:
-            candles = candles[-maxAmount:]
+        if len(candles) > self.__maxLength:
+            candles = candles[-self.__maxLength:]
         if len(candles) < self.__minLength:
             return
         if candles[0].openTime != self.__lastOpenTime:
