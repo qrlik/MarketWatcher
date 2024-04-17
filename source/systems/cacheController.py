@@ -53,14 +53,39 @@ def saveCandles():
 def __getViewedDivergences():
     return __cache.setdefault("viewedDivergences", {})
 
+def __getViewedChannels():
+    return __cache.setdefault("viewedChannels", {})
+
 def __getDatestamp(type):
     return __cache.setdefault(type.name, {})
+
+def setChannelViewed(ticker:str, timeframe:str, channelKey):
+    state = __getViewedChannels().setdefault(ticker, {}).setdefault(timeframe, {})
+    state.setdefault(channelKey, True)
+    state[channelKey] = True
 
 def setDivergenceViewed(ticker:str, timeframe:str, time1:str, time2:str, value):
     state = __getViewedDivergences().setdefault(ticker, {}).setdefault(timeframe, {}).setdefault(time1, {})
     state.setdefault(time2, value)
     state[time2] = value
 
+def updateViewedChannels(ticker:str, timeframe:str, channels):
+    forRemove = []
+    viewedChannels = __getViewedChannels().get(ticker, {}).get(timeframe, {})
+
+    for viewedChannel, value in viewedChannels.items():
+        found = False
+        for channel in channels:
+            if channel.getDictKey() == viewedChannel:
+                found = True
+                channel.viewed = value
+                break
+        if not found:
+            forRemove.append(viewedChannel)
+    
+    for remove in forRemove:
+        viewedChannels.pop(remove, None)
+ 
 def updateViewedDivergences(ticker:str, timeframe:str, divers):
     forRemove1 = []
     times1 = __getViewedDivergences().get(ticker, {}).get(timeframe, {})

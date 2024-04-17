@@ -15,7 +15,7 @@
 	"channelZonePrecisionPercent": 0.1,
 	"channelApproximateTouchPrecisionPercent": 0.02,
 	"channelUnionByLengthPercent": 0.1,
-	"channelRelevanceByPricePercent": 0.25,
+	"channelRelevanceByPricePercent": 0.2,
 
 	"vertexStrengthToDivergenceLength": {
 		"1": 5,

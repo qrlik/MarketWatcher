@@ -59,6 +59,7 @@ if __name__ == "__main__":
     # stats.print_stats(10) # top 10 rows
         
 # move feeController inside tfController, may be cache fee filter results for N days
+# make fixed tf for feeController
 # fix bored ago calculate, make fixed tf for it, not lowest    
 # fix divergence actual length for channels!
 

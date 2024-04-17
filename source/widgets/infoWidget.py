@@ -187,13 +187,15 @@ def __updateBoredCount(count):
 def __onTabClicked():
     if __tickerController is None:
         return
-    
     for _, tfController in __tickerController.getTimeframes().items():
         for divergence in tfController.getDivergenceController().getActuals():
             time1 = divergence.firstCandle.time
             time2 = divergence.secondCandle.time
             cacheController.setDivergenceViewed(__tickerController.getTicker(), tfController.getTimeframe().name, time1, time2, True)
             divergence.viewed = True
+        for channel in tfController.getChannelController().getChannels():
+            cacheController.setChannelViewed(__tickerController.getTicker(), tfController.getTimeframe().name, channel.getDictKey())
+            channel.viewed = True
 
 def __onDataCopyClicked():
     ticker = __tickerController.getTicker() if __tickerController else ''

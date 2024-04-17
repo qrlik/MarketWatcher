@@ -1,3 +1,4 @@
+from systems import cacheController
 from systems import settingsController
 from utilities import utils
 from utilities.channelUtils import VertexData
@@ -342,8 +343,7 @@ class ChannelController:
         self.__channels.sort(key=lambda channel : (channel.relevance, channel.strength), reverse=True)
         self.__createReadableInfo()
 
-        # to do
-        #cacheController.updateViewedDivergences(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__actuals)
+        cacheController.updateViewedChannels(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__channels)
 
         # print(self.__candleController.getTicker() + ' ' + str(len(self.__channels)))
         # for channel in self.__channels:

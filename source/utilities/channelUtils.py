@@ -322,7 +322,7 @@ class Channel:
         self.widthPrice = None
         self.strength = None
         self.relevance = None
-        self.viewed = None # to do
+        self.viewed = False
 
     def __calculateWidthPercent(self, mainPrice):
         if self.angle >= 0:
@@ -351,6 +351,9 @@ class Channel:
         result += '\n==============================='
         result += '\n'
         return result
+
+    def getDictKey(self):
+        return str(self.mainPoint_2.index) + '.' + str(self.mainPoint_1.index) + '.' + str(self.minorPoint.index)
 
     @staticmethod
     def createFromProcessData(data:ChannelProcessData, candles):
