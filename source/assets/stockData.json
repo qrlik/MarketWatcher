@@ -166,13 +166,6 @@
 			"Computers",
 			26
 		],
-		"ACOR": [
-			"ACORDA THERAPEUTICS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			26
-		],
 		"ACRS": [
 			"ACLARIS THERAPEUTICS INC",
 			"COMMON",
@@ -390,6 +383,13 @@
 			"Healthcare-Products",
 			26
 		],
+		"ALAB": [
+			"ASTERA LABS INC",
+			"COMMON",
+			"Technology",
+			"Semiconductors",
+			26
+		],
 		"ALB": [
 			"ALBEMARLE CORP",
 			"COMMON",
@@ -424,13 +424,6 @@
 			"Consumer, Non-cyclical",
 			"Healthcare-Products",
 			26
-		],
-		"ALGS": [
-			"ALIGOS THERAPEUTICS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"ALGT": [
 			"ALLEGIANT TRAVEL CO",
@@ -530,13 +523,6 @@
 			"Biotechnology",
 			26
 		],
-		"AMAM": [
-			"NEW AMBRX BIOPHARMA INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			26
-		],
 		"AMAT": [
 			"APPLIED MATERIALS INC",
 			"COMMON",
@@ -605,14 +591,7 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Pharmaceuticals",
-			26
-		],
-		"AMNB": [
-			"AMER NATL BNKSHS/DANVILLE VA",
-			"COMMON",
-			"Financial",
-			"Banks",
-			26
+			557
 		],
 		"AMP": [
 			"AMERIPRISE FINANCIAL INC.",
@@ -909,7 +888,7 @@
 			26
 		],
 		"ARM": [
-			"ARM HOLDINGS PLC",
+			"ARM HOLDINGS PLC-ADR",
 			"ADR",
 			"Technology",
 			"Semiconductors",
@@ -955,7 +934,7 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Biotechnology",
-			557
+			26
 		],
 		"ASML": [
 			"ASML HOLDING NV-NY REG SHS",
@@ -983,7 +962,7 @@
 			"COMMON",
 			"Financial",
 			"Diversified Finan Serv",
-			26
+			557
 		],
 		"ASTE": [
 			"ASTEC INDUSTRIES INC",
@@ -997,7 +976,7 @@
 			"COMMON",
 			"Communications",
 			"Telecommunications",
-			26
+			557
 		],
 		"ASYS": [
 			"AMTECH SYSTEMS INC",
@@ -1363,13 +1342,6 @@
 			"Retail",
 			26
 		],
-		"BCEL": [
-			"ATRECA INC - A",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
-		],
 		"BCML": [
 			"BAYCOM CORP",
 			"COMMON",
@@ -1382,7 +1354,7 @@
 			"COMMON",
 			"Technology",
 			"Software",
-			26
+			557
 		],
 		"BCPC": [
 			"BALCHEM CORP",
@@ -1559,13 +1531,6 @@
 			"Banks",
 			26
 		],
-		"BKCC": [
-			"BLACKROCK CAPITAL INVESTMENT",
-			"COMMON",
-			"Financial",
-			"Investment Companies",
-			557
-		],
 		"BKNG": [
 			"BOOKING HOLDINGS INC",
 			"COMMON",
@@ -1669,6 +1634,13 @@
 			"COMMON",
 			"Financial",
 			"Banks",
+			26
+		],
+		"BOLD": [
+			"BOUNDLESS BIO INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Biotechnology",
 			26
 		],
 		"BOLT": [
@@ -1972,13 +1944,6 @@
 			"Internet",
 			26
 		],
-		"CASA": [
-			"CASA SYSTEMS INC",
-			"COMMON",
-			"Communications",
-			"Telecommunications",
-			557
-		],
 		"CASH": [
 			"PATHWARD FINANCIAL INC",
 			"COMMON",
@@ -2020,13 +1985,6 @@
 			"Financial",
 			"Insurance",
 			26
-		],
-		"CBAY": [
-			"CYMABAY THERAPEUTICS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"CBNK": [
 			"CAPITAL BANCORP INC/MD",
@@ -2111,13 +2069,6 @@
 			"Consumer, Cyclical",
 			"Leisure Time",
 			26
-		],
-		"CCLP": [
-			"CSI COMPRESSCO LP",
-			"MLP",
-			"Energy",
-			"Oil&Gas Services",
-			557
 		],
 		"CCNE": [
 			"CNB FINANCIAL CORP/PA",
@@ -2288,7 +2239,7 @@
 			26
 		],
 		"CGEM": [
-			"CULLINAN ONCOLOGY INC",
+			"CULLINAN THERAPEUTICS INC",
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Biotechnology",
@@ -2558,7 +2509,7 @@
 			"COMMON",
 			"Industrial",
 			"Electronics",
-			26
+			557
 		],
 		"CNC": [
 			"CENTENE CORP",
@@ -2728,6 +2679,13 @@
 			"Retail",
 			26
 		],
+		"CPAY": [
+			"CORPAY INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Commercial Services",
+			26
+		],
 		"CPB": [
 			"CAMPBELL SOUP CO",
 			"COMMON",
@@ -2754,13 +2712,6 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Distribution/Wholesale",
-			26
-		],
-		"CPSI": [
-			"COMPUTER PROGRAMS & SYSTEMS",
-			"COMMON",
-			"Technology",
-			"Software",
 			26
 		],
 		"CPT": [
@@ -2931,13 +2882,6 @@
 			"Building Materials",
 			26
 		],
-		"CSTR": [
-			"CAPSTAR FINANCIAL HOLDINGS I",
-			"COMMON",
-			"Financial",
-			"Banks",
-			26
-		],
 		"CSWC": [
 			"CAPITAL SOUTHWEST CORP",
 			"COMMON",
@@ -3000,6 +2944,13 @@
 			"Consumer, Non-cyclical",
 			"Biotechnology",
 			557
+		],
+		"CTNM": [
+			"CONTINEUM THERAPEUTICS INC-A",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Biotechnology",
+			26
 		],
 		"CTRA": [
 			"COTERRA ENERGY INC",
@@ -3119,13 +3070,6 @@
 			"Technology",
 			"Computers",
 			26
-		],
-		"CYT": [
-			"CYTEIR THERAPEUTICS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"CYTK": [
 			"CYTOKINETICS INC",
@@ -3251,6 +3195,13 @@
 			"COMMON",
 			"Industrial",
 			"Machinery-Diversified",
+			26
+		],
+		"DECK": [
+			"DECKERS OUTDOOR CORP",
+			"COMMON",
+			"Consumer, Cyclical",
+			"Apparel",
 			26
 		],
 		"DFS": [
@@ -3407,6 +3358,13 @@
 			"Food",
 			26
 		],
+		"DOC": [
+			"HEALTHPEAK PROPERTIES INC",
+			"REIT",
+			"Financial",
+			"REITS",
+			26
+		],
 		"DOCU": [
 			"DOCUSIGN INC",
 			"COMMON",
@@ -3454,7 +3412,7 @@
 			"ADR",
 			"Technology",
 			"Software",
-			557
+			26
 		],
 		"DPZ": [
 			"DOMINO'S PIZZA INC",
@@ -3588,13 +3546,6 @@
 			"Technology",
 			"Software",
 			26
-		],
-		"EAR": [
-			"EARGO INC ",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Healthcare-Products",
-			557
 		],
 		"EBAY": [
 			"EBAY INC",
@@ -4296,13 +4247,6 @@
 			"Retail",
 			26
 		],
-		"FIXX": [
-			"HOMOLOGY MEDICINES INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
-		],
 		"FIZZ": [
 			"NATIONAL BEVERAGE CORP",
 			"COMMON",
@@ -4322,13 +4266,6 @@
 			"COMMON",
 			"Energy",
 			"Energy-Alternate Sources",
-			26
-		],
-		"FLT": [
-			"FLEETCOR TECHNOLOGIES INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Commercial Services",
 			26
 		],
 		"FLWS": [
@@ -4364,7 +4301,7 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Biotechnology",
-			26
+			557
 		],
 		"FNKO": [
 			"FUNKO INC-CLASS A",
@@ -4622,7 +4559,7 @@
 			"GENERAL ELECTRIC CO",
 			"COMMON",
 			"Industrial",
-			"Miscellaneous Manufactur",
+			"Aerospace/Defense",
 			26
 		],
 		"GEG": [
@@ -4660,6 +4597,13 @@
 			"Biotechnology",
 			557
 		],
+		"GEV": [
+			"GE VERNOVA INC",
+			"COMMON",
+			"Industrial",
+			"Machinery-Constr&Mining",
+			26
+		],
 		"GFS": [
 			"GLOBALFOUNDRIES INC",
 			"COMMON",
@@ -4672,7 +4616,7 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Leisure Time",
-			26
+			557
 		],
 		"GH": [
 			"GUARDANT HEALTH INC",
@@ -4771,13 +4715,6 @@
 			"Financial",
 			"Insurance",
 			26
-		],
-		"GLTO": [
-			"GALECTO INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"GLUE": [
 			"MONTE ROSA THERAPEUTICS INC",
@@ -4911,13 +4848,6 @@
 			"Communications",
 			"Internet",
 			26
-		],
-		"GRCL": [
-			"GRACELL BIOTECHNOLOGIES-ADR",
-			"ADR",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"GREE": [
 			"GREENIDGE GENERATION HOLDING ",
@@ -5647,13 +5577,6 @@
 			"Healthcare-Products",
 			26
 		],
-		"ICVX": [
-			"ICOSAVAX INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			26
-		],
 		"IDCC": [
 			"INTERDIGITAL INC",
 			"COMMON",
@@ -5744,13 +5667,6 @@
 			"Consumer, Non-cyclical",
 			"Biotechnology",
 			26
-		],
-		"IMGN": [
-			"IMMUNOGEN INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"IMKTA": [
 			"INGLES MARKETS INC-CLASS A",
@@ -6386,8 +6302,8 @@
 			"KANDI TECHNOLOGIES GROUP INC",
 			"COMMON",
 			"Consumer, Cyclical",
-			"Auto Manufacturers",
-			557
+			"Leisure Time",
+			26
 		],
 		"KNSA": [
 			"KINIKSA PHARMACEUTICALS-A",
@@ -6395,13 +6311,6 @@
 			"Consumer, Non-cyclical",
 			"Biotechnology",
 			26
-		],
-		"KNTE": [
-			"KINNATE BIOPHARMA INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"KO": [
 			"COCA-COLA CO/THE",
@@ -6494,6 +6403,13 @@
 			"Cosmetics/Personal Care",
 			26
 		],
+		"KYTX": [
+			"KYVERNA THERAPEUTICS INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Biotechnology",
+			26
+		],
 		"KZR": [
 			"KEZAR LIFE SCIENCES INC",
 			"COMMON",
@@ -6548,17 +6464,10 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Auto Parts&Equipment",
-			26
+			557
 		],
 		"LBAI": [
 			"LAKELAND BANCORP INC",
-			"COMMON",
-			"Financial",
-			"Banks",
-			26
-		],
-		"LBC": [
-			"LUTHER BURBANK CORP",
 			"COMMON",
 			"Financial",
 			"Banks",
@@ -6653,6 +6562,13 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Home Builders",
+			26
+		],
+		"LENZ": [
+			"LENZ THERAPEUTICS INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Biotechnology",
 			26
 		],
 		"LESL": [
@@ -6837,6 +6753,13 @@
 			"Commercial Services",
 			26
 		],
+		"LOT": [
+			"LOTUS TECHNOLOGY INC",
+			"ADR",
+			"Consumer, Cyclical",
+			"Auto Manufacturers",
+			26
+		],
 		"LOW": [
 			"LOWE'S COS INC",
 			"COMMON",
@@ -6856,7 +6779,7 @@
 			"COMMON",
 			"Technology",
 			"Software",
-			26
+			557
 		],
 		"LQDT": [
 			"LIQUIDITY SERVICES INC",
@@ -7066,7 +6989,7 @@
 			"COMMON",
 			"Energy",
 			"Energy-Alternate Sources",
-			26
+			557
 		],
 		"MBLY": [
 			"MOBILEYE GLOBAL INC-A",
@@ -7157,13 +7080,6 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Food",
-			26
-		],
-		"MDRX": [
-			"VERADIGM INC",
-			"COMMON",
-			"Technology",
-			"Software",
 			26
 		],
 		"MDT": [
@@ -7320,6 +7236,13 @@
 			"Biotechnology",
 			26
 		],
+		"MGX": [
+			"METAGENOMI INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Biotechnology",
+			26
+		],
 		"MHK": [
 			"MOHAWK INDUSTRIES INC",
 			"COMMON",
@@ -7459,13 +7382,6 @@
 			"Consumer, Non-cyclical",
 			"Beverages",
 			26
-		],
-		"MNTS": [
-			"MOMENTUS INC ",
-			"COMMON",
-			"Industrial",
-			"Aerospace/Defense",
-			557
 		],
 		"MO": [
 			"ALTRIA GROUP INC",
@@ -7626,6 +7542,13 @@
 			"COMMON",
 			"Technology",
 			"Semiconductors",
+			26
+		],
+		"MRX": [
+			"MAREX GROUP PLC",
+			"COMMON",
+			"Financial",
+			"Diversified Finan Serv",
 			26
 		],
 		"MS": [
@@ -7914,13 +7837,6 @@
 			"Communications",
 			"Internet",
 			26
-		],
-		"NGM": [
-			"NGM BIOPHARMACEUTICALS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
-			557
 		],
 		"NI": [
 			"NISOURCE INC",
@@ -8361,7 +8277,7 @@
 			"COMMON",
 			"Technology",
 			"Software",
-			26
+			557
 		],
 		"OMAB": [
 			"GRUPO AEROPORTUARIO CEN-ADR",
@@ -8424,7 +8340,7 @@
 			"REIT",
 			"Financial",
 			"REITS",
-			26
+			557
 		],
 		"OPK": [
 			"OPKO HEALTH INC",
@@ -8711,13 +8627,6 @@
 			"COMMON",
 			"Technology",
 			"Software",
-			26
-		],
-		"PEAK": [
-			"HEALTHPEAK PROPERTIES INC",
-			"REIT",
-			"Financial",
-			"REITS",
 			26
 		],
 		"PEBO": [
@@ -9173,7 +9082,7 @@
 			"COMMON",
 			"Communications",
 			"Internet",
-			26
+			557
 		],
 		"PRU": [
 			"PRUDENTIAL FINANCIAL INC",
@@ -9399,6 +9308,13 @@
 			"Semiconductors",
 			26
 		],
+		"QTI": [
+			"QT IMAGING HOLDINGS INC",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Healthcare-Products",
+			557
+		],
 		"QURE": [
 			"UNIQURE NV",
 			"COMMON",
@@ -9470,7 +9386,7 @@
 			26
 		],
 		"RDUS": [
-			"SCHNITZER STEEL INDS INC-A",
+			"RADIUS RECYCLING INC",
 			"COMMON",
 			"Basic Materials",
 			"Iron/Steel",
@@ -9838,7 +9754,7 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Commercial Services",
-			26
+			557
 		],
 		"SAFT": [
 			"SAFETY INSURANCE GROUP INC",
@@ -9852,6 +9768,13 @@
 			"COMMON",
 			"Industrial",
 			"Transportation",
+			26
+		],
+		"SAIC": [
+			"SCIENCE APPLICATIONS INTE",
+			"COMMON",
+			"Technology",
+			"Computers",
 			26
 		],
 		"SANA": [
@@ -10134,13 +10057,6 @@
 			"Auto Parts&Equipment",
 			26
 		],
-		"SIEN": [
-			"SIENTRA INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Healthcare-Products",
-			557
-		],
 		"SIGI": [
 			"SELECTIVE INSURANCE GROUP",
 			"COMMON",
@@ -10358,6 +10274,13 @@
 			"Internet",
 			26
 		],
+		"SOLV": [
+			"SOLVENTUM CORP",
+			"COMMON",
+			"Consumer, Non-cyclical",
+			"Healthcare-Products",
+			26
+		],
 		"SOND": [
 			"SONDER HOLDINGS INC",
 			"COMMON",
@@ -10378,13 +10301,6 @@
 			"Technology",
 			"Software",
 			557
-		],
-		"SOVO": [
-			"SOVOS BRANDS INC",
-			"COMMON",
-			"Consumer, Cyclical",
-			"Food Service",
-			26
 		],
 		"SP": [
 			"SP PLUS CORP",
@@ -10412,20 +10328,6 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Commercial Services",
-			26
-		],
-		"SPI": [
-			"SPI ENERGY CO LTD",
-			"COMMON",
-			"Energy",
-			"Energy-Alternate Sources",
-			557
-		],
-		"SPLK": [
-			"SPLUNK INC",
-			"COMMON",
-			"Technology",
-			"Software",
 			26
 		],
 		"SPNS": [
@@ -10482,7 +10384,7 @@
 			"COMMON",
 			"Energy",
 			"Energy-Alternate Sources",
-			26
+			557
 		],
 		"SRAD": [
 			"SPORTRADAR GROUP AG-A",
@@ -10862,6 +10764,13 @@
 			"Savings&Loans",
 			26
 		],
+		"TBRG": [
+			"TRUBRIDGE INC",
+			"COMMON",
+			"Technology",
+			"Software",
+			26
+		],
 		"TCBI": [
 			"TEXAS CAPITAL BANCSHARES INC",
 			"COMMON",
@@ -11007,13 +10916,6 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Auto Parts&Equipment",
-			26
-		],
-		"THRX": [
-			"THESEUS PHARMACEUTICALS INC",
-			"COMMON",
-			"Consumer, Non-cyclical",
-			"Biotechnology",
 			26
 		],
 		"TIGO": [
@@ -11261,13 +11163,6 @@
 			"Food",
 			26
 		],
-		"TSP": [
-			"TUSIMPLE HOLDINGS INC - A",
-			"COMMON",
-			"Consumer, Cyclical",
-			"Auto Manufacturers",
-			557
-		],
 		"TSVT": [
 			"2SEVENTY BIO INC",
 			"COMMON",
@@ -11349,7 +11244,7 @@
 			"TWIST BIOSCIENCE CORP",
 			"COMMON",
 			"Consumer, Non-cyclical",
-			"Biotechnology",
+			"Healthcare-Products",
 			26
 		],
 		"TXG": [
@@ -11644,7 +11539,7 @@
 			"ADR",
 			"Communications",
 			"Internet",
-			26
+			557
 		],
 		"V": [
 			"VISA INC-CLASS A SHARES",
@@ -11700,13 +11595,6 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Biotechnology",
-			26
-		],
-		"VFC": [
-			"VF CORP",
-			"COMMON",
-			"Consumer, Cyclical",
-			"Apparel",
 			26
 		],
 		"VFS": [
@@ -11882,7 +11770,7 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Retail",
-			557
+			26
 		],
 		"VRNS": [
 			"VARONIS SYSTEMS INC",
@@ -12122,13 +12010,6 @@
 			"Investment Companies",
 			26
 		],
-		"WHR": [
-			"WHIRLPOOL CORP",
-			"COMMON",
-			"Consumer, Cyclical",
-			"Home Furnishings",
-			26
-		],
 		"WING": [
 			"WINGSTOP INC",
 			"COMMON",
@@ -12146,8 +12027,8 @@
 		"WISH": [
 			"CONTEXTLOGIC INC - A",
 			"COMMON",
-			"Communications",
-			"Internet",
+			"Financial",
+			"Investment Companies",
 			26
 		],
 		"WIX": [
@@ -12204,7 +12085,7 @@
 			"COMMON",
 			"Consumer, Cyclical",
 			"Retail",
-			26
+			557
 		],
 		"WPRT": [
 			"WESTPORT FUEL SYSTEMS INC",
@@ -12288,7 +12169,7 @@
 			"COMMON",
 			"Consumer, Non-cyclical",
 			"Commercial Services",
-			26
+			557
 		],
 		"WWD": [
 			"WOODWARD INC",
@@ -12558,8 +12439,7 @@
 			"TBLD"
 		],
 		"CONVPREFERRED": [
-			"BTSGU",
-			"PARAP"
+			"BTSGU"
 		],
 		"LTD PART": [
 			"PAGP"
@@ -12657,6 +12537,7 @@
 			"SLMBP",
 			"TCBIO",
 			"TFINP",
+			"TRINZ",
 			"UCBIO",
 			"VIASP",
 			"VLYPO",
@@ -12697,7 +12578,6 @@
 			"HYZNW",
 			"LILMW",
 			"MAPSW",
-			"MNTSW",
 			"MVSTW",
 			"RNWWW",
 			"RVMDW",
@@ -12738,7 +12618,6 @@
 					"EXAI",
 					"GMAB",
 					"GNFT",
-					"GRCL",
 					"IMCR",
 					"IPHA",
 					"LEGN",
@@ -12806,7 +12685,8 @@
 					"MLCO"
 				],
 				"Auto Manufacturers": [
-					"LI"
+					"LI",
+					"LOT"
 				],
 				"Airlines": [
 					"RYAAY"
@@ -12891,7 +12771,6 @@
 					"CUTR",
 					"CVRX",
 					"DHR",
-					"EAR",
 					"EMBC",
 					"EW",
 					"GEHC",
@@ -12921,12 +12800,13 @@
 					"PDCO",
 					"PODD",
 					"QDEL",
+					"QTI",
 					"RGEN",
 					"RMD",
 					"RPID",
 					"RVTY",
-					"SIEN",
 					"SILK",
+					"SOLV",
 					"SRDX",
 					"STE",
 					"SWAV",
@@ -12935,6 +12815,7 @@
 					"TFX",
 					"TMCI",
 					"TMO",
+					"TWST",
 					"TXG",
 					"UTMD",
 					"VREX",
@@ -13022,15 +12903,12 @@
 					"ABUS",
 					"ACAD",
 					"ACLX",
-					"ACOR",
 					"AKRO",
-					"ALGS",
 					"ALLK",
 					"ALLO",
 					"ALNY",
 					"ALVR",
 					"ALXO",
-					"AMAM",
 					"AMGN",
 					"ANAB",
 					"ANNX",
@@ -13045,7 +12923,6 @@
 					"AVRO",
 					"AVXL",
 					"BBIO",
-					"BCEL",
 					"BCRX",
 					"BDTX",
 					"BEAM",
@@ -13055,10 +12932,10 @@
 					"BLUE",
 					"BMEA",
 					"BMRN",
+					"BOLD",
 					"BOLT",
 					"BPMC",
 					"CABA",
-					"CBAY",
 					"CCCC",
 					"CERT",
 					"CGEM",
@@ -13069,8 +12946,8 @@
 					"CRNX",
 					"CTKB",
 					"CTMX",
+					"CTNM",
 					"CTVA",
-					"CYT",
 					"CYTK",
 					"DAWN",
 					"DCPH",
@@ -13085,14 +12962,12 @@
 					"EXEL",
 					"FDMT",
 					"FGEN",
-					"FIXX",
 					"FNCH",
 					"FUSN",
 					"GBIO",
 					"GERN",
 					"GH",
 					"GILD",
-					"GLTO",
 					"GLUE",
 					"GOSS",
 					"HALO",
@@ -13100,11 +12975,9 @@
 					"HOWL",
 					"HUMA",
 					"IBRX",
-					"ICVX",
 					"IDYA",
 					"IGMS",
 					"ILMN",
-					"IMGN",
 					"IMUX",
 					"IMVT",
 					"INCY",
@@ -13117,22 +12990,23 @@
 					"ITCI",
 					"KMDA",
 					"KNSA",
-					"KNTE",
 					"KPTI",
 					"KRON",
 					"KRYS",
+					"KYTX",
 					"KZR",
+					"LENZ",
 					"LVTX",
 					"LXRX",
 					"MGNX",
 					"MGTX",
+					"MGX",
 					"MLYS",
 					"MNMD",
 					"MRNA",
 					"MRSN",
 					"MRVI",
 					"MYGN",
-					"NGM",
 					"NKTX",
 					"NMRA",
 					"NUVL",
@@ -13179,12 +13053,10 @@
 					"TARS",
 					"TBIO",
 					"TERN",
-					"THRX",
 					"TNYA",
 					"TRML",
 					"TSHA",
 					"TSVT",
-					"TWST",
 					"TYRA",
 					"UBX",
 					"UTHR",
@@ -13252,6 +13124,7 @@
 					"CIGI",
 					"CMPR",
 					"CORZ",
+					"CPAY",
 					"CRAI",
 					"CRVL",
 					"CSGP",
@@ -13263,7 +13136,6 @@
 					"EFX",
 					"EWCZ",
 					"FA",
-					"FLT",
 					"FLYW",
 					"FORR",
 					"GPN",
@@ -13438,6 +13310,7 @@
 					"DOOO",
 					"GGR",
 					"JOUT",
+					"KNDI",
 					"NCLH",
 					"PTON",
 					"RCL"
@@ -13474,8 +13347,7 @@
 					"SNPO",
 					"SONO",
 					"UEIC",
-					"VOXX",
-					"WHR"
+					"VOXX"
 				],
 				"Retail": [
 					"ASO",
@@ -13573,25 +13445,23 @@
 					"F",
 					"GM",
 					"HYZN",
-					"KNDI",
 					"LCID",
 					"NKLA",
 					"PCAR",
 					"RIVN",
 					"TSLA",
-					"TSP",
 					"VFS"
 				],
 				"Apparel": [
 					"COLM",
 					"CROX",
+					"DECK",
 					"FOSL",
 					"NKE",
 					"RCKY",
 					"RL",
 					"SHOO",
 					"TPR",
-					"VFC",
 					"WEYS"
 				],
 				"Home Builders": [
@@ -13620,9 +13490,6 @@
 				"Housewares": [
 					"LCUT",
 					"NWL"
-				],
-				"Food Service": [
-					"SOVO"
 				],
 				"Office Furnishings": [
 					"TILE"
@@ -13706,7 +13573,6 @@
 				"Miscellaneous Manufactur": [
 					"AOS",
 					"AXON",
-					"GE",
 					"ITW",
 					"MMM",
 					"PH",
@@ -13745,7 +13611,8 @@
 				],
 				"Machinery-Constr&Mining": [
 					"ASTE",
-					"CAT"
+					"CAT",
+					"GEV"
 				],
 				"Aerospace/Defense": [
 					"ATRO",
@@ -13754,12 +13621,12 @@
 					"DRS",
 					"ESLT",
 					"GD",
+					"GE",
 					"HWM",
 					"ISSC",
 					"KTOS",
 					"LHX",
 					"LMT",
-					"MNTS",
 					"MRCY",
 					"NOC",
 					"RTX",
@@ -13856,6 +13723,7 @@
 					"NTAP",
 					"NTCT",
 					"QLYS",
+					"SAIC",
 					"SCWX",
 					"SMCI",
 					"SSYS",
@@ -13900,7 +13768,6 @@
 					"CGNT",
 					"CLBT",
 					"CNXC",
-					"CPSI",
 					"CRM",
 					"CRNC",
 					"CSGS",
@@ -13938,7 +13805,6 @@
 					"LPSN",
 					"MANH",
 					"MAPS",
-					"MDRX",
 					"MGIC",
 					"MNDY",
 					"MSCI",
@@ -13968,10 +13834,10 @@
 					"SLP",
 					"SNPS",
 					"SOPH",
-					"SPLK",
 					"SPNS",
 					"SPSC",
 					"SSNC",
+					"TBRG",
 					"TEAM",
 					"TTWO",
 					"TYL",
@@ -13986,6 +13852,7 @@
 				"Semiconductors": [
 					"ACLS",
 					"ADI",
+					"ALAB",
 					"ALGM",
 					"AMAT",
 					"AMBA",
@@ -14046,7 +13913,6 @@
 			"Financial": {
 				"Banks": [
 					"ABCB",
-					"AMNB",
 					"AROW",
 					"BAC",
 					"BANF",
@@ -14080,7 +13946,6 @@
 					"CMA",
 					"CNOB",
 					"COLB",
-					"CSTR",
 					"CTBI",
 					"CVBF",
 					"DCOM",
@@ -14129,7 +13994,6 @@
 					"KEY",
 					"KRNY",
 					"LBAI",
-					"LBC",
 					"LKFN",
 					"MBWM",
 					"MCBC",
@@ -14268,6 +14132,7 @@
 					"LPLA",
 					"MA",
 					"MFIN",
+					"MRX",
 					"MYFW",
 					"NAVI",
 					"NDAQ",
@@ -14298,7 +14163,6 @@
 				"Investment Companies": [
 					"ARCC",
 					"BANX",
-					"BKCC",
 					"CGBD",
 					"CSWC",
 					"FDUS",
@@ -14321,7 +14185,8 @@
 					"SLRC",
 					"TCPC",
 					"TRIN",
-					"WHF"
+					"WHF",
+					"WISH"
 				],
 				"Savings&Loans": [
 					"BFIN",
@@ -14419,7 +14284,6 @@
 					"VCSA",
 					"VRSN",
 					"VTRU",
-					"WISH",
 					"WIX",
 					"YNDX",
 					"Z",
@@ -14435,7 +14299,6 @@
 					"AUDC",
 					"AVNW",
 					"CAMP",
-					"CASA",
 					"CNSL",
 					"COMM",
 					"CRDO",
@@ -14558,7 +14421,6 @@
 					"MAXN",
 					"RUN",
 					"SEDG",
-					"SPI",
 					"SPWR"
 				],
 				"Pipelines": [
@@ -14677,11 +14539,6 @@
 				"Healthcare-Services": [
 					"BTSGU"
 				]
-			},
-			"Communications": {
-				"Media": [
-					"PARAP"
-				]
 			}
 		},
 		"LTD PART": {
@@ -14695,9 +14552,6 @@
 			"Energy": {
 				"Coal": [
 					"ARLP"
-				],
-				"Oil&Gas Services": [
-					"CCLP"
 				],
 				"Oil&Gas": [
 					"CLMT",
@@ -14822,6 +14676,7 @@
 					"OXSQZ",
 					"RWAYL",
 					"RWAYZ",
+					"TRINZ",
 					"WHFCL"
 				],
 				"Savings&Loans": [
@@ -14885,6 +14740,7 @@
 					"CPT",
 					"DHC",
 					"DLR",
+					"DOC",
 					"EQIX",
 					"EQR",
 					"ESS",
@@ -14903,7 +14759,6 @@
 					"O",
 					"OPI",
 					"PCH",
-					"PEAK",
 					"PECO",
 					"PLD",
 					"PSA",
