@@ -5,13 +5,13 @@
 	"loopInterval": 33,
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,
-	"atrAverageLength": 100,
+	"atrAverageLength": 50,
 
 	"channelMinLength": 200,
 	"channelMaxLength": 1000,
 	"channelFirstVertexStrength": 10,
 	"channelOneSideZonesMinimum": 2,
-	"channelBothSidesZonesMinimum": 5,
+	"channelBothSidesZonesMinimum": 6,
 	"channelZonePrecisionPercent": 0.1,
 	"channelApproximateTouchPrecisionPercent": 0.02,
 	"channelUnionByLengthPercent": 0.1,
@@ -29,7 +29,7 @@
 		"9": 45,
 		"10": 50
 	},
-	"divergenceActualLength": 0,
+	"divergenceActualLength": 50,
 	"divergenceTrickedFactor": 0.2,
 
 	"rsiLength": 14,

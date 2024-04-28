@@ -1,13 +1,6 @@
 {
-	"wrongLastDates": [
-		"ELVN",
-		"ADV",
-		"MNTS",
-		"APYX"
-	],
-	"lowVolume": [
-		"HBCP",
-		"DSGR",
-		"WEYS"
+	"closed": [
+		"YNDX",
+		"QIWI"
 	]
 }

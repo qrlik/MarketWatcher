@@ -103,6 +103,7 @@ class LinesData:
 
     def cleanupVertexs(self, dirtyFunctor, descending):
         if self.dirtyLength < 1:
+            self.linesToSecondVertexs.sort(key=lambda line : line.getAngle(), reverse=descending)
             return
         
         acceptedLines = []
@@ -257,11 +258,12 @@ class ChannelProcessData:
         self.__calculateWidthPrice(lastCandle, lastIndex, relevancePercent)
 
         # to do take atr from lowest tf for comparison and multi filter
-        widthFactor = self.widthPrice / lastCandle.atr
+        assert(lastCandle.atr)
+        #widthFactor = self.widthPrice / lastCandle.atr
         anglePercent = abs(pow(2, self.mainLine.getAngle()) - 1) * 100
         atrPercent = lastCandle.atr / lastCandle.close * 100
         growSpeedFactor = anglePercent / atrPercent
-        self.strength = widthFactor * growSpeedFactor
+        self.strength = growSpeedFactor #widthFactor * growSpeedFactor
 
     def addTopPoint(self, point):
         self.top.append(point)
