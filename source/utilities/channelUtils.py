@@ -24,37 +24,30 @@ class VertexProcessData:
         return self.isClose or self.isPivot
     
     @staticmethod
-    def getProcessData(candle):
+    def getProcessData(candle, minStrength):
         topProcess = VertexProcessData()
         bottomProcess = VertexProcessData()
 
-        if candle.vertexClose == VertexType.HIGH: # possible bottleneck (can check only pivots)
+        if candle.vertexClose == VertexType.HIGH and candle.vertexStrengthClose >= minStrength: # possible bottleneck (can check only pivots)
             topProcess.isClose = True
             if candle.close != candle.high:
                 topProcess.isPivot = True
-        if candle.vertexHigh == VertexType.HIGH: # wide bottleneck (can check every pivot)
+        if candle.vertexHigh == VertexType.HIGH and candle.vertexStrengthHigh >= minStrength: # wide bottleneck (can check every pivot)
             if not topProcess.isClose or candle.close != candle.high:
                 topProcess.isPivot = True
 
-        if candle.vertexClose == VertexType.LOW: # possible bottleneck (can check only pivots)
+        if candle.vertexClose == VertexType.LOW and candle.vertexStrengthClose >= minStrength: # possible bottleneck (can check only pivots)
             bottomProcess.isClose = True
             if candle.close != candle.low:
                 bottomProcess.isPivot = True
-        if candle.vertexLow == VertexType.LOW: # wide bottleneck
+        if candle.vertexLow == VertexType.LOW and candle.vertexStrengthLow >= minStrength: # wide bottleneck
             if not bottomProcess.isClose or candle.close != candle.low:
                 bottomProcess.isPivot = True
 
         return (topProcess, bottomProcess)
     
-    @staticmethod
-    def getStrengthProcessData(candle, minStrength, isTop):
-        vertex1PivotStrength = candle.vertexStrengthHigh if isTop else candle.vertexStrengthLow
-        isCloseAllowedByStrength = candle.vertexStrengthClose >= minStrength
-        isPivotAllowedByStrength = vertex1PivotStrength >= minStrength
-        return (isPivotAllowedByStrength, isCloseAllowedByStrength)
 
-
-
+    
 class LineFormula: # y = kx + b
     def __init__(self, x1, y1, x2, y2):
         self.__x1 = x1

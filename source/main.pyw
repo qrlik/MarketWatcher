@@ -58,11 +58,13 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
         
+# look divergences in rsi indicator
 # move feeController inside tfController, may be cache fee filter results for N days
 # make fixed tf for feeController
+# add bored expired color
 # fix bored ago calculate, make fixed tf for it, not lowest    
 # fix divergence actual length for channels!
-
+# divergence actual range can show breaked divergences
 
 
 # to do channel visualize (remove union may be then)

@@ -69,7 +69,7 @@ class ChannelController:
     def __processLines(self):
         for firstIndex in range(len(self.__candles) - self.__minLength + 1):
             firstCandle = self.__candles[firstIndex]
-            topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle)
+            topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle, self.__firstVertexStrength)
             if not topFirstVertex.isValid() and not bottomFirstVertex.isValid():
                 continue
 
@@ -161,20 +161,14 @@ class ChannelController:
         approximateFunctor = utils.greater if isTop else utils.less
 
         for linesVertex1 in firstSide:
-            pivotAllowByStrength, closeAllowByStrength = VertexProcessData.getStrengthProcessData(self.__candles[linesVertex1.firstVertex.index], self.__firstVertexStrength, isTop)
-            if not pivotAllowByStrength and not closeAllowByStrength:
-                continue
-
             channelLength = len(self.__candles) - linesVertex1.firstVertex.index - 1
             for linesVertex2 in secondSide:
                 if linesVertex1.firstVertex.index > linesVertex2.firstVertex.index: # look only right side
                     continue
-                if pivotAllowByStrength:
-                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
-                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
-                if closeAllowByStrength:
-                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
-                    self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelLength, linesVertex1.linesFromPivot, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromClose, breakFunctor, approximateFunctor, isTop)
+                self.__processVertexsChannels(channelLength, linesVertex1.linesFromClose, linesVertex2.linesFromPivot, breakFunctor, approximateFunctor, isTop)
 
     def __processVertexsChannels(self, channelLength, lines1:LinesData, lines2:LinesData, breakFunctor, approximateFunctor, isTop):
         if len(lines1.linesToSecondVertexs) == 0 or len(lines2.linesToSecondVertexs) == 0:
