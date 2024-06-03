@@ -15,8 +15,11 @@ class VertexController:
         self.__strengthHighs = []
         self.__strengthLows = []
         self.__strengthCloses = []
+
         for strength in settingsController.getSetting('vertexStrengthToDivergenceLength').keys():
             self.__strengthLength = max(self.__strengthLength, int(strength))
+        self.__strengthLength = max(self.__strengthLength, int(settingsController.getSetting('channelMaxLength') * settingsController.getSetting('channelStrengthToLengthFactor')))
+
         self.__reset()
 
     def __reset(self):

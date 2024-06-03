@@ -20,13 +20,13 @@
 			"time": "10 March 23",
 			"data": {
 				"vertexHigh": "LOW",
-				"vertexStrengthHigh": 10,
+				"vertexStrengthHigh": 50,
 
 				"vertexLow": "LOW",
-				"vertexStrengthLow": 10,
+				"vertexStrengthLow": 50,
 
 				"vertexClose": "LOW",
-				"vertexStrengthClose": 10
+				"vertexStrengthClose": 50
 			}
 		},
 		{
@@ -72,13 +72,13 @@
 			"time": "14 March 23",
 			"data": {
 				"vertexHigh": "HIGH",
-				"vertexStrengthHigh": 10,
+				"vertexStrengthHigh": 50,
 
 				"vertexLow": "HIGH",
-				"vertexStrengthLow": 10,
+				"vertexStrengthLow": 20,
 
 				"vertexClose": "HIGH",
-				"vertexStrengthClose": 10
+				"vertexStrengthClose": 21
 			}
 		},
 		{
@@ -111,13 +111,13 @@
 			"time": "17 March 23",
 			"data": {
 				"vertexHigh": "HIGH",
-				"vertexStrengthHigh": 10,
+				"vertexStrengthHigh": 50,
 
 				"vertexLow": "RISE",
 				"vertexStrengthLow": 0,
 
 				"vertexClose": "HIGH",
-				"vertexStrengthClose": 10
+				"vertexStrengthClose": 50
 			}
 		},
 		{
@@ -143,17 +143,17 @@
 				"vertexStrengthLow": 0,
 
 				"vertexClose": "HIGH",
-				"vertexStrengthClose": 10
+				"vertexStrengthClose": 50
 			}
 		},
 		{
 			"time": "20 March 23",
 			"data": {
 				"vertexHigh": "HIGH",
-				"vertexStrengthHigh": 10,
+				"vertexStrengthHigh": 50,
 
 				"vertexLow": "HIGH",
-				"vertexStrengthLow": 10,
+				"vertexStrengthLow": 50,
 
 				"vertexClose": "LOW",
 				"vertexStrengthClose": 1

@@ -26,7 +26,7 @@ class ChannelController:
     __minLength = settingsController.getSetting('channelMinLength') + 1
     __oneSideZonesMinimum = settingsController.getSetting('channelOneSideZonesMinimum')
     __bothSidesZonesMinimum = settingsController.getSetting('channelBothSidesZonesMinimum')
-    __firstVertexStrength = settingsController.getSetting('channelFirstVertexStrength')
+    __strengthToLengthFactor = settingsController.getSetting('channelStrengthToLengthFactor')
     __zonePrecisionPercent = settingsController.getSetting('channelZonePrecisionPercent')
     __approximateTouchPrecisionPercent = settingsController.getSetting('channelApproximateTouchPrecisionPercent')
     __unionByLengthPercent = settingsController.getSetting('channelUnionByLengthPercent')
@@ -36,7 +36,7 @@ class ChannelController:
     assert(__maxLength > __minLength)
     assert(__oneSideZonesMinimum > 1)
     assert(__bothSidesZonesMinimum >= 2 * __oneSideZonesMinimum)
-    assert(__firstVertexStrength >= 0)
+    assert(__strengthToLengthFactor >= 0.0 and __strengthToLengthFactor <= 0.2)
     assert(__zonePrecisionPercent > 0.0 and __zonePrecisionPercent <= 0.2)
     assert(__approximateTouchPrecisionPercent > 0.0 and __approximateTouchPrecisionPercent <= 0.2)
     assert(__unionByLengthPercent > 0.0 and __unionByLengthPercent <= 0.5)
@@ -46,7 +46,7 @@ class ChannelController:
         self.__candleController = candleController
 
     def getCandlesAmountForInit(self):
-        return self.__maxLength + self.__firstVertexStrength
+        return self.__maxLength + int(self.__strengthToLengthFactor * self.__maxLength)
 
     def __init__(self):
         self.__candleController = None
@@ -69,7 +69,9 @@ class ChannelController:
     def __processLines(self):
         for firstIndex in range(len(self.__candles) - self.__minLength + 1):
             firstCandle = self.__candles[firstIndex]
-            topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle, self.__firstVertexStrength)
+            channelLength = len(self.__candles) - firstIndex - 1
+            minStrength = max(1, int(channelLength * self.__strengthToLengthFactor))
+            topFirstVertex, bottomFirstVertex = VertexProcessData.getProcessData(firstCandle, minStrength)
             if not topFirstVertex.isValid() and not bottomFirstVertex.isValid():
                 continue
 
