@@ -30,8 +30,6 @@ class ChannelPowerItem(QTableWidgetItem):
         tickerController = watcherController.getTicker(self.__ticker)
         if not tickerController.isValidLastCandle():
             return
-        if not tickerController.isFeeAcceptable():
-            return
     
         relevance = False
         maxPower = 0.0

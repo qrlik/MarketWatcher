@@ -119,6 +119,7 @@ def __parseResponse(data, interval):
     c.high = round(data[2], getPricePrecision(data[2]))
     c.low = round(data[3], getPricePrecision(data[3]))
     c.close = round(data[4], getPricePrecision(data[4]))
+    c.volume = 0 if data[5] is None else data[5]
     c.closeTime = data[5] * 1000
     return c
 
@@ -213,6 +214,7 @@ def get_data(ticker, intervalStr, start_date = None, end_date = None, ):
         data.append(candles['high'][i])
         data.append(candles['low'][i])
         data.append(candles['close'][i])
+        data.append(candles['volume'][i])
         data.append(closeTime)
         if __isValidCandle(data, regularMarketTime, sessionStartTime, sessionEndTime):
             result.append(__parseResponse(data, intervalStr))

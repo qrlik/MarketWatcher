@@ -1,7 +1,4 @@
 {
-	"acceptableFeePercent": 2.0,
-	"feePerShare": 0.0035,
-	"atrStrategyFactor": 1.0,
 	"loopInterval": 33,
 	"emaFactor": 8,
 	"soundNotifyPretime": 60,
@@ -31,6 +28,15 @@
 	},
 	"divergenceActualLength": 50,
 	"divergenceTrickedFactor": 0.2,
+
+	"volumeAverageSize": 50,
+	"smallVolumeThresholdMillions": 10,
+	"smallVolumeRecheckIntervals": {
+		"0.8": 7,
+		"0.9": 4,
+		"0.95": 2,
+		"1.0": 1
+	},
 
 	"rsiLength": 14,
 	"spotSymbolsExceptions": [

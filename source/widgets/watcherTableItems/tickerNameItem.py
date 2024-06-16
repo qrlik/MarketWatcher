@@ -21,8 +21,8 @@ class TickerNameItem(QTableWidgetItem):
         if not tickerController.isValidLastCandle():
             super().setForeground(guiDefines.invalidLastCandleColor)
             return
-        if not tickerController.isFeeAcceptable():
-            super().setForeground(guiDefines.unacceptableFeeColor)
+        if not tickerController.isValidVolume():
+            super().setForeground(guiDefines.invalidVolumeColor)
             return
         
         positionColor = userDataController.getTickerUserData(self.__ticker).getPositionColor()

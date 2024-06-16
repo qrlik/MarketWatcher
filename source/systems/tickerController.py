@@ -3,7 +3,6 @@ from collections import OrderedDict
 from models import timeframe
 from systems import cacheController
 from systems import configController
-from systems import feeController
 from systems import timeframeController
 from widgets.filters import timeframesFilter
 from utilities import workMode
@@ -33,7 +32,7 @@ class TickerController:
         self.__info = parseTickerInfo(info)
         self.__timeframes:OrderedDict = OrderedDict()
         self.__validLastCandle = True
-        self.__feeAcceptable = True
+        self.__validVolume = True
 
     def init(self):
         self.__initTimeframes()
@@ -48,10 +47,10 @@ class TickerController:
 
     def isValidLastCandle(self):
         return self.__validLastCandle
-
-    def isFeeAcceptable(self):
-        return self.__feeAcceptable
-
+    
+    def isValidVolume(self):
+        return self.__validVolume
+    
     def isBored(self):
         return cacheController.getDatestamp(self.__ticker, cacheController.DateStamp.BORED) is not None
 
@@ -91,16 +90,9 @@ class TickerController:
         return self.__info.pricePrecision
 
     def loop(self):
-        isFirst = True
         isDirty = False
         for _, tfController in self.__timeframes.items():
             isDirty |= tfController.loop()
-
-            # to do refactor, move feeController inside tfController
-            if isFirst:
-                lastCandle = tfController.getCandlesController().getLastCandle()
-                if lastCandle:
-                    self.__feeAcceptable = feeController.isFeeAcceptable(lastCandle.atr)
-            isFirst = False
+            self.__validVolume &= tfController.IsVolumeValid()
         
         return isDirty

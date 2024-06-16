@@ -63,9 +63,6 @@ if __name__ == "__main__":
 
 # == TO DO LIST ==
 
-# remove feeController
-# add volumeController with config (tf, factors, dirtyInterval)
-
 # add bored expired color
   
 # fix divergence actual length for channels

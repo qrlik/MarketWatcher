@@ -14,6 +14,8 @@ class Candle:
         self.low = 0.0
         self.close = 0.0
 
+        self.volume = 0
+
         self.atr = None
         self.rsi = None
 
@@ -37,7 +39,8 @@ class Candle:
         and self.open == __value.open \
         and self.high == __value.high \
         and self.low == __value.low \
-        and self.close == __value.close
+        and self.close == __value.close \
+        and self.volume == __value.volume
     
 def getPrettyTime(timestamp, interval):
     dt = datetime.fromtimestamp(timestamp / 1000)
@@ -55,6 +58,7 @@ def toJson(candle:Candle):
     result.append(candle.high)
     result.append(candle.low)
     result.append(candle.close)
+    result.append(candle.volume)
     return result
 
 def fromJson(data, tf:str):
@@ -66,6 +70,7 @@ def fromJson(data, tf:str):
     result.high = data[2]
     result.low = data[3]
     result.close = data[4]
+    result.volume = data[5]
     result.closeTime = result.openTime + result.interval - 1
     return result
 
@@ -76,5 +81,5 @@ def toSpotJson(candle:Candle):
 
 def fromSpotJson(data, tf:str):
     result = fromJson(data, tf)
-    result.closeTime = data[5]
+    result.closeTime = data[6]
     return result

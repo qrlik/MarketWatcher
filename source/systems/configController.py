@@ -43,17 +43,14 @@ def getTimeframes():
 	result = [timeframe.Timeframe[tf] for tf in __configs.get('timeframes', {}).keys()]
 	return sorted(result)
 
-def getTimeframesConfigs():
-	return __configs.get('timeframes', {}).items()
+# def getTimeframesConfigs():
+# 	return __configs.get('timeframes', {}).items()
 
-def isEmpty():
-	return True
-
-def __getConfigState(timeframe:str, config:str, name:str):
+def getConfigState(timeframe:str, config:str):
 	configs = __configs.get('timeframes', {}).get(timeframe, {})
-	return configs.get(config, {}).get(name, False)
+	return configs.get(config, None)
 
-def __setConfigState(timeframe:str, config:str, name:str, value):
-	config = __configs.setdefault('timeframes', {}).setdefault(timeframe, {}).setdefault(config, {})
-	config.setdefault(name, False)
-	config[name] = value
+# def __setConfigState(timeframe:str, config:str, name:str, value):
+# 	config = __configs.setdefault('timeframes', {}).setdefault(timeframe, {}).setdefault(config, {})
+# 	config.setdefault(name, False)
+# 	config[name] = value

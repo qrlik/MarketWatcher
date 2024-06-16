@@ -32,8 +32,6 @@ class DivergenceAccumulatePowerItem(QTableWidgetItem):
         tickerController = watcherController.getTicker(self.__ticker)
         if not tickerController.isValidLastCandle():
             return
-        if not tickerController.isFeeAcceptable():
-            return
     
         maxPower = 0.0
         allPower = 0.0
