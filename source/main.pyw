@@ -58,51 +58,25 @@ if __name__ == "__main__":
     # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
     # stats.print_stats(10) # top 10 rows
         
-# look divergences in rsi indicator
-# move feeController inside tfController, may be cache fee filter results for N days
-# make fixed tf for feeController
+
+
+
+# == TO DO LIST ==
+
+# remove feeController
+# add volumeController with config (tf, factors, dirtyInterval)
+
 # add bored expired color
-# fix bored ago calculate, make fixed tf for it, not lowest    
-# fix divergence actual length for channels!
-# divergence actual range can show breaked divergences
+  
+# fix divergence actual length for channels
+# fix divergence actual range can show breaked divergences
+
+# look divergences in rsi indicator
+# divergence indicator
+# divergence test
+ 
 
 
-# to do channel visualize (remove union may be then)
-# to do can improve channel calculate if store next max/min prices in candle?
-# can check can current ECL cross current min max in future
-
-
-
+# == if add more intervals ==
+# fix bored ago calculate, make fixed tf for it, not lowest  
 # look to actual yfinance multithread lib with less 1d intervals
-# fix getFtpNasdaqData, mb save cached result?
-
-
-       
-        
-# рисовать вертикальную линию на 200 свечей?
-# добавить количество акций в индикатор
-# добавить время закрытия в atr скрипт
-# ограничение по цене и размеру позиции в фильтры (atr > 10 Баксов)
-# bored учитывает только торговые дни?)
-
-
-# to do atr new test
-# to do divergence test
-
-# to do volume * close price indicator
-# сделать индикатор на диверы
-# индикатор на трендовые на RSI
-
-# сделать цвета для тикеров по фильтру, интервальных фильтров (без All), вкладок.
-
-# to do auto order open
-# to do parse data from orders
-
-# to do add color for tickers, tabs
-# to do add price delta for last N filter
-
-# after stock exchange
-# to do save atr data | cleanup unused candles?
-# to do optimize loop
-
-# to do add root logs handler also for binance logs
