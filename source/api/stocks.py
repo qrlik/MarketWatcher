@@ -43,7 +43,7 @@ def getTickersList(withInfo=True):
     tickers = set()
     sp500 = yahoo.tickers_sp500()
     dow = yahoo.tickers_dow()
-    nasdaq = yahoo.tickers_nasdaq(yahoo.NasdaqTier.GLOBAL_SELECT)
+    nasdaq = yahoo.tickers_nasdaq(yahoo.NasdaqTier.ANY)
     #other = si.tickers_other()
 
     tickers.update(sp500)
