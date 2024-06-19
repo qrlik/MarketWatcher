@@ -26,7 +26,7 @@
 		"9": 45,
 		"10": 50
 	},
-	"divergenceActualLength": 50,
+	"divergenceActualLength": 10,
 	"divergenceTrickedFactor": 0.2,
 
 	"volumeAverageSize": 50,

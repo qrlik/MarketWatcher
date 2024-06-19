@@ -238,14 +238,10 @@ class ChannelProcessData:
         self.__updateRelevance(lastCandle, mainLinePrice, minorLinePrice, relevancePercent)
 
     def __updateRelevance(self, lastCandle, mainLinePrice, minorLinePrice, relevancePercent):
-         # to do handle side channel (when angle about zero)
         interestDelta = self.widthPrice * relevancePercent
-        if self.mainLine.getAngle() >= 0:
-            interestSidePrice = minorLinePrice if self.isTop else mainLinePrice
-            self.relevance = lastCandle.close <= interestSidePrice + interestDelta
-        else:
-            interestSidePrice = mainLinePrice if self.isTop else minorLinePrice
-            self.relevance = lastCandle.close >= interestSidePrice - interestDelta
+        topPrice = max(mainLinePrice, minorLinePrice)
+        bottomPrice = min(mainLinePrice, minorLinePrice)
+        self.relevance = lastCandle.close >= topPrice - interestDelta or lastCandle.close <= bottomPrice + interestDelta
 
     def calculateStrengthAndRelevance(self, lastCandle, lastIndex, relevancePercent):
         self.__calculateWidthPrice(lastCandle, lastIndex, relevancePercent)

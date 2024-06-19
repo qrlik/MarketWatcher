@@ -36,7 +36,6 @@ class VolumeController:
         self.__volumes.append(volume)
         if len(self.__volumes) > self.__size:
             self.__summary -= self.__volumes.pop(0)
-        return self.__summary / len(self.__volumes)
 
     def isValid(self):
         if len(self.__volumes) > 0:
@@ -53,11 +52,13 @@ class VolumeController:
             candles = self.__candleController.getCandlesByOpenTime(self.__lastOpenTime)
         if candles is None:
             return self.isValid()
+        if len(candles) > self.__size:
+            candles = candles[-self.__size:]
         
         for candle in candles:
             price = (candle.high + candle.low) / 2
             volumeInMillions = (price * candle.volume) / 1_000_000
-            candle.volume = round(self.__update(volumeInMillions), 2)
+            self.__update(volumeInMillions)
             self.__updateCandles(candle)
         
         return self.isValid()

@@ -5,7 +5,7 @@ from systems import watcherController
 
 from widgets import infoWidget
 from widgets.watcherTableItems import tickerNameItem
-from widgets.watcherTableItems import channelPowerItem
+from widgets.watcherTableItems import powerItem
 from utilities import workMode
 
 __watcherTable:QTableWidget = None
@@ -52,7 +52,7 @@ def initList():
     row = 0
     for ticker in tickers:
         __watcherTable.setItem(row, 0, tickerNameItem.TickerNameItem(ticker))
-        __watcherTable.setItem(row, 1, channelPowerItem.ChannelPowerItem(ticker))
+        __watcherTable.setItem(row, 1, powerItem.PowerItem(ticker))
         row += 1
 
 def sortList():
