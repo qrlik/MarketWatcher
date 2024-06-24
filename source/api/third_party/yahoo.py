@@ -104,7 +104,7 @@ def __isValidCandle(candle, regularMarketTime, sessionStartTime, sessionEndTime)
     or candle[4] == None:
         return False
     if curTime <= sessionEndTime:
-        if not candle[5] or candle[5] >= sessionStartTime:
+        if not candle[6] or candle[6] >= sessionStartTime:
             return False
     if candle[0] % 10 > 0:
         utils.logError('yahoo isValidCandle not zero tail')
@@ -120,7 +120,7 @@ def __parseResponse(data, interval):
     c.low = round(data[3], getPricePrecision(data[3]))
     c.close = round(data[4], getPricePrecision(data[4]))
     c.volume = 0 if data[5] is None else data[5]
-    c.closeTime = data[5] * 1000
+    c.closeTime = data[6] * 1000
     return c
 
 def build_url(ticker, start_date = None, end_date = None, interval = "1d"):

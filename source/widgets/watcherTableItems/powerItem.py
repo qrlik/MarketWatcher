@@ -53,7 +53,7 @@ class PowerItem(QTableWidgetItem):
         return allNewPower > 0.0
 
     def update(self):
-        self.__power = -10.0
+        self.__power = -1.0
         super().setText('')
 
         tickerController = watcherController.getTicker(self.__ticker)
