@@ -63,6 +63,7 @@ if __name__ == "__main__":
 
 # == TO DO LIST ==
 
+#add volume ui text
 # add bored expired color
   
 # fix divergence actual length for channels
