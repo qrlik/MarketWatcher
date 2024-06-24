@@ -1,6 +1,11 @@
 from models import timeframe
-
+from enum import Enum
 from datetime import datetime
+
+class LastCandleState(Enum):
+    INVALID = 0,
+    DIRTY = 1,
+    VALID = 2
 
 class Candle:
     def __init__(self):

@@ -8,6 +8,7 @@ relevanceColor:QColor = Qt.GlobalColor.gray
 notViewedColor:QColor = QColor(255,127,80)
 zeroColor:QColor = Qt.GlobalColor.darkGray
 invalidLastCandleColor:QColor = Qt.GlobalColor.red
+dirtyLastCandleColor:QColor = QColor(245, 122, 98)
 invalidVolumeColor:QColor = Qt.GlobalColor.darkBlue
 boredColor:QColor = Qt.GlobalColor.darkYellow
 defaultBgColor:QColor = QColor(45, 45, 45)

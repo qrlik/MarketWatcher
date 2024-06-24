@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from models import timeframe
+from models.candle import LastCandleState
 from systems import cacheController
 from systems import configController
 from systems import timeframeController
@@ -31,7 +32,7 @@ class TickerController:
         self.__ticker = ticker
         self.__info = parseTickerInfo(info)
         self.__timeframes:OrderedDict = OrderedDict()
-        self.__validLastCandle = True
+        self.__validLastCandle = LastCandleState.VALID
         self.__validVolume = True
 
     def init(self):
@@ -42,11 +43,14 @@ class TickerController:
             tfController = timeframeController.TimeframeController(tf, self)
             self.__timeframes.setdefault(tf, tfController)
     
-    def setInvalidLastCandle(self):
-        self.__validLastCandle = False
+    def setInvalidLastCandle(self, state):
+        self.__validLastCandle = state
 
-    def isValidLastCandle(self):
-        return self.__validLastCandle
+    def isInvalidLastCandle(self):
+        return self.__validLastCandle == LastCandleState.INVALID
+    
+    def isDirtyLastCandle(self):
+        return self.__validLastCandle == LastCandleState.DIRTY
     
     def isValidVolume(self):
         return self.__validVolume

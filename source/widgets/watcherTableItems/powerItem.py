@@ -57,7 +57,7 @@ class PowerItem(QTableWidgetItem):
         super().setText('')
 
         tickerController = watcherController.getTicker(self.__ticker)
-        if not tickerController.isValidLastCandle():
+        if tickerController.isInvalidLastCandle():
             self.__power = -9.0
             return
         if not tickerController.isValidVolume():

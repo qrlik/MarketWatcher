@@ -18,11 +18,14 @@ class TickerNameItem(QTableWidgetItem):
 
     def update(self):
         tickerController = watcherController.getTicker(self.__ticker)
-        if not tickerController.isValidLastCandle():
+        if tickerController.isInvalidLastCandle():
             super().setForeground(guiDefines.invalidLastCandleColor)
             return
         if not tickerController.isValidVolume():
             super().setForeground(guiDefines.invalidVolumeColor)
+            return
+        if tickerController.isDirtyLastCandle():
+            super().setForeground(guiDefines.dirtyLastCandleColor)
             return
         
         positionColor = userDataController.getTickerUserData(self.__ticker).getPositionColor()
