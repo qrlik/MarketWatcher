@@ -303,7 +303,7 @@ class ChannelController:
     def getPowers(self):
         powers = ChannelsPowersInfo()
         for channel in self.__channels:
-            if channel.relevance is not ChannelRelevanceType.NONE:
+            if channel.relevanceBool:
                 powers.maxRelevancePower = max(powers.maxRelevancePower, channel.strength)
                 powers.relevancePower += channel.strength
                 if not channel.viewed:
@@ -334,7 +334,7 @@ class ChannelController:
 
         self.__channels.sort(key=lambda channel : channel.length, reverse=True)
         self.__unionChannelsByLength()
-        self.__channels.sort(key=lambda channel : (channel.relevance, channel.strength), reverse=True)
+        self.__channels.sort(key=lambda channel : (channel.relevanceBool, channel.strength), reverse=True)
         self.__createReadableInfo()
 
         cacheController.updateViewedChannels(self.__candleController.getTicker(), self.__candleController.getTimeframe().name, self.__channels)

@@ -214,6 +214,7 @@ class ChannelProcessData:
         self.widthPrice = None
         self.strength = None
         self.relevance = ChannelRelevanceType.NONE
+        self.relevanceBool = False
 
     def __makeZones(self, container):
         if len(container) == 0:
@@ -250,6 +251,7 @@ class ChannelProcessData:
             self.relevance = ChannelRelevanceType.BEAR
         elif lastCandle.close <= bottomPrice + interestDelta:
             self.relevance = ChannelRelevanceType.BULL
+        self.relevanceBool = self.relevance != ChannelRelevanceType.NONE
 
     def calculateStrengthAndRelevance(self, lastCandle, lastIndex, relevancePercent):
         self.__calculateWidthPrice(lastCandle, lastIndex, relevancePercent)
@@ -335,6 +337,7 @@ class Channel:
         self.widthPrice = None
         self.strength = None
         self.relevance = ChannelRelevanceType.NONE
+        self.relevanceBool = False
         self.viewed = False
 
     def __calculateWidthPercent(self, mainPrice):
@@ -393,6 +396,7 @@ class Channel:
         c.widthPrice = data.widthPrice
         c.strength = data.strength
         c.relevance = data.relevance
+        c.relevanceBool = data.relevanceBool
 
         return c
 
