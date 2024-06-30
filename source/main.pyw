@@ -62,9 +62,10 @@ if __name__ == "__main__":
 
 
 # == TO DO LIST ==
-
-#add volume ui text
+# Add Hidden divers to analys!
 # add bored expired color
+# add volume ui text
+# check RTH/ETH yahoo response?
   
 # fix divergence actual length for channels
 # fix divergence actual range can show breaked divergences

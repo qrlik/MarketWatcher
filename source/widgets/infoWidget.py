@@ -10,6 +10,7 @@ from systems import watcherController
 from utilities import guiDefines
 from utilities import workMode
 from utilities import utils
+from utilities.channelUtils import ChannelRelevanceType
 
 from datetime import date
 import pyperclip
@@ -358,11 +359,17 @@ def __updateChannelTable():
     row = 0
     headers = []
     for tf, channel in channels:
-        color = guiDefines.bearColor if channel.angle < 0 else guiDefines.bullColor
-        relevanceColor = guiDefines.relevanceColor if channel.relevance else guiDefines.defaultBgColor
-        __channelTable.item(row, 0).setText('BEAR' if channel.angle < 0 else 'BULL')
+        color = guiDefines.defaultFontColor
+        text = 'DOWN' if channel.angle < 0 else 'UP'
+        if channel.relevance is ChannelRelevanceType.BEAR:
+            color = guiDefines.bearColor
+            text = 'BEAR'
+        elif channel.relevance is ChannelRelevanceType.BULL:
+            color = guiDefines.bullColor
+            text = 'BULL'
+
+        __channelTable.item(row, 0).setText(text)
         __channelTable.item(row, 0).setForeground(color)
-        __channelTable.item(row, 0).setBackground(relevanceColor)
         __channelTable.item(row, 1).setText(str(round(channel.strength, 2)))
         __channelTable.item(row, 1).setForeground(guiDefines.defaultFontColor if channel.viewed else guiDefines.notViewedColor)
 

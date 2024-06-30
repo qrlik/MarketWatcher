@@ -1,7 +1,7 @@
 from api import stocks
 from systems.vertexController import VertexType
 
-from enum import IntEnum
+from enum import IntEnum, Enum
 import sys
 import math
 
@@ -194,6 +194,11 @@ class ChannelZone:
 
 
 
+class ChannelRelevanceType(Enum):
+    NONE = 0,
+    BULL = 1,
+    BEAR = 2
+
 class ChannelProcessData:
     def __init__(self, length, zonePrecisionPercent, line1:LineFormula, vertex2):
         self.isTop = None
@@ -208,7 +213,7 @@ class ChannelProcessData:
         self.width = line1.getDeltaY(vertex2[0], vertex2[1])
         self.widthPrice = None
         self.strength = None
-        self.relevance = None
+        self.relevance = ChannelRelevanceType.NONE
 
     def __makeZones(self, container):
         if len(container) == 0:
@@ -241,7 +246,10 @@ class ChannelProcessData:
         interestDelta = self.widthPrice * relevancePercent
         topPrice = max(mainLinePrice, minorLinePrice)
         bottomPrice = min(mainLinePrice, minorLinePrice)
-        self.relevance = lastCandle.close >= topPrice - interestDelta or lastCandle.close <= bottomPrice + interestDelta
+        if lastCandle.close >= topPrice - interestDelta:
+            self.relevance = ChannelRelevanceType.BEAR
+        elif lastCandle.close <= bottomPrice + interestDelta:
+            self.relevance = ChannelRelevanceType.BULL
 
     def calculateStrengthAndRelevance(self, lastCandle, lastIndex, relevancePercent):
         self.__calculateWidthPrice(lastCandle, lastIndex, relevancePercent)
@@ -326,7 +334,7 @@ class Channel:
         self.widthPercent = None
         self.widthPrice = None
         self.strength = None
-        self.relevance = None
+        self.relevance = ChannelRelevanceType.NONE
         self.viewed = False
 
     def __calculateWidthPercent(self, mainPrice):
@@ -340,7 +348,7 @@ class Channel:
             self.widthPercent = (1 - division) * 100
 
     def __str__(self):
-        result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t' + str(self.relevance) + '\n'
+        result = str(self.length) + '\t' + str(round(self.strength, 2)) + '\t' + self.relevance.name + '\n'
         if self.isTop:
             result += str(self.mainPoint_1) + str(self.mainPoint_2) + ' | '
             result += str(self.minorPoint)

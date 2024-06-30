@@ -6,8 +6,7 @@ from utilities.channelUtils import VertexProcessData
 from utilities.channelUtils import LineFormula
 from utilities.channelUtils import LinesData
 from utilities.channelUtils import VertexLinesData
-from utilities.channelUtils import Channel
-from utilities.channelUtils import ChannelProcessData
+from utilities.channelUtils import Channel, ChannelRelevanceType, ChannelProcessData
 from utilities.channelUtils import ZoneComparisonResult
 
 import math
@@ -304,7 +303,7 @@ class ChannelController:
     def getPowers(self):
         powers = ChannelsPowersInfo()
         for channel in self.__channels:
-            if channel.relevance:
+            if channel.relevance is not ChannelRelevanceType.NONE:
                 powers.maxRelevancePower = max(powers.maxRelevancePower, channel.strength)
                 powers.relevancePower += channel.strength
                 if not channel.viewed:
