@@ -35,7 +35,7 @@ class PowerItem(QTableWidgetItem):
         allPower = 0.0
         allNewPower = 0.0
         for _, controller in watcherController.getTicker(self.__ticker).getFilteredTimeframes().items():
-            powers = controller.getDivergenceController().getRegularPowers()
+            powers = controller.getDivergenceController().getPowers()
 
             if powers.bullPower <= 0.0 and powers.bearPower <= 0.0: # tf filter && logic
                 allPower = 0.0

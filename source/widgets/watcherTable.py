@@ -81,7 +81,7 @@ def __updateRatio():
         bullPower = 0.0
         bearPower = 0.0
         for _, timeframeController in tickerController.getFilteredTimeframes().items():
-            powers = timeframeController.getDivergenceController().getRegularPowers()
+            powers = timeframeController.getDivergenceController().getPowers()
             bullPower += powers.bullPower
             bearPower += powers.bearPower
         isBullPower = bullPower > 0.0

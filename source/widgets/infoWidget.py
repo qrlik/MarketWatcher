@@ -423,7 +423,7 @@ def __updateDivergenceTable():
         __divergenceTable.item(row, 1).setForeground(guiDefines.defaultFontColor if divergence.viewed else guiDefines.notViewedColor)
         __divergenceTable.item(row, 2).setText(str(round(divergence.breakPercents, 2)))
         __divergenceTable.item(row, 3).setText(str(divergence.secondIndex - divergence.firstIndex))
-        __divergenceTable.item(row, 4).setText(divergence.firstCandle.time[:-5])
+        __divergenceTable.item(row, 4).setText(divergence.firstCandle.time[:-3])
         headers.append(timeframe.timeframeToPrettyStr[tf])
         row += 1
 
