@@ -467,13 +467,6 @@
             "Software",
             26
         ],
-        "ADTH": [
-            "ADTHEORENT HOLDINGS CO INC",
-            "COMMON",
-            "Communications",
-            "Advertising",
-            557
-        ],
         "ADTN": [
             "ADTRAN HOLDINGS INC",
             "COMMON",
@@ -731,6 +724,13 @@
             "ADR",
             "Technology",
             "Software",
+            557
+        ],
+        "AIEV": [
+            "THUNDER POWER HOLDINGS INC",
+            "COMMON",
+            "Consumer, Cyclical",
+            "Auto Manufacturers",
             557
         ],
         "AIG": [
@@ -1040,6 +1040,13 @@
             "Communications",
             "Internet",
             557
+        ],
+        "ALMS": [
+            "ALUMIS INC",
+            "COMMON",
+            "Consumer, Non-cyclical",
+            "Biotechnology",
+            26
         ],
         "ALNT": [
             "ALLIENT INC",
@@ -2138,7 +2145,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            557
+            26
         ],
         "ATRC": [
             "ATRICURE INC",
@@ -2343,13 +2350,6 @@
             "Software",
             26
         ],
-        "AVRO": [
-            "AVROBIO INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Biotechnology",
-            557
-        ],
         "AVT": [
             "AVNET INC",
             "COMMON",
@@ -2362,7 +2362,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            26
+            557
         ],
         "AVTX": [
             "AVALO THERAPEUTICS INC",
@@ -2391,13 +2391,6 @@
             "Consumer, Non-cyclical",
             "Healthcare-Products",
             557
-        ],
-        "AWIN": [
-            "AERWINS TECHNOLOGIES INC",
-            "COMMON",
-            "Industrial",
-            "Aerospace/Defense",
-            26
         ],
         "AWK": [
             "AMERICAN WATER WORKS CO INC",
@@ -2600,7 +2593,7 @@
             "COMMON",
             "Communications",
             "Internet",
-            26
+            557
         ],
         "BASE": [
             "COUCHBASE INC",
@@ -2894,7 +2887,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            26
+            557
         ],
         "BFRI": [
             "BIOFRONTERA INC",
@@ -3022,13 +3015,6 @@
             "Biotechnology",
             26
         ],
-        "BIOL": [
-            "BIOLASE INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Healthcare-Products",
-            557
-        ],
         "BIOR": [
             "BIORA THERAPEUTICS INC",
             "COMMON",
@@ -3065,7 +3051,7 @@
             557
         ],
         "BJDX": [
-            "BLUEJAY DIAGNOSTICS INC ",
+            "BLUEJAY DIAGNOSTICS INC",
             "COMMON",
             "Consumer, Non-cyclical",
             "Healthcare-Products",
@@ -3505,13 +3491,6 @@
             "Pipelines",
             557
         ],
-        "BRSH": [
-            "BRUUSH ORAL CARE INC ",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Cosmetics/Personal Care",
-            557
-        ],
         "BRTX": [
             "BIORESTORATIVE THERAPIES INC",
             "COMMON",
@@ -3552,7 +3531,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Food",
-            26
+            557
         ],
         "BSRR": [
             "SIERRA BANCORP",
@@ -3744,7 +3723,7 @@
             26
         ],
         "BXP": [
-            "BOSTON PROPERTIES INC",
+            "BXP INC",
             "REIT",
             "Financial",
             "REITS",
@@ -4217,7 +4196,7 @@
             "COMMON",
             "Financial",
             "Investment Companies",
-            26
+            557
         ],
         "CDIO": [
             "CARDIO DIAGNOSTICS HOLDINGS",
@@ -4933,19 +4912,12 @@
             "Household Products/Wares",
             26
         ],
-        "CMA": [
-            "COMERICA INC",
-            "COMMON",
-            "Financial",
-            "Banks",
-            26
-        ],
         "CMAX": [
             "CAREMAX INC",
             "COMMON",
             "Consumer, Non-cyclical",
             "Healthcare-Services",
-            26
+            557
         ],
         "CMBM": [
             "CAMBIUM NETWORKS CORP",
@@ -5127,7 +5099,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            26
+            557
         ],
         "CNTA": [
             "CENTESSA PHARMACEUTICALS-ADR",
@@ -5302,7 +5274,7 @@
             "COMMON",
             "Consumer, Cyclical",
             "Retail",
-            26
+            557
         ],
         "COO": [
             "COOPER COS INC/THE",
@@ -5568,7 +5540,7 @@
             "COMMON",
             "Industrial",
             "Building Materials",
-            557
+            26
         ],
         "CRL": [
             "CHARLES RIVER LABORATORIES",
@@ -6550,13 +6522,6 @@
             "Software",
             26
         ],
-        "DMTK": [
-            "DERMTECH INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Healthcare-Products",
-            557
-        ],
         "DNLI": [
             "DENALI THERAPEUTICS INC",
             "COMMON",
@@ -6716,7 +6681,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Healthcare-Products",
-            26
+            557
         ],
         "DRUG": [
             "BRIGHT MINDS BIOSCIENCES INC",
@@ -7962,7 +7927,7 @@
             "ADR",
             "Financial",
             "Insurance",
-            26
+            557
         ],
         "FARM": [
             "FARMER BROS CO",
@@ -8550,7 +8515,7 @@
             "COMMON",
             "Industrial",
             "Electronics",
-            557
+            26
         ],
         "FORM": [
             "FORMFACTOR INC",
@@ -9049,6 +9014,13 @@
             "Environmental Control",
             557
         ],
+        "GDDY": [
+            "GODADDY INC - CLASS A",
+            "COMMON",
+            "Communications",
+            "Internet",
+            26
+        ],
         "GDEN": [
             "GOLDEN ENTERTAINMENT INC",
             "COMMON",
@@ -9432,14 +9404,14 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            26
+            557
         ],
         "GNPX": [
             "GENPREX INC",
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            26
+            557
         ],
         "GNRC": [
             "GENERAC HOLDINGS INC",
@@ -9602,8 +9574,8 @@
             "Internet",
             26
         ],
-        "GRALV": [
-            "GRAIL INC-WI",
+        "GRAL": [
+            "GRAIL INC",
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
@@ -9612,8 +9584,8 @@
         "GRDI": [
             "GRIID INFRASTRUCTURE INC",
             "COMMON",
-            "Consumer, Non-cyclical",
-            "Commercial Services",
+            "Financial",
+            "Investment Companies",
             557
         ],
         "GREE": [
@@ -10126,13 +10098,6 @@
             "Financial",
             "Banks",
             26
-        ],
-        "HGAS": [
-            "GLOBAL GAS CORP",
-            "COMMON",
-            "Basic Materials",
-            "Chemicals",
-            557
         ],
         "HGBL": [
             "HERITAGE GLOBAL INC",
@@ -11067,13 +11032,6 @@
         ],
         "ILMN": [
             "ILLUMINA INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Biotechnology",
-            26
-        ],
-        "ILMNV": [
-            "ILLUMINA INC-WI",
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
@@ -12318,6 +12276,13 @@
             "Commercial Services",
             557
         ],
+        "KKR": [
+            "KKR & CO INC",
+            "COMMON",
+            "Financial",
+            "Private Equity",
+            26
+        ],
         "KLAC": [
             "KLA CORP",
             "COMMON",
@@ -12382,7 +12347,7 @@
             557
         ],
         "KNSA": [
-            "KINIKSA PHARMACEUTICALS-A",
+            "KINIKSA PHARMACEUTICALS INTERN",
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
@@ -13077,8 +13042,8 @@
         "LIPO": [
             "LIPELLA PHARMACEUTICALS INC",
             "COMMON",
-            "",
-            "",
+            "Consumer, Non-cyclical",
+            "Biotechnology",
             557
         ],
         "LIQT": [
@@ -13086,7 +13051,7 @@
             "COMMON",
             "Industrial",
             "Miscellaneous Manufactur",
-            26
+            557
         ],
         "LITE": [
             "LUMENTUM HOLDINGS INC",
@@ -13240,7 +13205,7 @@
             "COMMON",
             "Consumer, Cyclical",
             "Leisure Time",
-            26
+            557
         ],
         "LOCO": [
             "EL POLLO LOCO HOLDINGS INC",
@@ -13436,6 +13401,13 @@
             "COMMON",
             "Consumer, Cyclical",
             "Home Builders",
+            26
+        ],
+        "LSH": [
+            "LAKESIDE HOLDING LTD",
+            "COMMON",
+            "Industrial",
+            "Transportation",
             26
         ],
         "LSTA": [
@@ -13660,7 +13632,7 @@
             "COMMON",
             "Consumer, Cyclical",
             "Entertainment",
-            26
+            557
         ],
         "LYTS": [
             "LSI INDUSTRIES INC",
@@ -14120,8 +14092,8 @@
         "MFH": [
             "MERCURITY FINTECH HOLDING IN",
             "COMMON",
-            "Financial",
-            "Investment Companies",
+            "Consumer, Non-cyclical",
+            "Commercial Services",
             557
         ],
         "MFI": [
@@ -14281,8 +14253,8 @@
         "MIGI": [
             "MAWSON INFRASTRUCTURE GROUP",
             "COMMON",
-            "Technology",
-            "Software",
+            "Financial",
+            "Investment Companies",
             557
         ],
         "MIND": [
@@ -14850,7 +14822,7 @@
             "COMMON",
             "Industrial",
             "Miscellaneous Manufactur",
-            26
+            557
         ],
         "MSBI": [
             "MIDLAND STATES BANCORP INC",
@@ -15515,7 +15487,7 @@
             "COMMON",
             "Consumer, Cyclical",
             "Auto Manufacturers",
-            557
+            26
         ],
         "NKSH": [
             "NATIONAL BANKSHARES INC/VA",
@@ -15900,7 +15872,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Healthcare-Products",
-            557
+            26
         ],
         "NUZE": [
             "NUZEE INC",
@@ -16474,7 +16446,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            557
+            26
         ],
         "ON": [
             "ON SEMICONDUCTOR",
@@ -18350,7 +18322,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Pharmaceuticals",
-            557
+            26
         ],
         "QLYS": [
             "QUALYS INC",
@@ -18700,7 +18672,7 @@
             "COMMON",
             "Financial",
             "Insurance",
-            26
+            557
         ],
         "REAL": [
             "REALREAL INC/THE",
@@ -18722,6 +18694,13 @@
             "Consumer, Non-cyclical",
             "Beverages",
             557
+        ],
+        "RECT": [
+            "RECTITUDE HOLDINGS LTD",
+            "COMMON",
+            "Industrial",
+            "Electronics",
+            26
         ],
         "REE": [
             "REE AUTOMOTIVE LTD - CLASS A",
@@ -18912,13 +18891,6 @@
             "Computers",
             557
         ],
-        "RHI": [
-            "ROBERT HALF INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Commercial Services",
-            26
-        ],
         "RICK": [
             "RCI HOSPITALITY HOLDINGS INC",
             "COMMON",
@@ -18931,7 +18903,7 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Biotechnology",
-            557
+            26
         ],
         "RILY": [
             "B. RILEY FINANCIAL INC",
@@ -20326,6 +20298,13 @@
             "Pharmaceuticals",
             26
         ],
+        "SLRX": [
+            "SALARIUS PHARMACEUTICALS INC",
+            "COMMON",
+            "Consumer, Non-cyclical",
+            "Biotechnology",
+            26
+        ],
         "SLS": [
             "SELLAS LIFE SCIENCES GROUP I",
             "COMMON",
@@ -21124,6 +21103,13 @@
             "Biotechnology",
             557
         ],
+        "STRR": [
+            "STAR EQUITY HOLDINGS INC",
+            "COMMON",
+            "Industrial",
+            "Engineering&Construction",
+            26
+        ],
         "STRS": [
             "STRATUS PROPERTIES INC",
             "COMMON",
@@ -21621,13 +21607,6 @@
             "Internet",
             26
         ],
-        "TCON": [
-            "TRACON PHARMACEUTICALS INC",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Pharmaceuticals",
-            557
-        ],
         "TCPC": [
             "BLACKROCK TCP CAPITAL CORP",
             "COMMON",
@@ -21696,6 +21675,13 @@
             "COMMON",
             "Consumer, Non-cyclical",
             "Healthcare-Products",
+            26
+        ],
+        "TECX": [
+            "TECTONIC THERAPEUTIC INC",
+            "COMMON",
+            "Consumer, Non-cyclical",
+            "Biotechnology",
             26
         ],
         "TEL": [
@@ -21789,13 +21775,6 @@
             "Healthcare-Products",
             26
         ],
-        "TGAN": [
-            "TRANSPHORM INC",
-            "COMMON",
-            "Industrial",
-            "Machinery-Constr&Mining",
-            557
-        ],
         "TGL": [
             "TREASURE GLOBAL INC",
             "COMMON",
@@ -21844,13 +21823,6 @@
             "Financial",
             "Banks",
             26
-        ],
-        "THMO": [
-            "THERMOGENESIS HOLDINGS INC  ",
-            "COMMON",
-            "Consumer, Non-cyclical",
-            "Healthcare-Products",
-            557
         ],
         "THRD": [
             "THIRD HARMONIC BIO INC",
@@ -22235,7 +22207,7 @@
             "COMMON",
             "Technology",
             "Software",
-            26
+            557
         ],
         "TRNS": [
             "TRANSCAT INC",
@@ -22312,7 +22284,7 @@
             "ADR",
             "Communications",
             "Internet",
-            26
+            557
         ],
         "TRVI": [
             "TREVI THERAPEUTICS INC",
@@ -23609,6 +23581,13 @@
             "Distribution/Wholesale",
             26
         ],
+        "VSEE": [
+            "VSEE HEALTH INC",
+            "COMMON",
+            "Technology",
+            "Software",
+            26
+        ],
         "VSME": [
             "VS MEDIA HOLDINGS LTD-CL A",
             "COMMON",
@@ -23847,6 +23826,13 @@
             "Media",
             26
         ],
+        "WBTN": [
+            "WEBTOON ENTERTAINMENT INC",
+            "COMMON",
+            "Consumer, Cyclical",
+            "Entertainment",
+            26
+        ],
         "WBUY": [
             "WEBUY GLOBAL LTD",
             "COMMON",
@@ -23895,6 +23881,13 @@
             "Consumer, Cyclical",
             "Retail",
             26
+        ],
+        "WENA": [
+            "ANEW MEDICAL INC",
+            "COMMON",
+            "Consumer, Non-cyclical",
+            "Biotechnology",
+            557
         ],
         "WERN": [
             "WERNER ENTERPRISES INC",
@@ -23971,7 +23964,7 @@
             "REIT",
             "Financial",
             "REITS",
-            557
+            26
         ],
         "WILC": [
             "G. WILLI-FOOD INTERNATIONAL",
@@ -24034,6 +24027,13 @@
             "ADR",
             "Technology",
             "Semiconductors",
+            557
+        ],
+        "WKHS": [
+            "WORKHORSE GROUP INC",
+            "COMMON",
+            "Consumer, Cyclical",
+            "Auto Manufacturers",
             557
         ],
         "WKME": [
@@ -24776,7 +24776,7 @@
             "COMMON",
             "Industrial",
             "Electrical Compo&Equip",
-            26
+            557
         ],
         "ZPTA": [
             "ZAPATA COMPUTING HOLDINGS IN",
@@ -24850,12 +24850,6 @@
         ]
     },
     "exceptions": {
-        "": [
-            "HYDR",
-            "SLRX",
-            "STRR",
-            "WKHS"
-        ],
         "CLOSED-END FUND": [
             "CCD",
             "CGO",
@@ -24905,6 +24899,7 @@
             "BWAQ",
             "BYNO",
             "CBRG",
+            "CCIX",
             "CCTS",
             "CDAQ",
             "CETU",
@@ -24913,11 +24908,9 @@
             "CLOE",
             "CLRC",
             "CNGL",
-            "COOL",
             "CSLM",
             "CVII",
             "DECA",
-            "DHAC",
             "DIST",
             "DPCS",
             "DUET",
@@ -24928,7 +24921,6 @@
             "EVGR",
             "FEXD",
             "FIAC",
-            "FLFV",
             "FNVT",
             "FORL",
             "FRLA",
@@ -24942,7 +24934,6 @@
             "GLAC",
             "GLLI",
             "GLST",
-            "GMFI",
             "GODN",
             "GPAC",
             "GTAC",
@@ -25002,7 +24993,6 @@
             "RENE",
             "RFAC",
             "ROCL",
-            "RWOD",
             "SEPA",
             "SKGR",
             "SLAM",
@@ -25069,6 +25059,7 @@
             "BBH",
             "BDGS",
             "BEEZ",
+            "BELT",
             "BGRN",
             "BGRO",
             "BIB",
@@ -25081,10 +25072,12 @@
             "BLCN",
             "BLCR",
             "BLLD",
+            "BMDL",
             "BND",
             "BNDW",
             "BNDX",
             "BOTT",
+            "BRHY",
             "BRNY",
             "BRRR",
             "BRTR",
@@ -25216,6 +25209,7 @@
             "ETEC",
             "EUFN",
             "EVMT",
+            "EVSD",
             "EWJV",
             "EWZS",
             "EYEG",
@@ -25296,6 +25290,7 @@
             "GGLL",
             "GGLS",
             "GINX",
+            "GLOW",
             "GNMA",
             "GNOM",
             "GOVI",
@@ -25315,6 +25310,7 @@
             "HNDL",
             "HQGO",
             "HRTS",
+            "HYDR",
             "HYLS",
             "HYXF",
             "HYZD",
@@ -25503,6 +25499,7 @@
             "QQQM",
             "QQQN",
             "QQQS",
+            "QQQT",
             "QQQY",
             "QQXT",
             "QRMI",
@@ -25889,7 +25886,6 @@
             "EMCGR",
             "ESHAR",
             "FEXDR",
-            "FLFVR",
             "GBBKR",
             "GDSTR",
             "GLACR",
@@ -25916,8 +25912,6 @@
             "QETAR",
             "QOMOR",
             "RFACR",
-            "RWODR",
-            "SIFYR",
             "SVIIR",
             "TBMCR",
             "TENKR",
@@ -25978,11 +25972,10 @@
             "CLOEU",
             "CLRCU",
             "CNGLU",
-            "COOLU",
             "CSLMU",
+            "CUBWU",
             "CVIIU",
             "DECAU",
-            "DHACU",
             "DPCSU",
             "DUETU",
             "DYCQU",
@@ -25991,10 +25984,10 @@
             "EVGRU",
             "FEXDU",
             "FIACU",
-            "FLFVU",
             "FNVTU",
             "FORLU",
             "FRLAU",
+            "FSHPU",
             "FTIIU",
             "GAMCU",
             "GATEU",
@@ -26003,7 +25996,6 @@
             "GLACU",
             "GLLIU",
             "GLSTU",
-            "GMFIU",
             "GODNU",
             "GPACU",
             "GPATU",
@@ -26031,6 +26023,7 @@
             "KVACU",
             "LATGU",
             "MACAU",
+            "MACIU",
             "MAQCU",
             "MARXU",
             "MCAAU",
@@ -26062,7 +26055,6 @@
             "RFACU",
             "RFAIU",
             "ROCLU",
-            "RWODU",
             "SEPAU",
             "SKGRU",
             "SLAMU",
@@ -26094,7 +26086,6 @@
             "ACONW",
             "ADNWW",
             "ADSEW",
-            "ADTHW",
             "ADVWW",
             "AEAEW",
             "AENTW",
@@ -26122,7 +26113,6 @@
             "AREBW",
             "ARKOW",
             "ARQQW",
-            "ARTLW",
             "ASCBW",
             "ASTLW",
             "ASTSW",
@@ -26131,7 +26121,6 @@
             "AUROW",
             "AUUDW",
             "AVPTW",
-            "AWINW",
             "BAERW",
             "BBLGW",
             "BCDAW",
@@ -26158,7 +26147,6 @@
             "BRKHW",
             "BRLSW",
             "BROGW",
-            "BRSHW",
             "BTBDW",
             "BTCTW",
             "BTMWW",
@@ -26166,9 +26154,9 @@
             "BWAQW",
             "BYNOW",
             "BZFDW",
-            "CACG",
             "CAPTW",
             "CCGWW",
+            "CCIXW",
             "CCTSW",
             "CDAQW",
             "CDIOW",
@@ -26193,7 +26181,6 @@
             "CNGLW",
             "COCHW",
             "COEPW",
-            "COOLW",
             "COOTW",
             "CORZW",
             "CORZZ",
@@ -26215,7 +26202,6 @@
             "DBGIW",
             "DECAW",
             "DFLIW",
-            "DHACW",
             "DHAIW",
             "DISTW",
             "DJTWW",
@@ -26246,7 +26232,6 @@
             "FFIEW",
             "FGIWW",
             "FIACW",
-            "FLFVW",
             "FMSTW",
             "FNVTW",
             "FORLW",
@@ -26254,7 +26239,7 @@
             "FRLAW",
             "FTIIW",
             "FUFUW",
-            "File Creation Time: 0614202421:31",
+            "File Creation Time: 0628202421:31",
             "GAMCW",
             "GATEW",
             "GBBKW",
@@ -26267,7 +26252,6 @@
             "GIPRW",
             "GLLIW",
             "GLSTW",
-            "GMFIW",
             "GOEVW",
             "GOVXW",
             "GPACW",
@@ -26279,7 +26263,6 @@
             "GTACW",
             "HAIAW",
             "HCVIW",
-            "HGASW",
             "HHGCW",
             "HOFVW",
             "HOLOW",
@@ -26442,7 +26425,6 @@
             "RVMDW",
             "RVPHW",
             "RVSNW",
-            "RWODW",
             "SABSW",
             "SAITW",
             "SATLW",
@@ -26462,7 +26444,6 @@
             "SLNAW",
             "SMXWW",
             "SNAXW",
-            "SNPO",
             "SONDW",
             "SOUNW",
             "SPECW",
@@ -26499,11 +26480,13 @@
             "VMCAW",
             "VRMEW",
             "VSACW",
+            "VSEEW",
             "VSSYW",
             "VSTEW",
             "VWEWW",
             "WALDW",
             "WAVSW",
+            "WENAW",
             "WESTW",
             "WGSWW",
             "WINVW",
@@ -26532,16 +26515,6 @@
         ]
     },
     "backets": {
-        "": {
-            "": {
-                "": [
-                    "HYDR",
-                    "SLRX",
-                    "STRR",
-                    "WKHS"
-                ]
-            }
-        },
         "ADR": {
             "Technology": {
                 "Software": [
@@ -26875,7 +26848,6 @@
                     "AZTA",
                     "BAX",
                     "BEAT",
-                    "BIOL",
                     "BIOR",
                     "BJDX",
                     "BLFS",
@@ -26901,7 +26873,6 @@
                     "DCTH",
                     "DHAI",
                     "DHR",
-                    "DMTK",
                     "DRTS",
                     "DXR",
                     "DYNT",
@@ -27012,7 +26983,6 @@
                     "TCMD",
                     "TECH",
                     "TFX",
-                    "THMO",
                     "TIVC",
                     "TLIS",
                     "TMCI",
@@ -27064,6 +27034,7 @@
                     "ALLK",
                     "ALLO",
                     "ALLR",
+                    "ALMS",
                     "ALNY",
                     "ALRN",
                     "ALT",
@@ -27101,7 +27072,6 @@
                     "AURA",
                     "AVBP",
                     "AVIR",
-                    "AVRO",
                     "AVTE",
                     "AVTX",
                     "AVXL",
@@ -27240,7 +27210,7 @@
                     "GNPX",
                     "GOSS",
                     "GOVX",
-                    "GRALV",
+                    "GRAL",
                     "GTBP",
                     "HALO",
                     "HBIO",
@@ -27257,7 +27227,6 @@
                     "IGMS",
                     "IKNA",
                     "ILMN",
-                    "ILMNV",
                     "IMMX",
                     "IMNM",
                     "IMNN",
@@ -27306,6 +27275,7 @@
                     "LEXX",
                     "LGND",
                     "LGVN",
+                    "LIPO",
                     "LQDA",
                     "LRMR",
                     "LSB",
@@ -27434,6 +27404,7 @@
                     "SHPH",
                     "SILO",
                     "SLDB",
+                    "SLRX",
                     "SNDX",
                     "SNES",
                     "SNPX",
@@ -27458,6 +27429,7 @@
                     "TBPH",
                     "TCRT",
                     "TCRX",
+                    "TECX",
                     "TELA",
                     "TENX",
                     "TERN",
@@ -27508,6 +27480,7 @@
                     "VVOS",
                     "VXRT",
                     "VYNE",
+                    "WENA",
                     "WINT",
                     "WVE",
                     "XBIO",
@@ -27735,7 +27708,6 @@
                     "SXTP",
                     "SYRE",
                     "SYRS",
-                    "TCON",
                     "TELO",
                     "TFFP",
                     "THTX",
@@ -27867,7 +27839,6 @@
                     "FORR",
                     "GFAI",
                     "GPN",
-                    "GRDI",
                     "GV",
                     "HCKT",
                     "HCSG",
@@ -27896,6 +27867,7 @@
                     "MATH",
                     "MATW",
                     "MCO",
+                    "MFH",
                     "MKTW",
                     "MKTX",
                     "MNRO",
@@ -27920,7 +27892,6 @@
                     "RELY",
                     "RENT",
                     "RGP",
-                    "RHI",
                     "ROL",
                     "ROMA",
                     "RPAY",
@@ -27954,7 +27925,6 @@
                 "Cosmetics/Personal Care": [
                     "AIMD",
                     "ATPC",
-                    "BRSH",
                     "CL",
                     "DSY",
                     "EL",
@@ -28103,6 +28073,7 @@
                     "BWAQ",
                     "BYNO",
                     "CBRG",
+                    "CCIX",
                     "CCTS",
                     "CDAQ",
                     "CETU",
@@ -28111,11 +28082,9 @@
                     "CLOE",
                     "CLRC",
                     "CNGL",
-                    "COOL",
                     "CSLM",
                     "CVII",
                     "DECA",
-                    "DHAC",
                     "DIST",
                     "DPCS",
                     "DUET",
@@ -28126,7 +28095,6 @@
                     "EVGR",
                     "FEXD",
                     "FIAC",
-                    "FLFV",
                     "FNVT",
                     "FORL",
                     "FRLA",
@@ -28140,7 +28108,6 @@
                     "GLAC",
                     "GLLI",
                     "GLST",
-                    "GMFI",
                     "GODN",
                     "GPAC",
                     "GTAC",
@@ -28200,7 +28167,6 @@
                     "RENE",
                     "RFAC",
                     "ROCL",
-                    "RWOD",
                     "SEPA",
                     "SKGR",
                     "SLAM",
@@ -28332,8 +28298,38 @@
                     "SLE",
                     "SRAD",
                     "TRUG",
+                    "WBTN",
                     "WMG",
                     "WORX"
+                ],
+                "Auto Manufacturers": [
+                    "AIEV",
+                    "AYRO",
+                    "BLBD",
+                    "CENN",
+                    "CJET",
+                    "CMI",
+                    "EVTV",
+                    "F",
+                    "GM",
+                    "GOEV",
+                    "GP",
+                    "HYZN",
+                    "LCID",
+                    "MULN",
+                    "NKLA",
+                    "NWTN",
+                    "PCAR",
+                    "PEV",
+                    "REE",
+                    "RIVN",
+                    "SVMH",
+                    "SYPR",
+                    "TSLA",
+                    "VEV",
+                    "VFS",
+                    "WKHS",
+                    "XOS"
                 ],
                 "Leisure Time": [
                     "AOUT",
@@ -28500,33 +28496,6 @@
                     "YOSH",
                     "YUM",
                     "ZUMZ"
-                ],
-                "Auto Manufacturers": [
-                    "AYRO",
-                    "BLBD",
-                    "CENN",
-                    "CJET",
-                    "CMI",
-                    "EVTV",
-                    "F",
-                    "GM",
-                    "GOEV",
-                    "GP",
-                    "HYZN",
-                    "LCID",
-                    "MULN",
-                    "NKLA",
-                    "NWTN",
-                    "PCAR",
-                    "PEV",
-                    "REE",
-                    "RIVN",
-                    "SVMH",
-                    "SYPR",
-                    "TSLA",
-                    "VEV",
-                    "VFS",
-                    "XOS"
                 ],
                 "Storage/Warehousing": [
                     "BTOC"
@@ -28714,7 +28683,6 @@
                     "CHCO",
                     "CHMG",
                     "CIVB",
-                    "CMA",
                     "CNOB",
                     "COFS",
                     "COLB",
@@ -29061,6 +29029,7 @@
                     "GBDC",
                     "GECC",
                     "GLAD",
+                    "GRDI",
                     "GREE",
                     "HIVE",
                     "HRZN",
@@ -29074,8 +29043,8 @@
                     "MCVT",
                     "MDBH",
                     "MDIA",
-                    "MFH",
                     "MFIC",
+                    "MIGI",
                     "MRCC",
                     "NEWT",
                     "NMFC",
@@ -29148,6 +29117,7 @@
                     "BX",
                     "CG",
                     "GIPR",
+                    "KKR",
                     "PAX",
                     "SSSS",
                     "VINP"
@@ -29209,6 +29179,7 @@
                     "OST",
                     "PLXS",
                     "PRZO",
+                    "RECT",
                     "SAI",
                     "SANM",
                     "SELX",
@@ -29362,6 +29333,7 @@
                     "HUBG",
                     "JBHT",
                     "JYD",
+                    "LSH",
                     "LSTR",
                     "MRTN",
                     "NSC",
@@ -29454,7 +29426,6 @@
                     "ASTR",
                     "ATRO",
                     "AVAV",
-                    "AWIN",
                     "BA",
                     "BAER",
                     "CODA",
@@ -29488,8 +29459,7 @@
                     "LTBR",
                     "NNE",
                     "POLA",
-                    "RAYA",
-                    "TGAN"
+                    "RAYA"
                 ],
                 "Engineering&Construction": [
                     "BBCP",
@@ -29511,6 +29481,7 @@
                     "ROAD",
                     "SHIM",
                     "STRL",
+                    "STRR",
                     "SWIM",
                     "WETH",
                     "WLGS"
@@ -29746,7 +29717,6 @@
                     "MAPS",
                     "MDB",
                     "MGIC",
-                    "MIGI",
                     "MMV",
                     "MNDO",
                     "MNDY",
@@ -29832,6 +29802,7 @@
                     "VRNT",
                     "VRRM",
                     "VS",
+                    "VSEE",
                     "VSTA",
                     "WAY",
                     "WDAY",
@@ -29975,7 +29946,6 @@
                     "EMN",
                     "FMC",
                     "GURE",
-                    "HGAS",
                     "HWKN",
                     "IFF",
                     "IOSP",
@@ -30058,6 +30028,7 @@
                     "FTEL",
                     "FTFT",
                     "GAMB",
+                    "GDDY",
                     "GEN",
                     "GIGM",
                     "GOOG",
@@ -30147,29 +30118,6 @@
                     "ZD",
                     "ZG"
                 ],
-                "Advertising": [
-                    "ADTH",
-                    "ADV",
-                    "BNZI",
-                    "DRCT",
-                    "FLNT",
-                    "HHS",
-                    "HWH",
-                    "IPG",
-                    "IZEA",
-                    "MCHX",
-                    "MRIN",
-                    "NCMI",
-                    "OMC",
-                    "PODC",
-                    "SCOR",
-                    "STGW",
-                    "SWAG",
-                    "TBLA",
-                    "TTD",
-                    "VSME",
-                    "XELB"
-                ],
                 "Telecommunications": [
                     "ADTN",
                     "AIRG",
@@ -30238,6 +30186,28 @@
                     "VSAT",
                     "VZ",
                     "WTO"
+                ],
+                "Advertising": [
+                    "ADV",
+                    "BNZI",
+                    "DRCT",
+                    "FLNT",
+                    "HHS",
+                    "HWH",
+                    "IPG",
+                    "IZEA",
+                    "MCHX",
+                    "MRIN",
+                    "NCMI",
+                    "OMC",
+                    "PODC",
+                    "SCOR",
+                    "STGW",
+                    "SWAG",
+                    "TBLA",
+                    "TTD",
+                    "VSME",
+                    "XELB"
                 ],
                 "Media": [
                     "AMCX",
@@ -30452,11 +30422,6 @@
                 "Municipal": [
                     "GSUN"
                 ]
-            },
-            "": {
-                "": [
-                    "LIPO"
-                ]
             }
         },
         "CONVPREFERRED": {
@@ -30523,6 +30488,7 @@
                     "BBH",
                     "BDGS",
                     "BEEZ",
+                    "BELT",
                     "BGRN",
                     "BGRO",
                     "BIB",
@@ -30535,10 +30501,12 @@
                     "BLCN",
                     "BLCR",
                     "BLLD",
+                    "BMDL",
                     "BND",
                     "BNDW",
                     "BNDX",
                     "BOTT",
+                    "BRHY",
                     "BRNY",
                     "BRRR",
                     "BRTR",
@@ -30670,6 +30638,7 @@
                     "ETEC",
                     "EUFN",
                     "EVMT",
+                    "EVSD",
                     "EWJV",
                     "EWZS",
                     "EYEG",
@@ -30750,6 +30719,7 @@
                     "GGLL",
                     "GGLS",
                     "GINX",
+                    "GLOW",
                     "GNMA",
                     "GNOM",
                     "GOVI",
@@ -30769,6 +30739,7 @@
                     "HNDL",
                     "HQGO",
                     "HRTS",
+                    "HYDR",
                     "HYLS",
                     "HYXF",
                     "HYZD",
@@ -30957,6 +30928,7 @@
                     "QQQM",
                     "QQQN",
                     "QQQS",
+                    "QQQT",
                     "QQQY",
                     "QQXT",
                     "QRMI",
@@ -31508,12 +31480,14 @@
                     "ATMVR",
                     "BAYAR",
                     "BKHAR",
+                    "BLACR",
                     "BLEUR",
                     "BNIXR",
                     "BOWNR",
                     "BRACR",
                     "BUJAR",
                     "BWAQR",
+                    "CETUR",
                     "CLOER",
                     "CLRCR",
                     "CSLMR",
@@ -31522,7 +31496,6 @@
                     "EMCGR",
                     "ESHAR",
                     "FEXDR",
-                    "FLFVR",
                     "GBBKR",
                     "GDSTR",
                     "GLACR",
@@ -31549,7 +31522,6 @@
                     "QETAR",
                     "QOMOR",
                     "RFACR",
-                    "RWODR",
                     "SVIIR",
                     "TBMCR",
                     "TENKR",
@@ -31557,17 +31529,6 @@
                     "WINVR",
                     "WTMAR",
                     "YOTAR"
-                ]
-            },
-            "": {
-                "": [
-                    "BLACR",
-                    "CETUR"
-                ]
-            },
-            "Technology": {
-                "Computers": [
-                    "SIFYR"
                 ]
             }
         },
@@ -31640,11 +31601,10 @@
                     "CLOEU",
                     "CLRCU",
                     "CNGLU",
-                    "COOLU",
                     "CSLMU",
+                    "CUBWU",
                     "CVIIU",
                     "DECAU",
-                    "DHACU",
                     "DPCSU",
                     "DUETU",
                     "DYCQU",
@@ -31653,10 +31613,10 @@
                     "EVGRU",
                     "FEXDU",
                     "FIACU",
-                    "FLFVU",
                     "FNVTU",
                     "FORLU",
                     "FRLAU",
+                    "FSHPU",
                     "FTIIU",
                     "GAMCU",
                     "GATEU",
@@ -31665,7 +31625,6 @@
                     "GLACU",
                     "GLLIU",
                     "GLSTU",
-                    "GMFIU",
                     "GODNU",
                     "GPACU",
                     "GPATU",
@@ -31693,6 +31652,7 @@
                     "KVACU",
                     "LATGU",
                     "MACAU",
+                    "MACIU",
                     "MAQCU",
                     "MARXU",
                     "MCAAU",
@@ -31723,7 +31683,6 @@
                     "RFACU",
                     "RFAIU",
                     "ROCLU",
-                    "RWODU",
                     "SEPAU",
                     "SKGRU",
                     "SLAMU",

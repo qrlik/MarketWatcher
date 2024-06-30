@@ -62,7 +62,6 @@ if __name__ == "__main__":
 
 
 # == TO DO LIST ==
-# Add Hidden divers to analys!
 # add bored expired color
 # add volume ui text
 # check RTH/ETH yahoo response?
