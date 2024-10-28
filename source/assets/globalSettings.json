@@ -38,7 +38,7 @@
 		"1.0": 1
 	},
 
-	"rsiLength": 14,
+	"rsiLength": 50,
 	"spotSymbolsExceptions": [
 		"BLUR"
 	],

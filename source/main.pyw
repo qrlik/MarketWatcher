@@ -62,10 +62,14 @@ if __name__ == "__main__":
 
 
 # == TO DO LIST ==
+# RSI Length == max divergence lenght ??
+# to do https://www.tradingview.com/chart/?symbol=EXCHANGE:SYMBOL
+# recheck ibkrExceptions
 # to do tf loop optimize, if no divers no need to process channels etc
 # add bored expired color
 # add volume ui text
 # check RTH/ETH yahoo response?
+# add bored price range/single price (as option)
   
 # fix divergence actual length for channels
 # fix divergence actual range can show breaked divergences
